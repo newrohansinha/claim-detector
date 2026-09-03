@@ -1,4 +1,4 @@
-.PHONY: setup download prepare audit baseline source-probe test test-data lint format verify
+.PHONY: setup download prepare audit baseline train-bert source-probe test test-data lint format verify
 
 setup:
 	uv sync --all-groups
@@ -14,6 +14,9 @@ audit: prepare
 
 baseline: prepare
 	uv run claim-baseline
+
+train-bert: prepare
+	uv run claim-train-bert
 
 source-probe: prepare
 	uv run claim-source-probe

@@ -124,21 +124,6 @@ def write_source_probe(
         stream.write("\n")
     predictions.to_csv(output_dir / "predictions.csv", index=False)
 
-    probe = results["text_source_probe"]
-    majority = results["majority_baseline"]
-    markdown = f"""# Text-to-Source Probe
-
-This is a five-fold stratified group cross-validation experiment. Normalized duplicate texts stay
-within one fold. It measures whether source provenance is recoverable from sentence text; it does
-not prove that the claim classifier uses source information.
-
-| Model | Accuracy | Macro F1 |
-|---|---:|---:|
-| Majority source | {majority["accuracy"]:.4f} | {majority["macro_f1"]:.4f} |
-| TF-IDF source probe | {probe["accuracy"]:.4f} | {probe["macro_f1"]:.4f} |
-"""
-    (output_dir / "README.md").write_text(markdown, encoding="utf-8")
-
     sns.set_theme(style="white", context="talk")
     figure, axis = plt.subplots(figsize=(9, 7))
     sns.heatmap(

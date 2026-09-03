@@ -212,33 +212,6 @@ def write_report(results: dict[str, Any], output_dir: Path) -> None:
         json.dump(results, stream, indent=2, sort_keys=True, allow_nan=False)
         stream.write("\n")
 
-    lines = [
-        "# TF-IDF Logistic-Regression Baseline",
-        "",
-        "All values below were generated from real predictions. The source-held-out models were",
-        "fit from scratch without any rows from the evaluation source.",
-        "",
-        "| Evaluation | Samples | Accuracy | Claim precision | Claim recall | "
-        "Claim F1 | Macro F1 |",
-        "|---|---:|---:|---:|---:|---:|---:|",
-    ]
-    for name, evaluation in results["evaluations"].items():
-        metrics = evaluation["metrics"]
-        lines.append(
-            f"| {name} | {metrics['samples']} | {metrics['accuracy']:.4f} | "
-            f"{metrics['claim_precision']:.4f} | {metrics['claim_recall']:.4f} | "
-            f"{metrics['claim_f1']:.4f} | {metrics['macro_f1']:.4f} |"
-        )
-    lines.extend(
-        [
-            "",
-            "AVeriTeC contains only positive detection examples. Its apparent accuracy equals",
-            "recall, and its binary F1 is not compared as though it came from a two-class test.",
-            "",
-        ]
-    )
-    (output_dir / "README.md").write_text("\n".join(lines), encoding="utf-8")
-
     plot_names = [
         "mixed_paper_test",
         "mixed_paper_test_without_train_duplicates",

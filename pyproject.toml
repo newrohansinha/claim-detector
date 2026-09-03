@@ -18,6 +18,8 @@ dependencies = [
   "pandas>=2.2,<3",
   "scikit-learn>=1.5,<2",
   "seaborn>=0.13,<1",
+  "torch==2.8.0",
+  "transformers==4.55.4",
 ]
 
 [dependency-groups]
@@ -35,6 +37,7 @@ claim-download = "claim_detector.data.download:main"
 claim-prepare = "claim_detector.data.prepare:main"
 claim-audit = "claim_detector.analysis.audit:main"
 claim-baseline = "claim_detector.models.tfidf:main"
+claim-train-bert = "claim_detector.models.bert:main"
 claim-source-probe = "claim_detector.analysis.source_probe:main"
 
 [tool.hatch.build.targets.wheel]
@@ -66,5 +69,5 @@ strict = true
 warn_unreachable = true
 
 [[tool.mypy.overrides]]
-module = ["joblib", "seaborn", "sklearn.*"]
+module = ["joblib", "seaborn", "sklearn.*", "transformers"]
 ignore_missing_imports = true

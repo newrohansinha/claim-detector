@@ -2,63 +2,75 @@
 
 [![CI](https://github.com/newrohansinha/claim-detector/actions/workflows/ci.yml/badge.svg)](https://github.com/newrohansinha/claim-detector/actions/workflows/ci.yml)
 
-This project investigates whether a sentence-level factual-claim detector that performs well on
-a random mixed-source split still performs well when the evaluation source was never observed
-during training.
+Detect whether an English sentence contains a factual claim. This is not fact verification: a
+false but checkable statement is still a claim.
 
-The deployed task is **claim detection**, not fact verification: a false but externally
-checkable assertion is still a claim.
+## Main question
 
-## Hero investigation
+Does strong performance on a random mix of ClaimBuster, PoliClaim, and AVeriTeC survive when the
+test source was never seen during training?
 
-The primary experiment compares ordinary mixed-source evaluation with source-held-out transfer.
-The training corpus combines ClaimBuster, PoliClaim, and AVeriTeC, whose label distributions and
-collection processes differ. The project tests, rather than assumes, whether those differences
-permit source-specific shortcuts.
+That source-held-out comparison is the main experiment. Dataset source and label are strongly
+related, so a random split may reward source-specific patterns. The experiment tests that
+hypothesis; it does not assume it is true.
 
-The investigation is pre-registered in
-[`docs/EXPERIMENT_PROTOCOL.md`](docs/EXPERIMENT_PROTOCOL.md). Its label semantics are defined in
-[`LABEL_POLICY.md`](LABEL_POLICY.md).
+## Results so far
 
-## Current status
+All numbers below come from saved predictions over the real upstream data.
 
-The repository is under an explicit 20-hour timebox. Dataset acquisition, experiments, model
-metrics, and serving artifacts must be generated from real upstream data and executable code.
-No simulated metrics or dummy production model will be used.
+| Experiment | Accuracy | Claim F1 | Macro F1 | Predicted claim rate |
+|---|---:|---:|---:|---:|
+| Source-only diagnostic, mixed test | 0.7804 | 0.7389 | 0.7747 | 0.3746 |
+| TF-IDF, mixed test | 0.8465 | 0.8300 | 0.8451 | 0.4362 |
+| TF-IDF, mixed test without train duplicates | 0.8453 | 0.8273 | 0.8436 | 0.4326 |
+| TF-IDF, ClaimBuster held out | 0.3699 | 0.4382 | 0.3604 | 0.8716 |
+| TF-IDF, PoliClaim held out | 0.6400 | 0.5957 | 0.6357 | 0.2995 |
+| TF-IDF, CheckThat tweets | 0.6498 | 0.7710 | 0.5137 | 0.8990 |
 
-The first verified data audit found 12,996 usable composite texts, one empty upstream AVeriTeC
-claim, and 18 normalized sentence hashes crossing the paper's frozen train/test boundary. A
-diagnostic that ignores sentence text and predicts only each source's majority label reaches
-78.04% accuracy and 0.7389 claim F1 on the frozen test set. These facts motivate the hero
-source-held-out experiment without yet proving that the language model uses source as a shortcut.
+The source-only diagnostic does not read sentence text. It predicts each source's majority
+training label. Its performance shows why source-aware evaluation matters.
 
-### Verified baseline results
+A grouped five-fold TF-IDF probe predicts the source dataset from sentence text with 0.8613
+accuracy and 0.7848 macro F1. This shows that source is recoverable from text. It does not prove
+that the claim classifier uses source as a shortcut.
 
-The real TF-IDF logistic-regression baseline reaches 0.8300 claim F1 and 0.8451 macro F1 on the
-paper's mixed test split. When ClaimBuster is entirely absent from training, claim F1 falls to
-0.4382 and the model predicts `claim` for 87.16% of a source whose actual positive rate is 25%.
-When PoliClaim is held out, claim F1 is 0.5957. On CheckThat tweets, claim F1 is 0.7710 but macro
-F1 is only 0.5137 because the model predicts `claim` for 89.90% of tweets.
+The TF-IDF result drops sharply when a source is unseen. CheckThat claim F1 looks reasonable, but
+the model predicts `claim` for 89.9% of tweets; macro F1 exposes that failure.
 
-A grouped five-fold text-to-source probe reaches 86.13% accuracy and 0.7848 macro F1, compared
-with 61.37% accuracy and 0.2535 macro F1 for always predicting the largest source. This establishes
-that provenance is recoverable from text; it does not establish that the future BERT classifier
-uses that signal.
+The transformer experiment is next. No conclusion about BERT transfer is claimed yet.
 
-All point estimates, 2,000-repetition bootstrap intervals, model checksums, and text-free saved
-predictions are generated under [`reports/generated`](reports/generated).
+## Data checks
 
-## Reproducibility entry points
+- 12,997 upstream composite rows; 12,996 contain usable text.
+- One AVeriTeC row has an empty claim.
+- 18 normalized sentence hashes cross the paper's frozen train/test boundary.
+- New fit, validation, and calibration splits keep duplicate groups together.
+- Raw third-party data is downloaded at a pinned revision and verified by SHA-256.
+
+The frozen split is retained for comparison with the paper. A second result removes test records
+whose normalized text appears in training.
+
+## Reproduce
+
+Requirements: `uv` and Python 3.12.
 
 ```bash
 make setup
-make download
 make prepare
 make audit
 make baseline
+make source-probe
 make verify
 ```
 
-Raw third-party datasets and generated artifacts are deliberately excluded from Git. Acquisition
-is pinned by upstream revision and SHA-256 checksum. See [`DATA_CARD.md`](DATA_CARD.md) for the
-provenance and redistribution policy.
+Generated evidence is in [`reports/generated`](reports/generated). Raw data and model binaries are
+not committed. The downloader reconstructs them from pinned sources.
+
+## Files worth reading
+
+- [`docs/EXPERIMENT_PROTOCOL.md`](docs/EXPERIMENT_PROTOCOL.md): hypotheses and evaluation rules
+- [`LABEL_POLICY.md`](LABEL_POLICY.md): what counts as a claim
+- [`DATA_CARD.md`](DATA_CARD.md): source composition, licenses, and integrity findings
+- [`reports/generated/data_audit/data_audit.md`](reports/generated/data_audit/data_audit.md): measured data audit
+- [`reports/generated/tfidf_baseline/metrics.json`](reports/generated/tfidf_baseline/metrics.json): full baseline metrics and bootstrap intervals
+- [`reports/generated/source_probe/metrics.json`](reports/generated/source_probe/metrics.json): grouped source-probe result
