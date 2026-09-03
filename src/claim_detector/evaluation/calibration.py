@@ -19,6 +19,7 @@ from scipy.optimize import minimize_scalar
 from scipy.special import expit
 
 from claim_detector.data.download import PROJECT_ROOT, digest_file
+from claim_detector.models.bert import MODEL_CONFIG
 
 DEFAULT_BERT_REPORT_DIR = PROJECT_ROOT / "reports" / "generated" / "bert_mixed"
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "reports" / "generated" / "bert_calibration"
@@ -261,6 +262,7 @@ def calibrate_predictions(bert_report_dir: Path, output_dir: Path) -> dict[str, 
         "fit_split": "calibration",
         "fit_records": len(fit_frame),
         "calibration_bins": CALIBRATION_BINS,
+        "max_tokens": MODEL_CONFIG["max_length"],
         "model_sha256": model_sha,
         "source_predictions": {
             "path": str(paths["calibration"].relative_to(PROJECT_ROOT)),

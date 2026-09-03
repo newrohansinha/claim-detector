@@ -13,7 +13,7 @@ import time
 from collections.abc import Iterator, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Literal, cast
+from typing import Any, cast
 
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
@@ -36,13 +36,12 @@ from claim_detector.data.download import PROJECT_ROOT, digest_file
 from claim_detector.data.prepare import DEFAULT_PROCESSED_DIR
 from claim_detector.evaluation.bootstrap import evaluated_binary_predictions
 from claim_detector.evaluation.metrics import binary_classification_metrics
+from claim_detector.models.runtime import MODEL_ID, MODEL_REVISION, DeviceName, resolve_device
 
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "reports" / "generated" / "bert_mixed"
 DEFAULT_ARTIFACT_DIR = PROJECT_ROOT / "artifacts" / "bert_mixed"
 TFIDF_METRICS_PATH = PROJECT_ROOT / "reports" / "generated" / "tfidf_baseline" / "metrics.json"
 
-MODEL_ID = "google-bert/bert-base-uncased"
-MODEL_REVISION = "86b5e0934494bd15c9632b12f734a8a67f723594"
 MODEL_CONFIG: dict[str, Any] = {
     "model_id": MODEL_ID,
     "model_revision": MODEL_REVISION,
@@ -57,8 +56,6 @@ MODEL_CONFIG: dict[str, Any] = {
     "seed": 42,
 }
 
-DeviceName = Literal["auto", "cpu", "cuda", "mps"]
-
 
 def set_reproducible_seed(seed: int) -> None:
     random.seed(seed)
@@ -67,20 +64,6 @@ def set_reproducible_seed(seed: int) -> None:
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
     torch.use_deterministic_algorithms(True, warn_only=True)
-
-
-def resolve_device(requested: DeviceName) -> torch.device:
-    if requested == "auto":
-        if torch.cuda.is_available():
-            return torch.device("cuda")
-        if torch.backends.mps.is_available():
-            return torch.device("mps")
-        return torch.device("cpu")
-    if requested == "cuda" and not torch.cuda.is_available():
-        raise RuntimeError("CUDA was requested but is unavailable")
-    if requested == "mps" and not torch.backends.mps.is_available():
-        raise RuntimeError("MPS was requested but is unavailable")
-    return torch.device(requested)
 
 
 def validate_development_splits(composite: pd.DataFrame) -> None:

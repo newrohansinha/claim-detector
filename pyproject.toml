@@ -11,20 +11,28 @@ requires-python = ">=3.11,<3.13"
 license = { file = "LICENSE" }
 authors = [{ name = "Rohan Sinha" }]
 dependencies = [
+  "fastapi>=0.116,<1",
+  "numpy>=2.0,<3",
+  "torch==2.8.0",
+  "transformers==4.55.4",
+  "uvicorn[standard]>=0.35,<1",
+]
+
+[project.optional-dependencies]
+research = [
   "joblib>=1.4,<2",
   "matplotlib>=3.9,<4",
-  "numpy>=2.0,<3",
   "openpyxl>=3.1,<4",
   "pandas>=2.2,<3",
   "scikit-learn>=1.5,<2",
   "scipy>=1.13,<2",
   "seaborn>=0.13,<1",
-  "torch==2.8.0",
-  "transformers==4.55.4",
 ]
 
 [dependency-groups]
 dev = [
+  "httpx>=0.28,<1",
+  "httpx2>=2.12,<3",
   "mypy>=1.13,<2",
   "pandas-stubs>=2.2,<3",
   "pytest>=8.3,<9",
@@ -43,6 +51,7 @@ claim-train-bert-heldout = "claim_detector.models.bert_transfer:main"
 claim-train-bert-control = "claim_detector.models.bert_control:main"
 claim-source-probe = "claim_detector.analysis.source_probe:main"
 claim-calibrate = "claim_detector.evaluation.calibration:main"
+claim-api = "claim_detector.api.serve:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/claim_detector"]
@@ -50,7 +59,13 @@ packages = ["src/claim_detector"]
 [tool.pytest.ini_options]
 addopts = "-ra --strict-config --strict-markers"
 testpaths = ["tests"]
-markers = ["real_data: tests that validate downloaded upstream research artifacts"]
+filterwarnings = [
+  "ignore:The anyio.abc.BlockingPortal alias is deprecated:DeprecationWarning:starlette.testclient",
+]
+markers = [
+  "model_artifact: tests that load the locally trained BERT checkpoint",
+  "real_data: tests that validate downloaded upstream research artifacts",
+]
 
 [tool.coverage.run]
 branch = true

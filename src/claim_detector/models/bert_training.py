@@ -17,8 +17,6 @@ from transformers import AutoModelForSequenceClassification
 from claim_detector.evaluation.metrics import binary_classification_metrics
 from claim_detector.models.bert import (
     MODEL_CONFIG,
-    MODEL_ID,
-    MODEL_REVISION,
     _artifact_manifest,
     build_loader,
     encode_frame,
@@ -28,6 +26,7 @@ from claim_detector.models.bert import (
     set_reproducible_seed,
     train_epoch,
 )
+from claim_detector.models.runtime import MODEL_ID, MODEL_REVISION
 
 
 def _source_label_counts(frame: pd.DataFrame) -> dict[str, int]:

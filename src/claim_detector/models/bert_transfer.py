@@ -28,14 +28,11 @@ from claim_detector.evaluation.bootstrap import (
 )
 from claim_detector.models.bert import (
     MODEL_CONFIG,
-    MODEL_ID,
-    MODEL_REVISION,
-    DeviceName,
     _git_state,
-    resolve_device,
     validate_development_splits,
 )
 from claim_detector.models.bert_training import train_selected_classifier
+from claim_detector.models.runtime import MODEL_ID, MODEL_REVISION, DeviceName, resolve_device
 
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "reports" / "generated" / "bert_heldout"
 DEFAULT_ARTIFACT_DIR = PROJECT_ROOT / "artifacts" / "bert_heldout"

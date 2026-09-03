@@ -3,6 +3,7 @@
     "calibration_bins": 15,
     "fit_records": 800,
     "fit_split": "calibration",
+    "max_tokens": 128,
     "method": "temperature_scaling",
     "model_sha256": "ab8cd8a15cdc0badef3d90b2b57e98b03d7435e4b36c7aafc8999a625df99224",
     "review_policy": {

@@ -1,0 +1,41 @@
+{
+  "configuration": {
+    "concurrency": 1,
+    "requests": 100,
+    "sentence_variants": 8,
+    "timeout_seconds": 30.0,
+    "warmup_requests": 10
+  },
+  "deployment": "docker-desktop-arm64-cpu",
+  "environment": {
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "python": "3.12.13"
+  },
+  "measured_at": "2026-09-03T13:39:13.993946+00:00",
+  "results": {
+    "latency_ms": {
+      "maximum": 81.2284580024425,
+      "mean": 51.152142139180796,
+      "minimum": 20.07150001008995,
+      "p50": 56.55412499618251,
+      "p95": 61.37470624453272,
+      "p99": 65.21520899943434
+    },
+    "model_versions": [
+      "ab8cd8a15cdc"
+    ],
+    "successful_requests": 100,
+    "throughput_requests_per_second": 19.53329759697835,
+    "wall_seconds": 5.119463291004649
+  },
+  "schema_version": 1,
+  "server_model": {
+    "calibration_method": "temperature_scaling",
+    "maximum_input_characters": 2000,
+    "model_id": "google-bert/bert-base-uncased",
+    "model_version": "ab8cd8a15cdc",
+    "review_confidence_threshold": 0.775775084742109,
+    "temperature": 1.6535728153253397
+  },
+  "target": "http://127.0.0.1:8000/v1/predict"
+}

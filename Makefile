@@ -1,7 +1,7 @@
-.PHONY: setup download prepare audit baseline train-bert train-bert-heldout train-bert-control calibrate source-probe test test-data lint format verify
+.PHONY: setup download prepare audit baseline train-bert train-bert-heldout train-bert-control calibrate serve benchmark docker-build docker-up docker-down source-probe test test-data lint format verify
 
 setup:
-	uv sync --all-groups
+	uv sync --all-extras --all-groups
 
 download:
 	uv run claim-download
@@ -27,6 +27,22 @@ train-bert-control: prepare
 calibrate:
 	uv run claim-calibrate
 
+serve:
+	uv run claim-api
+
+benchmark:
+	uv run python scripts/benchmark_api.py --requests 100 --concurrency 1 --warmup 10 --deployment docker-cpu --output reports/generated/api_benchmark_c1.json
+	uv run python scripts/benchmark_api.py --requests 500 --concurrency 4 --warmup 10 --deployment docker-cpu --output reports/generated/api_benchmark_c4.json
+
+docker-build:
+	PATH="/Applications/Docker.app/Contents/Resources/bin:$${PATH}" docker build --tag claim-detector:local .
+
+docker-up:
+	PATH="/Applications/Docker.app/Contents/Resources/bin:$${PATH}" docker compose up --build
+
+docker-down:
+	PATH="/Applications/Docker.app/Contents/Resources/bin:$${PATH}" docker compose down
+
 source-probe: prepare
 	uv run claim-source-probe
 
@@ -38,7 +54,7 @@ test-data: prepare
 
 lint:
 	uv run ruff check .
-	uv run mypy src
+	uv run mypy src scripts
 
 format:
 	uv run ruff format .
