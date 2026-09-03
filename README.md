@@ -14,30 +14,48 @@ That source-held-out comparison is the main experiment. Dataset source and label
 related, so a random split may reward source-specific patterns. The experiment tests that
 hypothesis; it does not assume it is true.
 
-## Results so far
+## Results
 
-All numbers below come from saved predictions over the real upstream data.
+All numbers come from committed, text-free predictions over the real upstream data.
 
-| Experiment | Accuracy | Claim F1 | Macro F1 | Predicted claim rate |
-|---|---:|---:|---:|---:|
-| Source-only diagnostic, mixed test | 0.7804 | 0.7389 | 0.7747 | 0.3746 |
-| TF-IDF, mixed test | 0.8465 | 0.8300 | 0.8451 | 0.4362 |
-| TF-IDF, mixed test without train duplicates | 0.8453 | 0.8273 | 0.8436 | 0.4326 |
-| TF-IDF, ClaimBuster held out | 0.3699 | 0.4382 | 0.3604 | 0.8716 |
-| TF-IDF, PoliClaim held out | 0.6400 | 0.5957 | 0.6357 | 0.2995 |
-| TF-IDF, CheckThat tweets | 0.6498 | 0.7710 | 0.5137 | 0.8990 |
+### Hero result: source-held-out transfer
 
-The source-only diagnostic does not read sentence text. It predicts each source's majority
-training label. Its performance shows why source-aware evaluation matters.
+Each row compares BERT on the same full source with and without that source available during
+training. A fresh model was trained for every held-out condition. The held-out source was also
+excluded from checkpoint selection.
 
-A grouped five-fold TF-IDF probe predicts the source dataset from sentence text with 0.8613
-accuracy and 0.7848 macro F1. This shows that source is recoverable from text. It does not prove
-that the claim classifier uses source as a shortcut.
+| Evaluation source | Metric | Source included | Source held out | Change | Actual claim rate | Held-out prediction rate |
+|---|---|---:|---:|---:|---:|---:|
+| ClaimBuster | Macro F1 | 0.9455 | 0.6598 | -0.2858 | 0.2500 | 0.5622 |
+| PoliClaim | Macro F1 | 0.9083 | 0.6960 | -0.2123 | 0.5909 | 0.3113 |
+| AVeriTeC | Claim recall | 0.9967 | 0.9605 | -0.0362 | 1.0000 | 0.9605 |
 
-The TF-IDF result drops sharply when a source is unseen. CheckThat claim F1 looks reasonable, but
-the model predicts `claim` for 89.9% of tweets; macro F1 exposes that failure.
+The mixed model looks excellent on every source it saw. Removing a source cuts macro F1 by 28.6
+points on ClaimBuster and 21.2 points on PoliClaim. The errors follow source-specific label priors:
+the ClaimBuster holdout over-predicts claims, while the PoliClaim holdout under-predicts them.
+AVeriTeC is positive-only, so recall is reported instead of binary F1.
 
-The transformer experiment is next. No conclusion about BERT transfer is claimed yet.
+### Benchmark checks
+
+| Evaluation | Model | Accuracy | Claim F1 | Macro F1 | Predicted claim rate |
+|---|---|---:|---:|---:|---:|
+| Mixed test | TF-IDF | 0.8465 | 0.8300 | 0.8451 | 0.4362 |
+| Mixed test | BERT | 0.9069 | 0.9007 | 0.9066 | 0.4712 |
+| Mixed test without train duplicates | BERT | 0.9062 | 0.8993 | 0.9058 | 0.4678 |
+| CheckThat tweets | TF-IDF | 0.6498 | 0.7710 | 0.5137 | 0.8990 |
+| CheckThat tweets | BERT | 0.6400 | 0.7772 | 0.4200 | 0.9857 |
+
+BERT reaches 0.9007 claim F1, compared with 0.911 in the
+[paper](https://aclanthology.org/2025.fever-1.6.pdf). This run withheld 1,600 paper-training
+records for validation and calibration instead of fitting on all of them.
+
+The CheckThat result closely reproduces the paper: it reports 0.633 accuracy, 0.774 F1, and 0.998
+recall; this run gets 0.640, 0.777, and 0.997. Macro F1 shows the failure hidden by claim F1: BERT
+predicts `claim` for 98.6% of the tweets.
+
+A source-only diagnostic reaches 0.7804 accuracy without reading the sentence. A grouped text
+probe predicts source with 0.8613 accuracy. These are supporting diagnostics: they establish that
+source signal exists, while the held-out experiment measures the resulting transfer gap.
 
 ## Data checks
 
@@ -59,6 +77,8 @@ make setup
 make prepare
 make audit
 make baseline
+make train-bert
+make train-bert-heldout
 make source-probe
 make verify
 ```
@@ -73,4 +93,6 @@ not committed. The downloader reconstructs them from pinned sources.
 - [`DATA_CARD.md`](DATA_CARD.md): source composition, licenses, and integrity findings
 - [`reports/generated/data_audit/data_audit.md`](reports/generated/data_audit/data_audit.md): measured data audit
 - [`reports/generated/tfidf_baseline/metrics.json`](reports/generated/tfidf_baseline/metrics.json): full baseline metrics and bootstrap intervals
+- [`reports/generated/bert_mixed/metrics.json`](reports/generated/bert_mixed/metrics.json): training history, artifact hashes, and BERT metrics
+- [`reports/generated/bert_heldout/metrics.json`](reports/generated/bert_heldout/metrics.json): source-held-out runs and matched transfer comparison
 - [`reports/generated/source_probe/metrics.json`](reports/generated/source_probe/metrics.json): grouped source-probe result

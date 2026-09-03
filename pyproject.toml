@@ -38,6 +38,7 @@ claim-prepare = "claim_detector.data.prepare:main"
 claim-audit = "claim_detector.analysis.audit:main"
 claim-baseline = "claim_detector.models.tfidf:main"
 claim-train-bert = "claim_detector.models.bert:main"
+claim-train-bert-heldout = "claim_detector.models.bert_transfer:main"
 claim-source-probe = "claim_detector.analysis.source_probe:main"
 
 [tool.hatch.build.targets.wheel]

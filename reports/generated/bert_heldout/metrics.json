@@ -1,0 +1,762 @@
+{
+  "configuration": {
+    "epochs": 3,
+    "evaluation_batch_size": 32,
+    "learning_rate": 2e-05,
+    "max_gradient_norm": 1.0,
+    "max_length": 128,
+    "model_id": "google-bert/bert-base-uncased",
+    "model_revision": "86b5e0934494bd15c9632b12f734a8a67f723594",
+    "seed": 42,
+    "train_batch_size": 16,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01
+  },
+  "dataset_manifest": {
+    "bytes": 1111,
+    "path": "data/processed/dataset_manifest.json",
+    "sha256": "700e3144116c6fc379971beaa20d2274ae08323e3f94219cc2918cb4e4a56a17"
+  },
+  "experiment": "bert_leave_one_source_out",
+  "git": {
+    "dirty": true,
+    "revision": "da848dda77cf14ad8de1fc65e214dcb83c473ffa"
+  },
+  "mixed_reference": {
+    "model_artifact": "artifacts/bert_mixed",
+    "predictions": {
+      "bytes": 1399059,
+      "path": "reports/generated/bert_heldout/predictions/mixed_model_all_sources.csv",
+      "sha256": "01f510a0e813085c1aec50bf3182e7c1a33899ee0cf491f7fa21898dbfaa6fbd"
+    },
+    "records": 12996,
+    "source_evaluations": {
+      "averitec": {
+        "bootstrap_repetitions": 2000,
+        "confidence_intervals_95": {
+          "accuracy": {
+            "high": 0.9986957939354418,
+            "low": 0.9947831757417672
+          },
+          "claim_f1": {
+            "high": 0.999347471451876,
+            "low": 0.9973847662634848
+          },
+          "claim_precision": {
+            "high": 1.0,
+            "low": 1.0
+          },
+          "claim_recall": {
+            "high": 0.9986957939354418,
+            "low": 0.9947831757417672
+          },
+          "macro_f1": {
+            "high": 0.499673735725938,
+            "low": 0.4986923831317424
+          }
+        },
+        "metrics": {
+          "accuracy": 0.9967394848386045,
+          "claim_f1": 0.9983670803396473,
+          "claim_precision": 1.0,
+          "claim_recall": 0.9967394848386045,
+          "false_negatives": 10,
+          "false_positives": 0,
+          "macro_f1": 0.49918354016982364,
+          "positive_prediction_rate": 0.9967394848386045,
+          "pr_auc": null,
+          "prevalence": 1.0,
+          "roc_auc": null,
+          "samples": 3067,
+          "true_negatives": 0,
+          "true_positives": 3057
+        },
+        "score_summary": {
+          "maximum": 0.9991851449012756,
+          "median": 0.9990222454071045,
+          "minimum": 0.00962971430271864,
+          "p05": 0.9980211377143859,
+          "p95": 0.9991408228874207
+        }
+      },
+      "claimbuster": {
+        "bootstrap_repetitions": 2000,
+        "confidence_intervals_95": {
+          "accuracy": {
+            "high": 0.9628886659979939,
+            "low": 0.9543599548645938
+          },
+          "claim_f1": {
+            "high": 0.9268443112539133,
+            "low": 0.9105163737515753
+          },
+          "claim_precision": {
+            "high": 0.9127879203081025,
+            "low": 0.8902011618291789
+          },
+          "claim_recall": {
+            "high": 0.9473420260782347,
+            "low": 0.9262788365095286
+          },
+          "macro_f1": {
+            "high": 0.9509740318228123,
+            "low": 0.9399058033979316
+          }
+        },
+        "metrics": {
+          "accuracy": 0.9586258776328987,
+          "claim_f1": 0.9188391539596655,
+          "claim_precision": 0.9015444015444015,
+          "claim_recall": 0.9368104312938816,
+          "false_negatives": 126,
+          "false_positives": 204,
+          "macro_f1": 0.9455376991403577,
+          "positive_prediction_rate": 0.2597793380140421,
+          "pr_auc": 0.9646632978770053,
+          "prevalence": 0.25,
+          "roc_auc": 0.9863026474944727,
+          "samples": 7976,
+          "true_negatives": 5778,
+          "true_positives": 1868
+        },
+        "score_summary": {
+          "maximum": 0.9991835951805115,
+          "median": 0.01179582066833973,
+          "minimum": 0.0025307312607765198,
+          "p05": 0.003714879392646253,
+          "p95": 0.9988045990467072
+        }
+      },
+      "policlaim": {
+        "bootstrap_repetitions": 2000,
+        "confidence_intervals_95": {
+          "accuracy": {
+            "high": 0.9221710189452125,
+            "low": 0.8970814132104454
+          },
+          "claim_f1": {
+            "high": 0.9317160826594789,
+            "low": 0.9086737121534647
+          },
+          "claim_precision": {
+            "high": 0.9734105669650693,
+            "low": 0.9513309809019717
+          },
+          "claim_recall": {
+            "high": 0.9003466204506065,
+            "low": 0.8630849220103987
+          },
+          "macro_f1": {
+            "high": 0.9206436063449177,
+            "low": 0.8956332990859364
+          }
+        },
+        "metrics": {
+          "accuracy": 0.9098822324628776,
+          "claim_f1": 0.9203619909502262,
+          "claim_precision": 0.9630681818181818,
+          "claim_recall": 0.8812824956672444,
+          "false_negatives": 137,
+          "false_positives": 39,
+          "macro_f1": 0.9082942030222829,
+          "positive_prediction_rate": 0.5407066052227343,
+          "pr_auc": 0.9770684441045959,
+          "prevalence": 0.5908858166922683,
+          "roc_auc": 0.9634682000681095,
+          "samples": 1953,
+          "true_negatives": 760,
+          "true_positives": 1017
+        },
+        "score_summary": {
+          "maximum": 0.9991697072982788,
+          "median": 0.8572044372558594,
+          "minimum": 0.0027501999866217375,
+          "p05": 0.0050830932334065436,
+          "p95": 0.9989710569381713
+        }
+      }
+    },
+    "tokenization": {
+      "maximum": 187,
+      "median": 21.0,
+      "minimum": 5,
+      "p95": 53.0,
+      "records": 12996,
+      "truncated_fraction": 0.0004616805170821791,
+      "truncated_records": 6
+    }
+  },
+  "runs": {
+    "averitec": {
+      "artifact": {
+        "files": [
+          {
+            "bytes": 803,
+            "path": "artifacts/bert_heldout/averitec/config.json",
+            "sha256": "3b3a6bf900c909e6899fdad3a0b8048d28626135de15b48e32db9ecd5a7e8c4e"
+          },
+          {
+            "bytes": 437958648,
+            "path": "artifacts/bert_heldout/averitec/model.safetensors",
+            "sha256": "491d1c149d4ba3a49304bd0e12496aba52a594dd3af8865708bf514b571063e3"
+          },
+          {
+            "bytes": 125,
+            "path": "artifacts/bert_heldout/averitec/special_tokens_map.json",
+            "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3"
+          },
+          {
+            "bytes": 711661,
+            "path": "artifacts/bert_heldout/averitec/tokenizer.json",
+            "sha256": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0"
+          },
+          {
+            "bytes": 1221,
+            "path": "artifacts/bert_heldout/averitec/tokenizer_config.json",
+            "sha256": "1f92c93d2e31974acffab86d48e80a9357acb18c68346c5472ef1d12c72d5d77"
+          },
+          {
+            "bytes": 1531,
+            "path": "artifacts/bert_heldout/averitec/training_metadata.json",
+            "sha256": "7cff9c9b850b0bbc5cf01eec9d945482e4234d81a9b20f2703ee83a94129a66a"
+          },
+          {
+            "bytes": 231508,
+            "path": "artifacts/bert_heldout/averitec/vocab.txt",
+            "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3"
+          }
+        ],
+        "path": "artifacts/bert_heldout/averitec"
+      },
+      "evaluation": {
+        "bootstrap_repetitions": 2000,
+        "confidence_intervals_95": {
+          "accuracy": {
+            "high": 0.9670687968699054,
+            "low": 0.9533746331920443
+          },
+          "claim_f1": {
+            "high": 0.9832587435769932,
+            "low": 0.9761308629611083
+          },
+          "claim_precision": {
+            "high": 1.0,
+            "low": 1.0
+          },
+          "claim_recall": {
+            "high": 0.9670687968699054,
+            "low": 0.9533746331920443
+          },
+          "macro_f1": {
+            "high": 0.4916293717884966,
+            "low": 0.48806543148055415
+          }
+        },
+        "held_out_source_integrity": true,
+        "metrics": {
+          "accuracy": 0.9605477665471145,
+          "claim_f1": 0.9798769333111591,
+          "claim_precision": 1.0,
+          "claim_recall": 0.9605477665471145,
+          "false_negatives": 121,
+          "false_positives": 0,
+          "macro_f1": 0.48993846665557955,
+          "positive_prediction_rate": 0.9605477665471145,
+          "pr_auc": null,
+          "prevalence": 1.0,
+          "roc_auc": null,
+          "samples": 3067,
+          "true_negatives": 0,
+          "true_positives": 2946
+        },
+        "predictions": {
+          "bytes": 312896,
+          "path": "reports/generated/bert_heldout/predictions/holdout_averitec.csv",
+          "sha256": "aa4466398e4d8d95a654ae2ce3d1e7632af5f0147e402a1daa05d956d2ad732b"
+        },
+        "score_summary": {
+          "maximum": 0.9987334609031677,
+          "median": 0.996690034866333,
+          "minimum": 0.001569267944432795,
+          "p05": 0.6640241026878357,
+          "p95": 0.9984548211097717
+        },
+        "test_records": 3067,
+        "test_sources": [
+          "averitec"
+        ]
+      },
+      "held_out_source": "averitec",
+      "tokenization": {
+        "fit": {
+          "maximum": 187,
+          "median": 21.0,
+          "minimum": 7,
+          "p95": 55.94999999999982,
+          "records": 6702,
+          "truncated_fraction": 0.000596836765144733,
+          "truncated_records": 4
+        },
+        "test": {
+          "maximum": 98,
+          "median": 22.0,
+          "minimum": 6,
+          "p95": 46.0,
+          "records": 3067,
+          "truncated_fraction": 0.0,
+          "truncated_records": 0
+        },
+        "validation": {
+          "maximum": 118,
+          "median": 21.0,
+          "minimum": 8,
+          "p95": 53.0,
+          "records": 609,
+          "truncated_fraction": 0.0,
+          "truncated_records": 0
+        }
+      },
+      "training": {
+        "device": "mps",
+        "finished_at": "2026-09-03T03:20:48.937631+00:00",
+        "fit_records": 6702,
+        "fit_sources": [
+          "claimbuster",
+          "policlaim"
+        ],
+        "history": [
+          {
+            "epoch": 1,
+            "epoch_seconds": 132.75360216700938,
+            "train_loss": 0.39302368309561153,
+            "training_records_per_second": 50.484505810762215,
+            "validation_accuracy": 0.8801313628899836,
+            "validation_claim_f1": 0.8053333333333333,
+            "validation_macro_f1": 0.8593689205219455
+          },
+          {
+            "epoch": 2,
+            "epoch_seconds": 134.9068377079966,
+            "train_loss": 0.2083704770878691,
+            "training_records_per_second": 49.678727289615644,
+            "validation_accuracy": 0.8866995073891626,
+            "validation_claim_f1": 0.7988338192419825,
+            "validation_macro_f1": 0.8599883381924198
+          },
+          {
+            "epoch": 3,
+            "epoch_seconds": 135.09029587500845,
+            "train_loss": 0.10448141862902044,
+            "training_records_per_second": 49.61126153873398,
+            "validation_accuracy": 0.8949096880131363,
+            "validation_claim_f1": 0.8391959798994975,
+            "validation_macro_f1": 0.8805735997058464
+          }
+        ],
+        "selected_epoch": 3,
+        "selection_metric": "validation_macro_f1",
+        "source_label_counts": {
+          "claimbuster|0": 4395,
+          "claimbuster|1": 1467,
+          "policlaim|0": 584,
+          "policlaim|1": 865
+        },
+        "started_at": "2026-09-03T03:13:49.535892+00:00",
+        "total_optimizer_steps": 1257,
+        "validation_records": 609,
+        "validation_sources": [
+          "claimbuster",
+          "policlaim"
+        ],
+        "warmup_steps": 125
+      }
+    },
+    "claimbuster": {
+      "artifact": {
+        "files": [
+          {
+            "bytes": 803,
+            "path": "artifacts/bert_heldout/claimbuster/config.json",
+            "sha256": "3b3a6bf900c909e6899fdad3a0b8048d28626135de15b48e32db9ecd5a7e8c4e"
+          },
+          {
+            "bytes": 437958648,
+            "path": "artifacts/bert_heldout/claimbuster/model.safetensors",
+            "sha256": "6c506047fc05d234d6f22a44a6975ffa5280124ab13451141de5bbfa8cd6d305"
+          },
+          {
+            "bytes": 125,
+            "path": "artifacts/bert_heldout/claimbuster/special_tokens_map.json",
+            "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3"
+          },
+          {
+            "bytes": 711661,
+            "path": "artifacts/bert_heldout/claimbuster/tokenizer.json",
+            "sha256": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0"
+          },
+          {
+            "bytes": 1221,
+            "path": "artifacts/bert_heldout/claimbuster/tokenizer_config.json",
+            "sha256": "1f92c93d2e31974acffab86d48e80a9357acb18c68346c5472ef1d12c72d5d77"
+          },
+          {
+            "bytes": 1489,
+            "path": "artifacts/bert_heldout/claimbuster/training_metadata.json",
+            "sha256": "6165c00cb4e7636ffeeddcf83d3920abb8b9a25ec787c5fe01b275b2e2be9b81"
+          },
+          {
+            "bytes": 231508,
+            "path": "artifacts/bert_heldout/claimbuster/vocab.txt",
+            "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3"
+          }
+        ],
+        "path": "artifacts/bert_heldout/claimbuster"
+      },
+      "evaluation": {
+        "bootstrap_repetitions": 2000,
+        "confidence_intervals_95": {
+          "accuracy": {
+            "high": 0.6820461384152458,
+            "low": 0.6624843279839518
+          },
+          "claim_f1": {
+            "high": 0.6041213849300796,
+            "low": 0.5882519394413058
+          },
+          "claim_precision": {
+            "high": 0.43837906048991937,
+            "low": 0.42326925497181905
+          },
+          "claim_recall": {
+            "high": 0.9754262788365096,
+            "low": 0.9598796389167502
+          },
+          "macro_f1": {
+            "high": 0.6690039858007205,
+            "low": 0.6512122277369249
+          }
+        },
+        "held_out_source_integrity": true,
+        "metrics": {
+          "accuracy": 0.671765295887663,
+          "claim_f1": 0.595862920654523,
+          "claim_precision": 0.4304192685102587,
+          "claim_recall": 0.9679037111334002,
+          "false_negatives": 64,
+          "false_positives": 2554,
+          "macro_f1": 0.6597638436922604,
+          "positive_prediction_rate": 0.5621865596790371,
+          "pr_auc": 0.7699457343557982,
+          "prevalence": 0.25,
+          "roc_auc": 0.9126440672737035,
+          "samples": 7976,
+          "true_negatives": 3428,
+          "true_positives": 1930
+        },
+        "predictions": {
+          "bytes": 874818,
+          "path": "reports/generated/bert_heldout/predictions/holdout_claimbuster.csv",
+          "sha256": "3b98fe382095a38a1d3a15fe349af879ba648fd52534b10c931b1497662b96b9"
+        },
+        "score_summary": {
+          "maximum": 0.9995054006576538,
+          "median": 0.9257031679153442,
+          "minimum": 0.003695666790008545,
+          "p05": 0.0054087655153125525,
+          "p95": 0.9994049370288849
+        },
+        "test_records": 7976,
+        "test_sources": [
+          "claimbuster"
+        ]
+      },
+      "held_out_source": "claimbuster",
+      "tokenization": {
+        "fit": {
+          "maximum": 157,
+          "median": 22.0,
+          "minimum": 7,
+          "p95": 48.0,
+          "records": 3422,
+          "truncated_fraction": 0.0002922267679719462,
+          "truncated_records": 1
+        },
+        "test": {
+          "maximum": 187,
+          "median": 20.0,
+          "minimum": 7,
+          "p95": 56.0,
+          "records": 7976,
+          "truncated_fraction": 0.0005015045135406219,
+          "truncated_records": 4
+        },
+        "validation": {
+          "maximum": 118,
+          "median": 21.0,
+          "minimum": 8,
+          "p95": 47.0,
+          "records": 312,
+          "truncated_fraction": 0.0,
+          "truncated_records": 0
+        }
+      },
+      "training": {
+        "device": "mps",
+        "finished_at": "2026-09-03T03:06:02.167240+00:00",
+        "fit_records": 3422,
+        "fit_sources": [
+          "averitec",
+          "policlaim"
+        ],
+        "history": [
+          {
+            "epoch": 1,
+            "epoch_seconds": 65.98452629099484,
+            "train_loss": 0.2588211327795569,
+            "training_records_per_second": 51.860643583448955,
+            "validation_accuracy": 0.9166666666666666,
+            "validation_claim_f1": 0.9525547445255474,
+            "validation_macro_f1": 0.8052247406838264
+          },
+          {
+            "epoch": 2,
+            "epoch_seconds": 67.2560425420088,
+            "train_loss": 0.11459062330224477,
+            "training_records_per_second": 50.88018668155481,
+            "validation_accuracy": 0.9134615384615384,
+            "validation_claim_f1": 0.9506398537477148,
+            "validation_macro_f1": 0.799995251549182
+          },
+          {
+            "epoch": 3,
+            "epoch_seconds": 67.10047462499642,
+            "train_loss": 0.03900066325751262,
+            "training_records_per_second": 50.998148956836566,
+            "validation_accuracy": 0.9294871794871795,
+            "validation_claim_f1": 0.9589552238805971,
+            "validation_macro_f1": 0.8544776119402986
+          }
+        ],
+        "selected_epoch": 3,
+        "selection_metric": "validation_macro_f1",
+        "source_label_counts": {
+          "averitec|1": 2285,
+          "policlaim|0": 584,
+          "policlaim|1": 865
+        },
+        "started_at": "2026-09-03T03:02:01.281668+00:00",
+        "total_optimizer_steps": 642,
+        "validation_records": 312,
+        "validation_sources": [
+          "averitec",
+          "policlaim"
+        ],
+        "warmup_steps": 64
+      }
+    },
+    "policlaim": {
+      "artifact": {
+        "files": [
+          {
+            "bytes": 803,
+            "path": "artifacts/bert_heldout/policlaim/config.json",
+            "sha256": "3b3a6bf900c909e6899fdad3a0b8048d28626135de15b48e32db9ecd5a7e8c4e"
+          },
+          {
+            "bytes": 437958648,
+            "path": "artifacts/bert_heldout/policlaim/model.safetensors",
+            "sha256": "f385f61e71e506eff570a855b2dd7fb97704a6c17a116b44f249a3717150b1c2"
+          },
+          {
+            "bytes": 125,
+            "path": "artifacts/bert_heldout/policlaim/special_tokens_map.json",
+            "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3"
+          },
+          {
+            "bytes": 711661,
+            "path": "artifacts/bert_heldout/policlaim/tokenizer.json",
+            "sha256": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0"
+          },
+          {
+            "bytes": 1221,
+            "path": "artifacts/bert_heldout/policlaim/tokenizer_config.json",
+            "sha256": "1f92c93d2e31974acffab86d48e80a9357acb18c68346c5472ef1d12c72d5d77"
+          },
+          {
+            "bytes": 1490,
+            "path": "artifacts/bert_heldout/policlaim/training_metadata.json",
+            "sha256": "413b88786b107b69def56d3a5c1969b7bf33c38280b0a6d52f33cecc4f7fd9bd"
+          },
+          {
+            "bytes": 231508,
+            "path": "artifacts/bert_heldout/policlaim/vocab.txt",
+            "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3"
+          }
+        ],
+        "path": "artifacts/bert_heldout/policlaim"
+      },
+      "evaluation": {
+        "bootstrap_repetitions": 2000,
+        "confidence_intervals_95": {
+          "accuracy": {
+            "high": 0.7158218125960062,
+            "low": 0.6820148489503329
+          },
+          "claim_f1": {
+            "high": 0.68985332942578,
+            "low": 0.6412456232888756
+          },
+          "claim_precision": {
+            "high": 0.9788635016009803,
+            "low": 0.9512977463712758
+          },
+          "claim_recall": {
+            "high": 0.537261698440208,
+            "low": 0.4800693240901213
+          },
+          "macro_f1": {
+            "high": 0.7138061389667,
+            "low": 0.6775473660685293
+          }
+        },
+        "held_out_source_integrity": true,
+        "metrics": {
+          "accuracy": 0.6989247311827957,
+          "claim_f1": 0.6662883087400681,
+          "claim_precision": 0.9654605263157895,
+          "claim_recall": 0.5086655112651647,
+          "false_negatives": 567,
+          "false_positives": 21,
+          "macro_f1": 0.6960172886983922,
+          "positive_prediction_rate": 0.31131592421915005,
+          "pr_auc": 0.919865558983062,
+          "prevalence": 0.5908858166922683,
+          "roc_auc": 0.8767588601870189,
+          "samples": 1953,
+          "true_negatives": 778,
+          "true_positives": 587
+        },
+        "predictions": {
+          "bytes": 208035,
+          "path": "reports/generated/bert_heldout/predictions/holdout_policlaim.csv",
+          "sha256": "7e50f0db41f93dacb299ee950b5e237c48e480a79b91cc3e3168bf0b17ac9004"
+        },
+        "score_summary": {
+          "maximum": 0.9995002746582031,
+          "median": 0.0031801897566765547,
+          "minimum": 0.0009026367333717644,
+          "p05": 0.0011429910780861973,
+          "p95": 0.9993719696998596
+        },
+        "test_records": 1953,
+        "test_sources": [
+          "policlaim"
+        ]
+      },
+      "held_out_source": "policlaim",
+      "tokenization": {
+        "fit": {
+          "maximum": 187,
+          "median": 21.0,
+          "minimum": 7,
+          "p95": 54.0,
+          "records": 7468,
+          "truncated_fraction": 0.0004017139796464917,
+          "truncated_records": 3
+        },
+        "test": {
+          "maximum": 173,
+          "median": 23.0,
+          "minimum": 5,
+          "p95": 50.0,
+          "records": 1953,
+          "truncated_fraction": 0.0010240655401945725,
+          "truncated_records": 2
+        },
+        "validation": {
+          "maximum": 90,
+          "median": 20.0,
+          "minimum": 8,
+          "p95": 51.10000000000002,
+          "records": 679,
+          "truncated_fraction": 0.0,
+          "truncated_records": 0
+        }
+      },
+      "training": {
+        "device": "mps",
+        "finished_at": "2026-09-03T03:13:44.104704+00:00",
+        "fit_records": 7468,
+        "fit_sources": [
+          "averitec",
+          "claimbuster"
+        ],
+        "history": [
+          {
+            "epoch": 1,
+            "epoch_seconds": 147.0786195420078,
+            "train_loss": 0.29930921681983524,
+            "training_records_per_second": 50.77556495468079,
+            "validation_accuracy": 0.9234167893961709,
+            "validation_claim_f1": 0.912751677852349,
+            "validation_macro_f1": 0.922255104018038
+          },
+          {
+            "epoch": 2,
+            "epoch_seconds": 147.68638024998654,
+            "train_loss": 0.14232633811789333,
+            "training_records_per_second": 50.56661275981595,
+            "validation_accuracy": 0.9410898379970545,
+            "validation_claim_f1": 0.9354838709677419,
+            "validation_macro_f1": 0.9406416644811609
+          },
+          {
+            "epoch": 3,
+            "epoch_seconds": 148.12231141599477,
+            "train_loss": 0.06425916539632576,
+            "training_records_per_second": 50.41779275929918,
+            "validation_accuracy": 0.9455081001472754,
+            "validation_claim_f1": 0.9408,
+            "validation_macro_f1": 0.9451612551159618
+          }
+        ],
+        "selected_epoch": 3,
+        "selection_metric": "validation_macro_f1",
+        "source_label_counts": {
+          "averitec|1": 2285,
+          "claimbuster|0": 4395,
+          "claimbuster|1": 1467
+        },
+        "started_at": "2026-09-03T03:06:09.731704+00:00",
+        "total_optimizer_steps": 1401,
+        "validation_records": 679,
+        "validation_sources": [
+          "averitec",
+          "claimbuster"
+        ],
+        "warmup_steps": 140
+      }
+    }
+  },
+  "schema_version": 1,
+  "transfer_comparison": {
+    "averitec": {
+      "absolute_change": -0.03619171829149004,
+      "metric": "claim_recall",
+      "mixed_model": 0.9967394848386045,
+      "source_heldout_model": 0.9605477665471145
+    },
+    "claimbuster": {
+      "absolute_change": -0.2857738554480973,
+      "metric": "macro_f1",
+      "mixed_model": 0.9455376991403577,
+      "source_heldout_model": 0.6597638436922604
+    },
+    "policlaim": {
+      "absolute_change": -0.21227691432389073,
+      "metric": "macro_f1",
+      "mixed_model": 0.9082942030222829,
+      "source_heldout_model": 0.6960172886983922
+    }
+  }
+}

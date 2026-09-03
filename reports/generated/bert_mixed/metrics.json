@@ -1,0 +1,389 @@
+{
+  "artifact": {
+    "files": [
+      {
+        "bytes": 803,
+        "path": "artifacts/bert_mixed/config.json",
+        "sha256": "3b3a6bf900c909e6899fdad3a0b8048d28626135de15b48e32db9ecd5a7e8c4e"
+      },
+      {
+        "bytes": 437958648,
+        "path": "artifacts/bert_mixed/model.safetensors",
+        "sha256": "ab8cd8a15cdc0badef3d90b2b57e98b03d7435e4b36c7aafc8999a625df99224"
+      },
+      {
+        "bytes": 125,
+        "path": "artifacts/bert_mixed/special_tokens_map.json",
+        "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3"
+      },
+      {
+        "bytes": 711661,
+        "path": "artifacts/bert_mixed/tokenizer.json",
+        "sha256": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0"
+      },
+      {
+        "bytes": 1221,
+        "path": "artifacts/bert_mixed/tokenizer_config.json",
+        "sha256": "1f92c93d2e31974acffab86d48e80a9357acb18c68346c5472ef1d12c72d5d77"
+      },
+      {
+        "bytes": 1277,
+        "path": "artifacts/bert_mixed/training_metadata.json",
+        "sha256": "5ef63d493ef3100c6f34284b56e42cf68dfea568b3cff5b2c2a13c37463f3496"
+      },
+      {
+        "bytes": 231508,
+        "path": "artifacts/bert_mixed/vocab.txt",
+        "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3"
+      }
+    ],
+    "path": "artifacts/bert_mixed"
+  },
+  "configuration": {
+    "epochs": 3,
+    "evaluation_batch_size": 32,
+    "learning_rate": 2e-05,
+    "max_gradient_norm": 1.0,
+    "max_length": 128,
+    "model_id": "google-bert/bert-base-uncased",
+    "model_revision": "86b5e0934494bd15c9632b12f734a8a67f723594",
+    "seed": 42,
+    "train_batch_size": 16,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01
+  },
+  "dataset_manifest": {
+    "bytes": 1111,
+    "path": "data/processed/dataset_manifest.json",
+    "sha256": "700e3144116c6fc379971beaa20d2274ae08323e3f94219cc2918cb4e4a56a17"
+  },
+  "decision_threshold": 0.5,
+  "environment": {
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "python": "3.12.13",
+    "torch": "2.8.0",
+    "transformers": "4.55.4"
+  },
+  "evaluations": {
+    "calibration": {
+      "bootstrap_repetitions": 2000,
+      "confidence_intervals_95": {
+        "accuracy": {
+          "high": 0.945,
+          "low": 0.90875
+        },
+        "claim_f1": {
+          "high": 0.9424083769633508,
+          "low": 0.9058052693801723
+        },
+        "claim_precision": {
+          "high": 0.9448818897637795,
+          "low": 0.8951406649616368
+        },
+        "claim_recall": {
+          "high": 0.9532467532467532,
+          "low": 0.9038961038961039
+        },
+        "macro_f1": {
+          "high": 0.9448883990079912,
+          "low": 0.9086741709724503
+        }
+      },
+      "metrics": {
+        "accuracy": 0.9275,
+        "claim_f1": 0.9250645994832042,
+        "claim_precision": 0.9203084832904884,
+        "claim_recall": 0.9298701298701298,
+        "false_negatives": 27,
+        "false_positives": 31,
+        "macro_f1": 0.9274233409038297,
+        "positive_prediction_rate": 0.48625,
+        "pr_auc": 0.9771070758453418,
+        "prevalence": 0.48125,
+        "roc_auc": 0.9766484118291348,
+        "samples": 800,
+        "true_negatives": 384,
+        "true_positives": 358
+      },
+      "predictions": {
+        "bytes": 86124,
+        "path": "reports/generated/bert_mixed/predictions/calibration.csv",
+        "sha256": "6f623f91e4443fe49df98d5f7716544919f6c1e215f3c8854586d5aba9be4831"
+      }
+    },
+    "external_checkthat": {
+      "bootstrap_repetitions": 2000,
+      "confidence_intervals_95": {
+        "accuracy": {
+          "high": 0.6476399560922064,
+          "low": 0.6322722283205269
+        },
+        "claim_f1": {
+          "high": 0.7814223459697128,
+          "low": 0.7733120232952468
+        },
+        "claim_precision": {
+          "high": 0.6419753086419753,
+          "low": 0.6327433628318584
+        },
+        "claim_recall": {
+          "high": 1.0,
+          "low": 0.9912891986062717
+        },
+        "macro_f1": {
+          "high": 0.4408638540740528,
+          "low": 0.4015443559807408
+        }
+      },
+      "metrics": {
+        "accuracy": 0.6399560922063666,
+        "claim_f1": 0.7771739130434783,
+        "claim_precision": 0.6369710467706013,
+        "claim_recall": 0.9965156794425087,
+        "false_negatives": 2,
+        "false_positives": 326,
+        "macro_f1": 0.42001552795031055,
+        "positive_prediction_rate": 0.9857299670691547,
+        "pr_auc": 0.8467901067249766,
+        "prevalence": 0.6300768386388584,
+        "roc_auc": 0.7787017028712042,
+        "samples": 911,
+        "true_negatives": 11,
+        "true_positives": 572
+      },
+      "predictions": {
+        "bytes": 108829,
+        "path": "reports/generated/bert_mixed/predictions/external_checkthat.csv",
+        "sha256": "51a60cf3250926f6954ebaf7e791c84d01ba68c8241e80e3b932f7538b9b463d"
+      }
+    },
+    "mixed_paper_test": {
+      "bootstrap_repetitions": 2000,
+      "confidence_intervals_95": {
+        "accuracy": {
+          "high": 0.9180865384615384,
+          "low": 0.8957692307692308
+        },
+        "claim_f1": {
+          "high": 0.9127269227054177,
+          "low": 0.8890679253729825
+        },
+        "claim_precision": {
+          "high": 0.9115490386132589,
+          "low": 0.8807994647201947
+        },
+        "claim_recall": {
+          "high": 0.9208573784006595,
+          "low": 0.8887056883759274
+        },
+        "macro_f1": {
+          "high": 0.9178673806932999,
+          "low": 0.8954347487852379
+        }
+      },
+      "metrics": {
+        "accuracy": 0.9069230769230769,
+        "claim_f1": 0.9007383100902379,
+        "claim_precision": 0.8963265306122449,
+        "claim_recall": 0.9051937345424568,
+        "false_negatives": 115,
+        "false_positives": 127,
+        "macro_f1": 0.9065603208669871,
+        "positive_prediction_rate": 0.47115384615384615,
+        "pr_auc": 0.9723876369762222,
+        "prevalence": 0.4665384615384615,
+        "roc_auc": 0.9714163612058978,
+        "samples": 2600,
+        "true_negatives": 1260,
+        "true_positives": 1098
+      },
+      "predictions": {
+        "bytes": 280143,
+        "path": "reports/generated/bert_mixed/predictions/mixed_paper_test.csv",
+        "sha256": "b22ccb0742ad72e96dc2a10f1d2db683f1d27cb954bda12d5db149644038cb7b"
+      }
+    },
+    "mixed_paper_test_without_train_duplicates": {
+      "bootstrap_repetitions": 2000,
+      "confidence_intervals_95": {
+        "accuracy": {
+          "high": 0.9174418604651163,
+          "low": 0.8945736434108527
+        },
+        "claim_f1": {
+          "high": 0.9114979373774261,
+          "low": 0.8868550502120682
+        },
+        "claim_precision": {
+          "high": 0.9108498638481496,
+          "low": 0.8790322580645161
+        },
+        "claim_recall": {
+          "high": 0.9205020920502092,
+          "low": 0.8870292887029289
+        },
+        "macro_f1": {
+          "high": 0.917060914135689,
+          "low": 0.8941241752635508
+        }
+      },
+      "metrics": {
+        "accuracy": 0.9062015503875969,
+        "claim_f1": 0.8992506244796004,
+        "claim_precision": 0.8947804473902237,
+        "claim_recall": 0.9037656903765691,
+        "false_negatives": 115,
+        "false_positives": 127,
+        "macro_f1": 0.9057529409562615,
+        "positive_prediction_rate": 0.46782945736434106,
+        "pr_auc": 0.9716114967100922,
+        "prevalence": 0.4631782945736434,
+        "roc_auc": 0.9709717082307447,
+        "samples": 2580,
+        "true_negatives": 1258,
+        "true_positives": 1080
+      },
+      "removed_records": 20
+    },
+    "validation": {
+      "bootstrap_repetitions": 2000,
+      "confidence_intervals_95": {
+        "accuracy": {
+          "high": 0.94125,
+          "low": 0.90625
+        },
+        "claim_f1": {
+          "high": 0.9396364966813703,
+          "low": 0.9023111947527006
+        },
+        "claim_precision": {
+          "high": 0.9445910290237467,
+          "low": 0.8955223880597015
+        },
+        "claim_recall": {
+          "high": 0.9481865284974094,
+          "low": 0.8963730569948186
+        },
+        "macro_f1": {
+          "high": 0.941217008027613,
+          "low": 0.9060696830284823
+        }
+      },
+      "metrics": {
+        "accuracy": 0.92375,
+        "claim_f1": 0.9210866752910737,
+        "claim_precision": 0.9198966408268734,
+        "claim_recall": 0.9222797927461139,
+        "false_negatives": 30,
+        "false_positives": 31,
+        "macro_f1": 0.9236630474399745,
+        "positive_prediction_rate": 0.48375,
+        "pr_auc": 0.9766928425198664,
+        "prevalence": 0.4825,
+        "roc_auc": 0.976452404195139,
+        "samples": 800,
+        "true_negatives": 383,
+        "true_positives": 356
+      },
+      "predictions": {
+        "bytes": 86103,
+        "path": "reports/generated/bert_mixed/predictions/validation.csv",
+        "sha256": "3cdb10b196450cfd791ed5bc626cfa68d05e976b23a0aad6b7f6904b2820e62c"
+      }
+    }
+  },
+  "git": {
+    "dirty": true,
+    "revision": "da848dda77cf14ad8de1fc65e214dcb83c473ffa"
+  },
+  "model": "bert_base_uncased_mixed",
+  "schema_version": 1,
+  "tokenization": {
+    "calibration": {
+      "maximum": 109,
+      "median": 21.0,
+      "minimum": 5,
+      "p95": 52.0,
+      "records": 800,
+      "truncated_fraction": 0.0,
+      "truncated_records": 0
+    },
+    "external_checkthat": {
+      "maximum": 254,
+      "median": 67.0,
+      "minimum": 11,
+      "p95": 89.0,
+      "records": 911,
+      "truncated_fraction": 0.0010976948408342481,
+      "truncated_records": 1
+    },
+    "fit": {
+      "maximum": 187,
+      "median": 21.0,
+      "minimum": 7,
+      "p95": 53.0,
+      "records": 8796,
+      "truncated_fraction": 0.00045475216007276033,
+      "truncated_records": 4
+    },
+    "mixed_paper_test": {
+      "maximum": 173,
+      "median": 21.0,
+      "minimum": 7,
+      "p95": 52.0,
+      "records": 2600,
+      "truncated_fraction": 0.0007692307692307692,
+      "truncated_records": 2
+    },
+    "validation": {
+      "maximum": 118,
+      "median": 21.0,
+      "minimum": 8,
+      "p95": 51.049999999999955,
+      "records": 800,
+      "truncated_fraction": 0.0,
+      "truncated_records": 0
+    }
+  },
+  "training": {
+    "calibration_records_reserved": 800,
+    "device": "mps",
+    "finished_at": "2026-09-03T02:54:17.682606+00:00",
+    "fit_records": 8796,
+    "history": [
+      {
+        "epoch": 1,
+        "epoch_seconds": 169.56220708299952,
+        "train_loss": 0.33617809420962286,
+        "training_records_per_second": 51.874767091787255,
+        "validation_accuracy": 0.89875,
+        "validation_claim_f1": 0.9010989010989011,
+        "validation_macro_f1": 0.8986928564393353
+      },
+      {
+        "epoch": 2,
+        "epoch_seconds": 173.26043616699462,
+        "train_loss": 0.166179301209575,
+        "training_records_per_second": 50.76750465710533,
+        "validation_accuracy": 0.92375,
+        "validation_claim_f1": 0.9210866752910737,
+        "validation_macro_f1": 0.9236630474399745
+      },
+      {
+        "epoch": 3,
+        "epoch_seconds": 173.3726361670124,
+        "train_loss": 0.08742436981180166,
+        "training_records_per_second": 50.73464991053539,
+        "validation_accuracy": 0.92375,
+        "validation_claim_f1": 0.9210866752910737,
+        "validation_macro_f1": 0.9236630474399745
+      }
+    ],
+    "selected_epoch": 2,
+    "selection_metric": "validation_macro_f1",
+    "started_at": "2026-09-03T02:44:54.335323+00:00",
+    "total_optimizer_steps": 1650,
+    "validation_records": 800,
+    "warmup_steps": 165
+  }
+}

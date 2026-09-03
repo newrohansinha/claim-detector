@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import gc
 import json
+import os
 import platform
 import random
 import subprocess
@@ -13,6 +14,8 @@ from collections.abc import Iterator, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal, cast
+
+os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
 import matplotlib
 
@@ -534,9 +537,12 @@ def write_report(results: dict[str, Any], output_dir: Path) -> None:
         rows.extend(
             [
                 {
-                    "evaluation": evaluation.replace("_", " "),
+                    "evaluation": {
+                        "mixed_paper_test": "Mixed test",
+                        "external_checkthat": "CheckThat transfer",
+                    }[evaluation],
                     "model": "BERT",
-                    "metric": metric.replace("_", " "),
+                    "metric": {"claim_f1": "Claim F1", "macro_f1": "Macro F1"}[metric],
                     "score": _metric(results, evaluation, metric),
                 }
                 for metric in ("claim_f1", "macro_f1")
@@ -548,9 +554,12 @@ def write_report(results: dict[str, Any], output_dir: Path) -> None:
             rows.extend(
                 [
                     {
-                        "evaluation": evaluation.replace("_", " "),
+                        "evaluation": {
+                            "mixed_paper_test": "Mixed test",
+                            "external_checkthat": "CheckThat transfer",
+                        }[evaluation],
                         "model": "TF-IDF",
-                        "metric": metric.replace("_", " "),
+                        "metric": {"claim_f1": "Claim F1", "macro_f1": "Macro F1"}[metric],
                         "score": _metric(tfidf, evaluation, metric),
                     }
                     for metric in ("claim_f1", "macro_f1")
@@ -570,7 +579,10 @@ def write_report(results: dict[str, Any], output_dir: Path) -> None:
         aspect=1.1,
     )
     chart.set(xlim=(0, 1), xlabel="Score", ylabel="")
-    chart.figure.suptitle("Mixed-source accuracy can hide transfer failure", y=1.05)
+    chart.set_titles("{col_name}")
+    if chart.legend is not None:
+        chart.legend.set_title("")
+    chart.figure.suptitle("Claim F1 alone hides transfer failure", y=1.05)
     chart.figure.savefig(output_dir / "bert_tfidf_comparison.png", dpi=180, bbox_inches="tight")
     plt.close(chart.figure)
 

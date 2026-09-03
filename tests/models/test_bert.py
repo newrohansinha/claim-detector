@@ -11,6 +11,7 @@ from claim_detector.models.bert import (
     tokenizer_length_statistics,
     validate_development_splits,
 )
+from claim_detector.models.bert_transfer import source_holdout_frames
 
 
 def test_tokenizer_length_statistics_reports_truncation() -> None:
@@ -65,3 +66,26 @@ def test_linear_schedule_warms_up_and_decays() -> None:
 
     assert max(rates) <= 1.0
     assert rates[-1] == pytest.approx(0.0)
+
+
+def test_source_holdout_frames_exclude_source_from_model_selection() -> None:
+    composite = pd.DataFrame(
+        {
+            "source": [
+                "claimbuster",
+                "claimbuster",
+                "policlaim",
+                "policlaim",
+                "averitec",
+                "averitec",
+            ],
+            "development_split": ["fit", "test", "fit", "validation", "fit", "validation"],
+            "label": [0, 1, 0, 0, 1, 1],
+        }
+    )
+
+    fit, validation, test = source_holdout_frames(composite, "claimbuster")
+
+    assert set(fit["source"]) == {"policlaim", "averitec"}
+    assert set(validation["source"]) == {"policlaim", "averitec"}
+    assert set(test["source"]) == {"claimbuster"}
