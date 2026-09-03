@@ -12,6 +12,9 @@ work, validation, and documentation are recorded rather than hidden.
 | 2026-09-02 | Baselines | TF-IDF mixed/held-out transfer runs, bootstrap intervals, grouped source probe | Complete |
 | 2026-09-02 | Fine-tuning | Pinned BERT mixed, CheckThat, and three source-held-out runs | Complete |
 | 2026-09-02 | Verification | Linux CI with real pinned data acquisition, tests, and package build | Complete |
+| 2026-09-03 | Controlled evaluation | Size/class-prior-matched BERT controls and paired intervals | Complete |
+| 2026-09-03 | Confidence | Reserved-split temperature scaling and review-policy transfer test | Complete |
+| 2026-09-03 | Serving | Validated FastAPI contract, hardened Docker image, real HTTP load measurement | Complete |
 
 ## Scope rule
 

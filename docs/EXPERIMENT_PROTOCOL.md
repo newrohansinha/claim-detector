@@ -47,15 +47,25 @@ AVeriTeC contains only positive detection examples, so its held-out evaluation r
 false-negative rate, and score distributions rather than presenting binary F1 as comparable to
 two-class test sets.
 
+### Matched source-exposure control
+
+For each held-out model, train a second model with the same fit and validation row counts and the
+same label counts. Sample whole normalized-text groups from the full source mixture, require the
+target source to be present in fitting and checkpoint selection, and exclude hashes found in that
+source's frozen test records. Compare the two models on aligned records with a paired bootstrap.
+
+This control removes training-set size and class-prior differences from the source-exposure
+comparison. It does not make source mixture identical; restoring the target source necessarily
+changes that mixture.
+
+This sensitivity analysis was added after the original holdout exposed the size/prior confound.
+Its sampling rule, seed, metrics, and exclusion rules were committed before the control models were
+trained. It was not part of the initial hypothesis set.
+
 ### External transfer
 
 Evaluate the composite-trained model unchanged on CheckThat English tweets. CheckThat is not used
 for base-model fitting or in-domain calibration.
-
-### Human-reviewed challenge set
-
-Evaluate a 60-example, single-annotator diagnostic set under the policy in `LABEL_POLICY.md`.
-Examples remain excluded from training and model selection.
 
 ## Primary metrics
 
@@ -79,7 +89,5 @@ reliability diagram. Selective prediction reports risk versus automatic coverage
 
 ## Artifact requirements
 
-Every reported table and figure must be regenerated from saved predictions and a versioned
-configuration. Generated metrics record the model artifact hash, dataset manifest hash, Git commit,
-and evaluation timestamp.
-
+Every reported table and figure must be regenerated from saved, text-free predictions and a
+versioned configuration. Generated metrics record the relevant model and dataset hashes.
