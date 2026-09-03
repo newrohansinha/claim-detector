@@ -138,6 +138,10 @@ For a public deployment, TLS, authentication, global rate limits, and request-bo
 belong at the ingress or API gateway. Horizontal scaling should add one model process per replica;
 blindly adding web workers duplicates the roughly 418 MB checkpoint in memory.
 
+Production telemetry should count requests, latency, failures, prediction rate, and review rate by
+model version without logging sentence text. Alerts should cover error/latency budgets and sudden
+shifts in prediction or review rates.
+
 ## Reproduce
 
 Requirements: Python 3.12 and `uv`.
