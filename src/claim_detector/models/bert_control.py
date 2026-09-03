@@ -16,7 +16,6 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from transformers import AutoTokenizer
 
 from claim_detector.data.download import PROJECT_ROOT, digest_file
@@ -265,38 +264,72 @@ def write_report(results: dict[str, Any], output_dir: Path) -> None:
         json.dumps(results, indent=2, sort_keys=True, allow_nan=False) + "\n",
         encoding="utf-8",
     )
+    source_order = ("claimbuster", "policlaim", "averitec")
     labels = {
-        "claimbuster": "ClaimBuster — macro F1",
-        "policlaim": "PoliClaim — macro F1",
-        "averitec": "AVeriTeC — claim recall",
+        "claimbuster": "ClaimBuster\nmacro F1",
+        "policlaim": "PoliClaim\nmacro F1",
+        "averitec": "AVeriTeC\nclaim recall",
     }
-    rows = []
-    for source, run in results["runs"].items():
-        metric = run["metric"]
-        rows.extend(
-            [
-                {
-                    "evaluation": labels[source],
-                    "condition": "Matched · source included",
-                    "score": run["matched_source_included"]["metrics"][metric],
-                },
-                {
-                    "evaluation": labels[source],
-                    "condition": "Matched · source held out",
-                    "score": run["source_heldout"]["metrics"][metric],
-                },
-            ]
-        )
-    sns.set_theme(style="whitegrid", context="talk")
-    figure, axis = plt.subplots(figsize=(11, 6.5))
-    sns.barplot(data=pd.DataFrame(rows), x="score", y="evaluation", hue="condition", ax=axis)
-    axis.set(
-        xlim=(0, 1),
-        xlabel="Score",
-        ylabel="",
-        title="Source effect after matching size and class prior",
+    effects = np.array([results["runs"][source]["absolute_change"] for source in source_order])
+    interval_lows = np.array(
+        [
+            results["runs"][source]["absolute_change_confidence_interval_95"]["low"]
+            for source in source_order
+        ]
     )
-    axis.legend(loc="upper center", bbox_to_anchor=(0.5, -0.13), ncol=2, title=None)
+    interval_highs = np.array(
+        [
+            results["runs"][source]["absolute_change_confidence_interval_95"]["high"]
+            for source in source_order
+        ]
+    )
+    positions = np.arange(len(source_order))
+    asymmetric_errors = np.vstack((effects - interval_lows, interval_highs - effects))
+
+    plt.style.use("seaborn-v0_8-whitegrid")
+    figure, axis = plt.subplots(figsize=(10.5, 5.2))
+    axis.axvline(0, color="#30363d", linewidth=1.5)
+    axis.errorbar(
+        effects,
+        positions,
+        xerr=asymmetric_errors,
+        fmt="o",
+        color="#1f6feb",
+        ecolor="#1f6feb",
+        elinewidth=2.5,
+        capsize=6,
+        markersize=9,
+    )
+    for effect, position in zip(effects, positions, strict=True):
+        axis.annotate(
+            f"{effect:+.3f}",
+            (effect, position),
+            xytext=(0, 13),
+            textcoords="offset points",
+            ha="center",
+            va="bottom",
+            fontsize=11,
+            fontweight="bold",
+        )
+    axis.set_yticks(positions, [labels[source] for source in source_order])
+    axis.invert_yaxis()
+    axis.set(
+        xlim=(min(-0.14, float(interval_lows.min()) - 0.01), 0.015),
+        xlabel="Held-out score minus matched source-included score",
+        ylabel="",
+        title="A source-exposure penalty remains after controlling size and class prior",
+    )
+    axis.grid(axis="y", visible=False)
+    axis.spines[["top", "right", "left"]].set_visible(False)
+    figure.text(
+        0.52,
+        0.01,
+        "Point estimate with paired 95% bootstrap CI · negative values mean worse transfer",
+        ha="center",
+        fontsize=10,
+        color="#57606a",
+    )
+    figure.subplots_adjust(left=0.2, right=0.97, top=0.84, bottom=0.21)
     figure.savefig(output_dir / "matched_control_comparison.png", dpi=180, bbox_inches="tight")
     plt.close(figure)
 

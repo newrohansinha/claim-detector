@@ -15,6 +15,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+from matplotlib.container import BarContainer
 
 from claim_detector.data.download import PROJECT_ROOT, digest_file
 from claim_detector.data.prepare import DEFAULT_PROCESSED_DIR
@@ -177,8 +178,22 @@ def write_figures(processed_dir: Path, output_dir: Path) -> None:
 
     counts = composite.groupby(["source", "label"]).size().rename("records").reset_index()
     counts["label"] = counts["label"].map({0: "Not claim", 1: "Claim"})
+    counts["source"] = counts["source"].map(
+        {"claimbuster": "ClaimBuster", "policlaim": "PoliClaim", "averitec": "AVeriTeC"}
+    )
     figure, axis = plt.subplots(figsize=(10, 6))
-    sns.barplot(data=counts, x="source", y="records", hue="label", ax=axis)
+    sns.barplot(
+        data=counts,
+        x="source",
+        y="records",
+        hue="label",
+        order=("ClaimBuster", "PoliClaim", "AVeriTeC"),
+        hue_order=("Claim", "Not claim"),
+        ax=axis,
+    )
+    for container in axis.containers:
+        if isinstance(container, BarContainer):
+            axis.bar_label(container, fmt="{:,.0f}", padding=3, fontsize=10)
     axis.set(title="Composite label distribution by source", xlabel="Source", ylabel="Records")
     figure.tight_layout()
     figure.savefig(output_dir / "source_label_distribution.png", dpi=180)
