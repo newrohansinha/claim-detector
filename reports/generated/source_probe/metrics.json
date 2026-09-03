@@ -1,0 +1,285 @@
+{
+  "confusion_matrix": [
+    [
+      2588,
+      467,
+      12
+    ],
+    [
+      101,
+      7801,
+      74
+    ],
+    [
+      79,
+      1069,
+      805
+    ]
+  ],
+  "majority_baseline": {
+    "accuracy": 0.6137273007079102,
+    "macro_f1": 0.25354440841757264
+  },
+  "majority_source": "claimbuster",
+  "protocol": "5-fold stratified group cross-validation by normalized text hash",
+  "samples": 12996,
+  "schema_version": 1,
+  "sources": [
+    "averitec",
+    "claimbuster",
+    "policlaim"
+  ],
+  "task": "predict dataset source from sentence text",
+  "text_source_probe": {
+    "accuracy": 0.8613419513696522,
+    "macro_f1": 0.784779149278536
+  },
+  "top_features": {
+    "averitec": [
+      {
+        "coefficient": 4.6305818421769676,
+        "feature": "trump"
+      },
+      {
+        "coefficient": 4.005529204647585,
+        "feature": "coronavirus"
+      },
+      {
+        "coefficient": 3.1823059505168394,
+        "feature": "nigeria"
+      },
+      {
+        "coefficient": 3.098643853894467,
+        "feature": "kenya"
+      },
+      {
+        "coefficient": 2.8568518267400487,
+        "feature": "19"
+      },
+      {
+        "coefficient": 2.7878285734534893,
+        "feature": "covid"
+      },
+      {
+        "coefficient": 2.729093196652765,
+        "feature": "said"
+      },
+      {
+        "coefficient": 2.550220459426937,
+        "feature": "covid 19"
+      },
+      {
+        "coefficient": 2.469498233465587,
+        "feature": "biden"
+      },
+      {
+        "coefficient": 2.4364798787611908,
+        "feature": "2020"
+      },
+      {
+        "coefficient": 2.4264109501725555,
+        "feature": "india"
+      },
+      {
+        "coefficient": 2.241958243766384,
+        "feature": "2019"
+      },
+      {
+        "coefficient": 2.1969766680367946,
+        "feature": "in"
+      },
+      {
+        "coefficient": 2.1050026918449953,
+        "feature": "has"
+      },
+      {
+        "coefficient": 2.0702389949286246,
+        "feature": "the us"
+      },
+      {
+        "coefficient": 2.018461168403412,
+        "feature": "south"
+      },
+      {
+        "coefficient": 2.0066898693161193,
+        "feature": "donald trump"
+      },
+      {
+        "coefficient": 1.95092651404888,
+        "feature": "uk"
+      },
+      {
+        "coefficient": 1.8757913435367666,
+        "feature": "from"
+      },
+      {
+        "coefficient": 1.715768481101882,
+        "feature": "kenyan"
+      }
+    ],
+    "claimbuster": [
+      {
+        "coefficient": 4.070108637357707,
+        "feature": "think"
+      },
+      {
+        "coefficient": 3.7574629760000837,
+        "feature": "he"
+      },
+      {
+        "coefficient": 3.3358085585892217,
+        "feature": "uh"
+      },
+      {
+        "coefficient": 2.9082821587968186,
+        "feature": "it"
+      },
+      {
+        "coefficient": 2.8610866299864597,
+        "feature": "we"
+      },
+      {
+        "coefficient": 2.777269538233547,
+        "feature": "my"
+      },
+      {
+        "coefficient": 2.577490715481991,
+        "feature": "that"
+      },
+      {
+        "coefficient": 2.3021821720347586,
+        "feature": "ve"
+      },
+      {
+        "coefficient": 2.2891742082730993,
+        "feature": "very"
+      },
+      {
+        "coefficient": 2.230881889022287,
+        "feature": "believe"
+      },
+      {
+        "coefficient": 2.1725939403794623,
+        "feature": "me"
+      },
+      {
+        "coefficient": 1.9507966796028924,
+        "feature": "mr"
+      },
+      {
+        "coefficient": 1.9273742515901449,
+        "feature": "question"
+      },
+      {
+        "coefficient": 1.8828070629785805,
+        "feature": "you"
+      },
+      {
+        "coefficient": 1.8600311967522651,
+        "feature": "would"
+      },
+      {
+        "coefficient": 1.859438221004272,
+        "feature": "well"
+      },
+      {
+        "coefficient": 1.8311859846203327,
+        "feature": "the president"
+      },
+      {
+        "coefficient": 1.7770609085309566,
+        "feature": "have"
+      },
+      {
+        "coefficient": 1.7684123886202934,
+        "feature": "got"
+      },
+      {
+        "coefficient": 1.7153629835719144,
+        "feature": "don"
+      }
+    ],
+    "policlaim": [
+      {
+        "coefficient": 4.656057088339691,
+        "feature": "our"
+      },
+      {
+        "coefficient": 4.300921473447041,
+        "feature": "delaware"
+      },
+      {
+        "coefficient": 3.9470125682713726,
+        "feature": "we"
+      },
+      {
+        "coefficient": 3.2052877716635053,
+        "feature": "connecticut"
+      },
+      {
+        "coefficient": 3.0747379096215344,
+        "feature": "state"
+      },
+      {
+        "coefficient": 2.869955750903393,
+        "feature": "indiana"
+      },
+      {
+        "coefficient": 2.8081191160936716,
+        "feature": "this"
+      },
+      {
+        "coefficient": 2.329185557968733,
+        "feature": "students"
+      },
+      {
+        "coefficient": 2.1771325399709682,
+        "feature": "kentucky"
+      },
+      {
+        "coefficient": 2.115495594088944,
+        "feature": "to"
+      },
+      {
+        "coefficient": 2.0878378045332147,
+        "feature": "that"
+      },
+      {
+        "coefficient": 2.0030107058975353,
+        "feature": "of you"
+      },
+      {
+        "coefficient": 1.9307271941918547,
+        "feature": "will"
+      },
+      {
+        "coefficient": 1.8573648929175353,
+        "feature": "school"
+      },
+      {
+        "coefficient": 1.8517180399122426,
+        "feature": "budget"
+      },
+      {
+        "coefficient": 1.7940628167333912,
+        "feature": "our state"
+      },
+      {
+        "coefficient": 1.7811836097831062,
+        "feature": "delawareans"
+      },
+      {
+        "coefficient": 1.7271384427291163,
+        "feature": "of"
+      },
+      {
+        "coefficient": 1.5617688363937936,
+        "feature": "those"
+      },
+      {
+        "coefficient": 1.5315710710681876,
+        "feature": "thank"
+      }
+    ]
+  }
+}

@@ -30,6 +30,22 @@ diagnostic that ignores sentence text and predicts only each source's majority l
 78.04% accuracy and 0.7389 claim F1 on the frozen test set. These facts motivate the hero
 source-held-out experiment without yet proving that the language model uses source as a shortcut.
 
+### Verified baseline results
+
+The real TF-IDF logistic-regression baseline reaches 0.8300 claim F1 and 0.8451 macro F1 on the
+paper's mixed test split. When ClaimBuster is entirely absent from training, claim F1 falls to
+0.4382 and the model predicts `claim` for 87.16% of a source whose actual positive rate is 25%.
+When PoliClaim is held out, claim F1 is 0.5957. On CheckThat tweets, claim F1 is 0.7710 but macro
+F1 is only 0.5137 because the model predicts `claim` for 89.90% of tweets.
+
+A grouped five-fold text-to-source probe reaches 86.13% accuracy and 0.7848 macro F1, compared
+with 61.37% accuracy and 0.2535 macro F1 for always predicting the largest source. This establishes
+that provenance is recoverable from text; it does not establish that the future BERT classifier
+uses that signal.
+
+All point estimates, 2,000-repetition bootstrap intervals, model checksums, and text-free saved
+predictions are generated under [`reports/generated`](reports/generated).
+
 ## Reproducibility entry points
 
 ```bash

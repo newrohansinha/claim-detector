@@ -35,6 +35,7 @@ claim-download = "claim_detector.data.download:main"
 claim-prepare = "claim_detector.data.prepare:main"
 claim-audit = "claim_detector.analysis.audit:main"
 claim-baseline = "claim_detector.models.tfidf:main"
+claim-source-probe = "claim_detector.analysis.source_probe:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/claim_detector"]
@@ -65,5 +66,5 @@ strict = true
 warn_unreachable = true
 
 [[tool.mypy.overrides]]
-module = ["seaborn", "sklearn.*"]
+module = ["joblib", "seaborn", "sklearn.*"]
 ignore_missing_imports = true

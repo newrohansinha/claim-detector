@@ -1,0 +1,370 @@
+{
+  "configuration": {
+    "classifier": {
+      "C": 1.0,
+      "max_iter": 2000,
+      "random_state": 42
+    },
+    "vectorizer": {
+      "max_df": 0.995,
+      "max_features": 100000,
+      "min_df": 2,
+      "ngram_range": [
+        1,
+        2
+      ],
+      "strip_accents": "unicode",
+      "sublinear_tf": true
+    }
+  },
+  "decision_threshold": 0.5,
+  "evaluations": {
+    "external_checkthat": {
+      "bootstrap_repetitions": 2000,
+      "confidence_intervals_95": {
+        "accuracy": {
+          "high": 0.6695938529088913,
+          "low": 0.6300768386388584
+        },
+        "claim_f1": {
+          "high": 0.783611839340391,
+          "low": 0.7582246346321074
+        },
+        "claim_precision": {
+          "high": 0.667905824039653,
+          "low": 0.6440672921711057
+        },
+        "claim_recall": {
+          "high": 0.9547038327526133,
+          "low": 0.9146341463414634
+        },
+        "macro_f1": {
+          "high": 0.5465553678816513,
+          "low": 0.48091017978106165
+        }
+      },
+      "metrics": {
+        "accuracy": 0.6498353457738749,
+        "claim_f1": 0.7709978463747308,
+        "claim_precision": 0.6556776556776557,
+        "claim_recall": 0.9355400696864111,
+        "false_negatives": 37,
+        "false_positives": 282,
+        "macro_f1": 0.5137040513924935,
+        "positive_prediction_rate": 0.8990120746432492,
+        "pr_auc": 0.7278379837499831,
+        "prevalence": 0.6300768386388584,
+        "roc_auc": 0.6348442394979269,
+        "samples": 911,
+        "true_negatives": 55,
+        "true_positives": 537
+      },
+      "predictions": {
+        "bytes": 116624,
+        "path": "reports/generated/tfidf_baseline/predictions/external_checkthat.csv",
+        "sha256": "6f38fa2174b25f27982d64caae74e2600992de4d943c90609e7a12a539caf6e3"
+      },
+      "test_records": 911,
+      "test_sources": [
+        "checkthat"
+      ],
+      "train_records": 10396,
+      "train_sources": [
+        "averitec",
+        "claimbuster",
+        "policlaim"
+      ]
+    },
+    "holdout_averitec": {
+      "bootstrap_repetitions": 2000,
+      "confidence_intervals_95": {
+        "accuracy": {
+          "high": 0.5908053472448647,
+          "low": 0.5565699380502119
+        },
+        "claim_f1": {
+          "high": 0.7427751588440255,
+          "low": 0.715123586091328
+        },
+        "claim_precision": {
+          "high": 1.0,
+          "low": 1.0
+        },
+        "claim_recall": {
+          "high": 0.5908053472448647,
+          "low": 0.5565699380502119
+        },
+        "macro_f1": {
+          "high": 0.3713875794220127,
+          "low": 0.357561793045664
+        }
+      },
+      "held_out_source_integrity": true,
+      "metrics": {
+        "accuracy": 0.5741767199217477,
+        "claim_f1": 0.7294946147473074,
+        "claim_precision": 1.0,
+        "claim_recall": 0.5741767199217477,
+        "false_negatives": 1306,
+        "false_positives": 0,
+        "macro_f1": 0.3647473073736537,
+        "positive_prediction_rate": 0.5741767199217477,
+        "pr_auc": null,
+        "prevalence": 1.0,
+        "roc_auc": null,
+        "samples": 3067,
+        "true_negatives": 0,
+        "true_positives": 1761
+      },
+      "model_artifact": {
+        "bytes": 1138084,
+        "path": "artifacts/tfidf_baseline/holdout_averitec/model.joblib",
+        "sha256": "37125e50989392aa6c6e15aefb21d08c57d39c3dc1853ad5e465e2b420e257c3"
+      },
+      "predictions": {
+        "bytes": 339739,
+        "path": "reports/generated/tfidf_baseline/predictions/holdout_averitec.csv",
+        "sha256": "5e5ea233c65866c74ea789a8dc27776a0ddf526dcb92d4b0bab5ff8e7b201697"
+      },
+      "test_records": 3067,
+      "test_sources": [
+        "averitec"
+      ],
+      "train_records": 9929,
+      "train_sources": [
+        "claimbuster",
+        "policlaim"
+      ]
+    },
+    "holdout_claimbuster": {
+      "bootstrap_repetitions": 2000,
+      "confidence_intervals_95": {
+        "accuracy": {
+          "high": 0.3770060180541625,
+          "low": 0.36283851554663993
+        },
+        "claim_f1": {
+          "high": 0.44164059114515325,
+          "low": 0.4349756069293327
+        },
+        "claim_precision": {
+          "high": 0.28457181897211753,
+          "low": 0.2794914181570506
+        },
+        "claim_recall": {
+          "high": 0.9879638916750251,
+          "low": 0.9769307923771314
+        },
+        "macro_f1": {
+          "high": 0.3687345613747261,
+          "low": 0.3521383406329021
+        }
+      },
+      "held_out_source_integrity": true,
+      "metrics": {
+        "accuracy": 0.3698595787362086,
+        "claim_f1": 0.4381846635367762,
+        "claim_precision": 0.2819332566168009,
+        "claim_recall": 0.9829488465396189,
+        "false_negatives": 34,
+        "false_positives": 4992,
+        "macro_f1": 0.36039978252488253,
+        "positive_prediction_rate": 0.8716148445336008,
+        "pr_auc": 0.5288075106383165,
+        "prevalence": 0.25,
+        "roc_auc": 0.7732849166020294,
+        "samples": 7976,
+        "true_negatives": 990,
+        "true_positives": 1960
+      },
+      "model_artifact": {
+        "bytes": 717748,
+        "path": "artifacts/tfidf_baseline/holdout_claimbuster/model.joblib",
+        "sha256": "8a094b7938a72f65fbde664a8d29f121de2c3cf85a4be5f722deecc87c3751b9"
+      },
+      "predictions": {
+        "bytes": 937921,
+        "path": "reports/generated/tfidf_baseline/predictions/holdout_claimbuster.csv",
+        "sha256": "f5e41a8e4934c109e13102b371c6884b3f066656913a902802546e48a1cfd118"
+      },
+      "test_records": 7976,
+      "test_sources": [
+        "claimbuster"
+      ],
+      "train_records": 5020,
+      "train_sources": [
+        "averitec",
+        "policlaim"
+      ]
+    },
+    "holdout_policlaim": {
+      "bootstrap_repetitions": 2000,
+      "confidence_intervals_95": {
+        "accuracy": {
+          "high": 0.6589861751152074,
+          "low": 0.6221198156682027
+        },
+        "claim_f1": {
+          "high": 0.6235755858601112,
+          "low": 0.5695867865480085
+        },
+        "claim_precision": {
+          "high": 0.9094239130434782,
+          "low": 0.8614538665418915
+        },
+        "claim_recall": {
+          "high": 0.4783362218370884,
+          "low": 0.4219887348353553
+        },
+        "macro_f1": {
+          "high": 0.6559670432520741,
+          "low": 0.6167436814507898
+        }
+      },
+      "held_out_source_integrity": true,
+      "metrics": {
+        "accuracy": 0.6400409626216078,
+        "claim_f1": 0.5957446808510638,
+        "claim_precision": 0.8854700854700854,
+        "claim_recall": 0.4488734835355286,
+        "false_negatives": 636,
+        "false_positives": 67,
+        "macro_f1": 0.6356665259354535,
+        "positive_prediction_rate": 0.2995391705069124,
+        "pr_auc": 0.8445429140446247,
+        "prevalence": 0.5908858166922683,
+        "roc_auc": 0.7711773599147982,
+        "samples": 1953,
+        "true_negatives": 732,
+        "true_positives": 518
+      },
+      "model_artifact": {
+        "bytes": 1288340,
+        "path": "artifacts/tfidf_baseline/holdout_policlaim/model.joblib",
+        "sha256": "e982dc3a08c468a16dfd8cbaeef28094e2cf7e44994a3281efa9e341f4a394bd"
+      },
+      "predictions": {
+        "bytes": 222614,
+        "path": "reports/generated/tfidf_baseline/predictions/holdout_policlaim.csv",
+        "sha256": "f0b55775dcf34f4a2696765be820ac9e1fce8c946f3a2b6eea0b7ddeb5ab944a"
+      },
+      "test_records": 1953,
+      "test_sources": [
+        "policlaim"
+      ],
+      "train_records": 11043,
+      "train_sources": [
+        "averitec",
+        "claimbuster"
+      ]
+    },
+    "mixed_paper_test": {
+      "bootstrap_repetitions": 2000,
+      "confidence_intervals_95": {
+        "accuracy": {
+          "high": 0.86,
+          "low": 0.8334615384615385
+        },
+        "claim_f1": {
+          "high": 0.8451779304632245,
+          "low": 0.8149356549543877
+        },
+        "claim_precision": {
+          "high": 0.8781367668180583,
+          "low": 0.8409211788463015
+        },
+        "claim_recall": {
+          "high": 0.8244023083264633,
+          "low": 0.7815333882934872
+        },
+        "macro_f1": {
+          "high": 0.8585189795168698,
+          "low": 0.8316173021655439
+        }
+      },
+      "held_out_source_integrity": null,
+      "metrics": {
+        "accuracy": 0.8465384615384616,
+        "claim_f1": 0.829995739241585,
+        "claim_precision": 0.8589065255731922,
+        "claim_recall": 0.8029678483099753,
+        "false_negatives": 239,
+        "false_positives": 160,
+        "macro_f1": 0.8450714763505507,
+        "positive_prediction_rate": 0.43615384615384617,
+        "pr_auc": 0.9252808051946914,
+        "prevalence": 0.4665384615384615,
+        "roc_auc": 0.9215533950575092,
+        "samples": 2600,
+        "true_negatives": 1227,
+        "true_positives": 974
+      },
+      "model_artifact": {
+        "bytes": 1241604,
+        "path": "artifacts/tfidf_baseline/mixed_paper_test/model.joblib",
+        "sha256": "80d1f2686fd373a1a66f005bb9291998ca7ddbe6dae8c99adfa37cf7b1e6054f"
+      },
+      "predictions": {
+        "bytes": 301007,
+        "path": "reports/generated/tfidf_baseline/predictions/mixed_paper_test.csv",
+        "sha256": "6eb237a8b0e53c277737d0e90170c14d1db8b99e2892447bd3f7d9c7f040ee37"
+      },
+      "test_records": 2600,
+      "test_sources": [
+        "averitec",
+        "claimbuster",
+        "policlaim"
+      ],
+      "train_records": 10396,
+      "train_sources": [
+        "averitec",
+        "claimbuster",
+        "policlaim"
+      ]
+    },
+    "mixed_paper_test_without_train_duplicates": {
+      "bootstrap_repetitions": 2000,
+      "confidence_intervals_95": {
+        "accuracy": {
+          "high": 0.8585271317829457,
+          "low": 0.8310077519379845
+        },
+        "claim_f1": {
+          "high": 0.842920762379436,
+          "low": 0.8105482963426072
+        },
+        "claim_precision": {
+          "high": 0.8744339015529495,
+          "low": 0.8377419242550822
+        },
+        "claim_recall": {
+          "high": 0.8217573221757322,
+          "low": 0.7765690376569038
+        },
+        "macro_f1": {
+          "high": 0.8571320290988106,
+          "low": 0.828962000381776
+        }
+      },
+      "metrics": {
+        "accuracy": 0.8453488372093023,
+        "claim_f1": 0.8273474686282994,
+        "claim_precision": 0.8566308243727598,
+        "claim_recall": 0.8,
+        "false_negatives": 239,
+        "false_positives": 160,
+        "macro_f1": 0.8436491642895797,
+        "positive_prediction_rate": 0.4325581395348837,
+        "pr_auc": 0.923155070581139,
+        "prevalence": 0.4631782945736434,
+        "roc_auc": 0.9203208313822635,
+        "samples": 2580,
+        "true_negatives": 1225,
+        "true_positives": 956
+      },
+      "removed_records": 20
+    }
+  },
+  "model": "tfidf_logistic_regression",
+  "schema_version": 1
+}
