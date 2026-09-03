@@ -17,6 +17,7 @@ dependencies = [
   "openpyxl>=3.1,<4",
   "pandas>=2.2,<3",
   "scikit-learn>=1.5,<2",
+  "scipy>=1.13,<2",
   "seaborn>=0.13,<1",
   "torch==2.8.0",
   "transformers==4.55.4",
@@ -41,6 +42,7 @@ claim-train-bert = "claim_detector.models.bert:main"
 claim-train-bert-heldout = "claim_detector.models.bert_transfer:main"
 claim-train-bert-control = "claim_detector.models.bert_control:main"
 claim-source-probe = "claim_detector.analysis.source_probe:main"
+claim-calibrate = "claim_detector.evaluation.calibration:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/claim_detector"]
@@ -71,5 +73,5 @@ strict = true
 warn_unreachable = true
 
 [[tool.mypy.overrides]]
-module = ["joblib", "seaborn", "sklearn.*", "transformers"]
+module = ["joblib", "scipy.*", "seaborn", "sklearn.*", "transformers"]
 ignore_missing_imports = true

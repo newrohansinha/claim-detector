@@ -1,0 +1,847 @@
+{
+  "calibrator": {
+    "calibration_bins": 15,
+    "fit_records": 800,
+    "fit_split": "calibration",
+    "method": "temperature_scaling",
+    "model_sha256": "ab8cd8a15cdc0badef3d90b2b57e98b03d7435e4b36c7aafc8999a625df99224",
+    "review_policy": {
+      "accepted_records": 737,
+      "confidence_threshold": 0.775775084742109,
+      "coverage": 0.92125,
+      "empirical_risk": 0.048846675712347354,
+      "minimum_records": 100,
+      "target_risk": 0.05
+    },
+    "review_policy_interpretation": "Threshold selected for <=5% empirical error on the reserved calibration split; it is evaluated, not assumed, on frozen test and external data.",
+    "schema_version": 1,
+    "source_predictions": {
+      "bytes": 86124,
+      "path": "reports/generated/bert_mixed/predictions/calibration.csv",
+      "sha256": "6f623f91e4443fe49df98d5f7716544919f6c1e215f3c8854586d5aba9be4831"
+    },
+    "temperature": 1.6535728153253397
+  },
+  "evaluations": {
+    "calibration": {
+      "predictions": {
+        "bytes": 116838,
+        "path": "reports/generated/bert_calibration/predictions/calibration.csv",
+        "sha256": "8df60ee83c61da75278a7a42aac063708ec8f8ccef38177714911e5f2ef5d9b3"
+      },
+      "raw": {
+        "bins": [
+          {
+            "absolute_gap": 0.028115232169836954,
+            "lower": 0.0,
+            "mean_claim_probability": 0.012645637395380436,
+            "observed_claim_rate": 0.04076086956521739,
+            "records": 368,
+            "upper": 0.06666666666666667
+          },
+          {
+            "absolute_gap": 0.206721504375,
+            "lower": 0.06666666666666667,
+            "mean_claim_probability": 0.105778495625,
+            "observed_claim_rate": 0.3125,
+            "records": 16,
+            "upper": 0.13333333333333333
+          },
+          {
+            "absolute_gap": 0.02789597399999999,
+            "lower": 0.13333333333333333,
+            "mean_claim_probability": 0.17210402600000002,
+            "observed_claim_rate": 0.2,
+            "records": 5,
+            "upper": 0.2
+          },
+          {
+            "absolute_gap": 0.051068773333333345,
+            "lower": 0.2,
+            "mean_claim_probability": 0.21773544,
+            "observed_claim_rate": 0.16666666666666666,
+            "records": 6,
+            "upper": 0.26666666666666666
+          },
+          {
+            "absolute_gap": 0.29235301333333336,
+            "lower": 0.26666666666666666,
+            "mean_claim_probability": 0.29235301333333336,
+            "observed_claim_rate": 0.0,
+            "records": 3,
+            "upper": 0.3333333333333333
+          },
+          {
+            "absolute_gap": 0.17475230799999997,
+            "lower": 0.3333333333333333,
+            "mean_claim_probability": 0.374752308,
+            "observed_claim_rate": 0.2,
+            "records": 5,
+            "upper": 0.4
+          },
+          {
+            "absolute_gap": 0.13299501714285716,
+            "lower": 0.4,
+            "mean_claim_probability": 0.43843355428571423,
+            "observed_claim_rate": 0.5714285714285714,
+            "records": 7,
+            "upper": 0.4666666666666667
+          },
+          {
+            "absolute_gap": 0.002120679999999986,
+            "lower": 0.4666666666666667,
+            "mean_claim_probability": 0.50212068,
+            "observed_claim_rate": 0.5,
+            "records": 2,
+            "upper": 0.5333333333333333
+          },
+          {
+            "absolute_gap": 0.05594279666666668,
+            "lower": 0.5333333333333333,
+            "mean_claim_probability": 0.5559427966666667,
+            "observed_claim_rate": 0.5,
+            "records": 6,
+            "upper": 0.6
+          },
+          {
+            "absolute_gap": 0.6215532,
+            "lower": 0.6,
+            "mean_claim_probability": 0.6215532,
+            "observed_claim_rate": 0.0,
+            "records": 1,
+            "upper": 0.6666666666666666
+          },
+          {
+            "absolute_gap": 0.3723852766666666,
+            "lower": 0.6666666666666666,
+            "mean_claim_probability": 0.7057186099999999,
+            "observed_claim_rate": 0.3333333333333333,
+            "records": 6,
+            "upper": 0.7333333333333333
+          },
+          {
+            "absolute_gap": 0.021866830000000004,
+            "lower": 0.7333333333333333,
+            "mean_claim_probability": 0.77813317,
+            "observed_claim_rate": 0.8,
+            "records": 10,
+            "upper": 0.8
+          },
+          {
+            "absolute_gap": 0.08731199499999998,
+            "lower": 0.8,
+            "mean_claim_probability": 0.837311995,
+            "observed_claim_rate": 0.75,
+            "records": 4,
+            "upper": 0.8666666666666667
+          },
+          {
+            "absolute_gap": 0.27406822363636363,
+            "lower": 0.8666666666666667,
+            "mean_claim_probability": 0.91043186,
+            "observed_claim_rate": 0.6363636363636364,
+            "records": 11,
+            "upper": 0.9333333333333333
+          },
+          {
+            "absolute_gap": 0.041534478457142865,
+            "lower": 0.9333333333333333,
+            "mean_claim_probability": 0.9958201927428572,
+            "observed_claim_rate": 0.9542857142857143,
+            "records": 350,
+            "upper": 1.0
+          }
+        ],
+        "brier_score": 0.06140732185153938,
+        "expected_calibration_error": 0.047621406148125,
+        "maximum_calibration_error": 0.6215532,
+        "negative_log_likelihood": 0.2554038338675875,
+        "records": 800
+      },
+      "review_policy": {
+        "accepted_records": 737,
+        "confidence_threshold": 0.775775084742109,
+        "coverage": 0.92125,
+        "empirical_risk": 0.048846675712347354,
+        "records": 800,
+        "reviewed_records": 63
+      },
+      "temperature_scaled": {
+        "bins": [
+          {
+            "absolute_gap": 0.02993866273545112,
+            "lower": 0.0,
+            "mean_claim_probability": 0.04486403586977948,
+            "observed_claim_rate": 0.014925373134328358,
+            "records": 268,
+            "upper": 0.06666666666666667
+          },
+          {
+            "absolute_gap": 0.0050655101450435835,
+            "lower": 0.06666666666666667,
+            "mean_claim_probability": 0.09256551014504358,
+            "observed_claim_rate": 0.0875,
+            "records": 80,
+            "upper": 0.13333333333333333
+          },
+          {
+            "absolute_gap": 0.0054207836829001654,
+            "lower": 0.13333333333333333,
+            "mean_claim_probability": 0.15457921631709984,
+            "observed_claim_rate": 0.16,
+            "records": 25,
+            "upper": 0.2
+          },
+          {
+            "absolute_gap": 0.22773564418797146,
+            "lower": 0.2,
+            "mean_claim_probability": 0.2338028173504901,
+            "observed_claim_rate": 0.46153846153846156,
+            "records": 13,
+            "upper": 0.26666666666666666
+          },
+          {
+            "absolute_gap": 0.19736929487496885,
+            "lower": 0.26666666666666666,
+            "mean_claim_probability": 0.30848040598607995,
+            "observed_claim_rate": 0.1111111111111111,
+            "records": 9,
+            "upper": 0.3333333333333333
+          },
+          {
+            "absolute_gap": 0.36914948957611116,
+            "lower": 0.3333333333333333,
+            "mean_claim_probability": 0.36914948957611116,
+            "observed_claim_rate": 0.0,
+            "records": 3,
+            "upper": 0.4
+          },
+          {
+            "absolute_gap": 0.10343914429559159,
+            "lower": 0.4,
+            "mean_claim_probability": 0.4367724776289249,
+            "observed_claim_rate": 0.3333333333333333,
+            "records": 9,
+            "upper": 0.4666666666666667
+          },
+          {
+            "absolute_gap": 0.07608125860323878,
+            "lower": 0.4666666666666667,
+            "mean_claim_probability": 0.4953473128253326,
+            "observed_claim_rate": 0.5714285714285714,
+            "records": 7,
+            "upper": 0.5333333333333333
+          },
+          {
+            "absolute_gap": 0.1472943799785591,
+            "lower": 0.5333333333333333,
+            "mean_claim_probability": 0.5472943799785591,
+            "observed_claim_rate": 0.4,
+            "records": 5,
+            "upper": 0.6
+          },
+          {
+            "absolute_gap": 0.20537469213832077,
+            "lower": 0.6,
+            "mean_claim_probability": 0.6339461207097493,
+            "observed_claim_rate": 0.42857142857142855,
+            "records": 7,
+            "upper": 0.6666666666666666
+          },
+          {
+            "absolute_gap": 0.05622725550202079,
+            "lower": 0.6666666666666666,
+            "mean_claim_probability": 0.6937727444979792,
+            "observed_claim_rate": 0.75,
+            "records": 12,
+            "upper": 0.7333333333333333
+          },
+          {
+            "absolute_gap": 0.27713275152910855,
+            "lower": 0.7333333333333333,
+            "mean_claim_probability": 0.7771327515291085,
+            "observed_claim_rate": 0.5,
+            "records": 6,
+            "upper": 0.8
+          },
+          {
+            "absolute_gap": 0.1003240292210279,
+            "lower": 0.8,
+            "mean_claim_probability": 0.8371759707789721,
+            "observed_claim_rate": 0.9375,
+            "records": 16,
+            "upper": 0.8666666666666667
+          },
+          {
+            "absolute_gap": 0.04648209849819429,
+            "lower": 0.8666666666666667,
+            "mean_claim_probability": 0.913148765164861,
+            "observed_claim_rate": 0.8666666666666667,
+            "records": 15,
+            "upper": 0.9333333333333333
+          },
+          {
+            "absolute_gap": 0.023124261062437812,
+            "lower": 0.9333333333333333,
+            "mean_claim_probability": 0.9800473379855147,
+            "observed_claim_rate": 0.9569230769230769,
+            "records": 325,
+            "upper": 1.0
+          }
+        ],
+        "brier_score": 0.0586509303101323,
+        "expected_calibration_error": 0.037751997166335205,
+        "maximum_calibration_error": 0.36914948957611116,
+        "negative_log_likelihood": 0.21354755526808003,
+        "records": 800
+      }
+    },
+    "external_checkthat": {
+      "predictions": {
+        "bytes": 143281,
+        "path": "reports/generated/bert_calibration/predictions/external_checkthat.csv",
+        "sha256": "8e99706ecb77327af954c165aa78b2988ad39bbcfa8b010d9b823660b01f325f"
+      },
+      "raw": {
+        "bins": [
+          {
+            "absolute_gap": 0.019633375060000003,
+            "lower": 0.0,
+            "mean_claim_probability": 0.019633375060000003,
+            "observed_claim_rate": 0.0,
+            "records": 5,
+            "upper": 0.06666666666666667
+          },
+          {
+            "absolute_gap": 0.411141055,
+            "lower": 0.06666666666666667,
+            "mean_claim_probability": 0.088858945,
+            "observed_claim_rate": 0.5,
+            "records": 2,
+            "upper": 0.13333333333333333
+          },
+          {
+            "absolute_gap": 0.15766850000000002,
+            "lower": 0.13333333333333333,
+            "mean_claim_probability": 0.1756648333333333,
+            "observed_claim_rate": 0.3333333333333333,
+            "records": 3,
+            "upper": 0.2
+          },
+          {
+            "absolute_gap": null,
+            "lower": 0.2,
+            "mean_claim_probability": null,
+            "observed_claim_rate": null,
+            "records": 0,
+            "upper": 0.26666666666666666
+          },
+          {
+            "absolute_gap": 0.29548566,
+            "lower": 0.26666666666666666,
+            "mean_claim_probability": 0.29548566,
+            "observed_claim_rate": 0.0,
+            "records": 2,
+            "upper": 0.3333333333333333
+          },
+          {
+            "absolute_gap": 0.37510377,
+            "lower": 0.3333333333333333,
+            "mean_claim_probability": 0.37510377,
+            "observed_claim_rate": 0.0,
+            "records": 1,
+            "upper": 0.4
+          },
+          {
+            "absolute_gap": null,
+            "lower": 0.4,
+            "mean_claim_probability": null,
+            "observed_claim_rate": null,
+            "records": 0,
+            "upper": 0.4666666666666667
+          },
+          {
+            "absolute_gap": null,
+            "lower": 0.4666666666666667,
+            "mean_claim_probability": null,
+            "observed_claim_rate": null,
+            "records": 0,
+            "upper": 0.5333333333333333
+          },
+          {
+            "absolute_gap": 0.59324276,
+            "lower": 0.5333333333333333,
+            "mean_claim_probability": 0.59324276,
+            "observed_claim_rate": 0.0,
+            "records": 1,
+            "upper": 0.6
+          },
+          {
+            "absolute_gap": null,
+            "lower": 0.6,
+            "mean_claim_probability": null,
+            "observed_claim_rate": null,
+            "records": 0,
+            "upper": 0.6666666666666666
+          },
+          {
+            "absolute_gap": 0.6888112,
+            "lower": 0.6666666666666666,
+            "mean_claim_probability": 0.6888112,
+            "observed_claim_rate": 0.0,
+            "records": 1,
+            "upper": 0.7333333333333333
+          },
+          {
+            "absolute_gap": 0.7775903,
+            "lower": 0.7333333333333333,
+            "mean_claim_probability": 0.7775903,
+            "observed_claim_rate": 0.0,
+            "records": 1,
+            "upper": 0.8
+          },
+          {
+            "absolute_gap": 0.5943000625,
+            "lower": 0.8,
+            "mean_claim_probability": 0.8443000625,
+            "observed_claim_rate": 0.25,
+            "records": 4,
+            "upper": 0.8666666666666667
+          },
+          {
+            "absolute_gap": 0.6521188087500001,
+            "lower": 0.8666666666666667,
+            "mean_claim_probability": 0.9021188087500001,
+            "observed_claim_rate": 0.25,
+            "records": 8,
+            "upper": 0.9333333333333333
+          },
+          {
+            "absolute_gap": 0.35349957630804074,
+            "lower": 0.9333333333333333,
+            "mean_claim_probability": 0.9978936872933182,
+            "observed_claim_rate": 0.6443941109852774,
+            "records": 883,
+            "upper": 1.0
+          }
+        ],
+        "brier_score": 0.35371599231027945,
+        "expected_calibration_error": 0.3558215701814489,
+        "maximum_calibration_error": 0.7775903,
+        "negative_log_likelihood": 2.1820272874588356,
+        "records": 911
+      },
+      "review_policy": {
+        "accepted_records": 896,
+        "confidence_threshold": 0.775775084742109,
+        "coverage": 0.9835345773874863,
+        "empirical_risk": 0.3560267857142857,
+        "records": 911,
+        "reviewed_records": 15
+      },
+      "temperature_scaled": {
+        "bins": [
+          {
+            "absolute_gap": 0.05692823284734105,
+            "lower": 0.0,
+            "mean_claim_probability": 0.05692823284734105,
+            "observed_claim_rate": 0.0,
+            "records": 3,
+            "upper": 0.06666666666666667
+          },
+          {
+            "absolute_gap": 0.11715688080548349,
+            "lower": 0.06666666666666667,
+            "mean_claim_probability": 0.11715688080548349,
+            "observed_claim_rate": 0.0,
+            "records": 2,
+            "upper": 0.13333333333333333
+          },
+          {
+            "absolute_gap": 0.8114747300689934,
+            "lower": 0.13333333333333333,
+            "mean_claim_probability": 0.18852526993100657,
+            "observed_claim_rate": 1.0,
+            "records": 1,
+            "upper": 0.2
+          },
+          {
+            "absolute_gap": 0.2043856426267801,
+            "lower": 0.2,
+            "mean_claim_probability": 0.2043856426267801,
+            "observed_claim_rate": 0.0,
+            "records": 1,
+            "upper": 0.26666666666666666
+          },
+          {
+            "absolute_gap": 0.051412362522892,
+            "lower": 0.26666666666666666,
+            "mean_claim_probability": 0.2819209708104413,
+            "observed_claim_rate": 0.3333333333333333,
+            "records": 3,
+            "upper": 0.3333333333333333
+          },
+          {
+            "absolute_gap": 0.3715417572933391,
+            "lower": 0.3333333333333333,
+            "mean_claim_probability": 0.3715417572933391,
+            "observed_claim_rate": 0.0,
+            "records": 2,
+            "upper": 0.4
+          },
+          {
+            "absolute_gap": 0.4234431637091404,
+            "lower": 0.4,
+            "mean_claim_probability": 0.4234431637091404,
+            "observed_claim_rate": 0.0,
+            "records": 1,
+            "upper": 0.4666666666666667
+          },
+          {
+            "absolute_gap": null,
+            "lower": 0.4666666666666667,
+            "mean_claim_probability": null,
+            "observed_claim_rate": null,
+            "records": 0,
+            "upper": 0.5333333333333333
+          },
+          {
+            "absolute_gap": 0.5568099505612376,
+            "lower": 0.5333333333333333,
+            "mean_claim_probability": 0.5568099505612376,
+            "observed_claim_rate": 0.0,
+            "records": 1,
+            "upper": 0.6
+          },
+          {
+            "absolute_gap": 0.6178696013451811,
+            "lower": 0.6,
+            "mean_claim_probability": 0.6178696013451811,
+            "observed_claim_rate": 0.0,
+            "records": 1,
+            "upper": 0.6666666666666666
+          },
+          {
+            "absolute_gap": 0.372998658465644,
+            "lower": 0.6666666666666666,
+            "mean_claim_probability": 0.7063319917989773,
+            "observed_claim_rate": 0.3333333333333333,
+            "records": 3,
+            "upper": 0.7333333333333333
+          },
+          {
+            "absolute_gap": 0.7732316627992143,
+            "lower": 0.7333333333333333,
+            "mean_claim_probability": 0.7732316627992143,
+            "observed_claim_rate": 0.0,
+            "records": 7,
+            "upper": 0.8
+          },
+          {
+            "absolute_gap": 0.5017225919654575,
+            "lower": 0.8,
+            "mean_claim_probability": 0.8350559252987909,
+            "observed_claim_rate": 0.3333333333333333,
+            "records": 6,
+            "upper": 0.8666666666666667
+          },
+          {
+            "absolute_gap": 0.7108577200319992,
+            "lower": 0.8666666666666667,
+            "mean_claim_probability": 0.9108577200319992,
+            "observed_claim_rate": 0.2,
+            "records": 15,
+            "upper": 0.9333333333333333
+          },
+          {
+            "absolute_gap": 0.3267310397463321,
+            "lower": 0.9333333333333333,
+            "mean_claim_probability": 0.981066299861939,
+            "observed_claim_rate": 0.6543352601156069,
+            "records": 865,
+            "upper": 1.0
+          }
+        ],
+        "brier_score": 0.33655747296727406,
+        "expected_calibration_error": 0.3367108347952373,
+        "maximum_calibration_error": 0.8114747300689934,
+        "negative_log_likelihood": 1.3440999237431637,
+        "records": 911
+      }
+    },
+    "mixed_paper_test": {
+      "predictions": {
+        "bytes": 379893,
+        "path": "reports/generated/bert_calibration/predictions/mixed_paper_test.csv",
+        "sha256": "6149c5b200a5683fb7814667b4d9ba9750de7f91af4efec37b44a312011587a4"
+      },
+      "raw": {
+        "bins": [
+          {
+            "absolute_gap": 0.04432136575501223,
+            "lower": 0.0,
+            "mean_claim_probability": 0.011913353071393644,
+            "observed_claim_rate": 0.05623471882640587,
+            "records": 1227,
+            "upper": 0.06666666666666667
+          },
+          {
+            "absolute_gap": 0.17483634785185187,
+            "lower": 0.06666666666666667,
+            "mean_claim_probability": 0.10294142992592592,
+            "observed_claim_rate": 0.2777777777777778,
+            "records": 54,
+            "upper": 0.13333333333333333
+          },
+          {
+            "absolute_gap": 0.277512612173913,
+            "lower": 0.13333333333333333,
+            "mean_claim_probability": 0.15726999652173915,
+            "observed_claim_rate": 0.43478260869565216,
+            "records": 23,
+            "upper": 0.2
+          },
+          {
+            "absolute_gap": 0.08069532434782611,
+            "lower": 0.2,
+            "mean_claim_probability": 0.22365250173913043,
+            "observed_claim_rate": 0.30434782608695654,
+            "records": 23,
+            "upper": 0.26666666666666666
+          },
+          {
+            "absolute_gap": 0.029951500666666686,
+            "lower": 0.26666666666666666,
+            "mean_claim_probability": 0.29661816733333335,
+            "observed_claim_rate": 0.26666666666666666,
+            "records": 15,
+            "upper": 0.3333333333333333
+          },
+          {
+            "absolute_gap": 0.07379962285714281,
+            "lower": 0.3333333333333333,
+            "mean_claim_probability": 0.3595139085714285,
+            "observed_claim_rate": 0.2857142857142857,
+            "records": 14,
+            "upper": 0.4
+          },
+          {
+            "absolute_gap": 0.15092002142857142,
+            "lower": 0.4,
+            "mean_claim_probability": 0.4366343071428571,
+            "observed_claim_rate": 0.2857142857142857,
+            "records": 14,
+            "upper": 0.4666666666666667
+          },
+          {
+            "absolute_gap": 0.1730426716666667,
+            "lower": 0.4666666666666667,
+            "mean_claim_probability": 0.506376005,
+            "observed_claim_rate": 0.3333333333333333,
+            "records": 12,
+            "upper": 0.5333333333333333
+          },
+          {
+            "absolute_gap": 0.173452416111111,
+            "lower": 0.5333333333333333,
+            "mean_claim_probability": 0.5623413049999999,
+            "observed_claim_rate": 0.3888888888888889,
+            "records": 18,
+            "upper": 0.6
+          },
+          {
+            "absolute_gap": 0.07997658388888884,
+            "lower": 0.6,
+            "mean_claim_probability": 0.6355321394444444,
+            "observed_claim_rate": 0.5555555555555556,
+            "records": 18,
+            "upper": 0.6666666666666666
+          },
+          {
+            "absolute_gap": 0.08925464500000002,
+            "lower": 0.6666666666666666,
+            "mean_claim_probability": 0.689254645,
+            "observed_claim_rate": 0.6,
+            "records": 10,
+            "upper": 0.7333333333333333
+          },
+          {
+            "absolute_gap": 0.30874248884615374,
+            "lower": 0.7333333333333333,
+            "mean_claim_probability": 0.7702809503846153,
+            "observed_claim_rate": 0.46153846153846156,
+            "records": 26,
+            "upper": 0.8
+          },
+          {
+            "absolute_gap": 0.48123058096774196,
+            "lower": 0.8,
+            "mean_claim_probability": 0.8360692906451613,
+            "observed_claim_rate": 0.3548387096774194,
+            "records": 31,
+            "upper": 0.8666666666666667
+          },
+          {
+            "absolute_gap": 0.3312716169047618,
+            "lower": 0.8666666666666667,
+            "mean_claim_probability": 0.9027001883333332,
+            "observed_claim_rate": 0.5714285714285714,
+            "records": 42,
+            "upper": 0.9333333333333333
+          },
+          {
+            "absolute_gap": 0.03909561086672886,
+            "lower": 0.9333333333333333,
+            "mean_claim_probability": 0.9952931877539609,
+            "observed_claim_rate": 0.9561975768872321,
+            "records": 1073,
+            "upper": 1.0
+          }
+        ],
+        "brier_score": 0.0759255162753155,
+        "expected_calibration_error": 0.0623064770136154,
+        "maximum_calibration_error": 0.48123058096774196,
+        "negative_log_likelihood": 0.27948114502490584,
+        "records": 2600
+      },
+      "review_policy": {
+        "accepted_records": 2367,
+        "confidence_threshold": 0.775775084742109,
+        "coverage": 0.9103846153846153,
+        "empirical_risk": 0.05787917194761301,
+        "records": 2600,
+        "reviewed_records": 233
+      },
+      "temperature_scaled": {
+        "bins": [
+          {
+            "absolute_gap": 0.02603058780333387,
+            "lower": 0.0,
+            "mean_claim_probability": 0.04500380208904815,
+            "observed_claim_rate": 0.018973214285714284,
+            "records": 896,
+            "upper": 0.06666666666666667
+          },
+          {
+            "absolute_gap": 0.0503772714931575,
+            "lower": 0.06666666666666667,
+            "mean_claim_probability": 0.08890844279255679,
+            "observed_claim_rate": 0.1392857142857143,
+            "records": 280,
+            "upper": 0.13333333333333333
+          },
+          {
+            "absolute_gap": 0.07722309790282209,
+            "lower": 0.13333333333333333,
+            "mean_claim_probability": 0.15807101974423673,
+            "observed_claim_rate": 0.23529411764705882,
+            "records": 68,
+            "upper": 0.2
+          },
+          {
+            "absolute_gap": 0.0948852004287333,
+            "lower": 0.2,
+            "mean_claim_probability": 0.23203787649434363,
+            "observed_claim_rate": 0.3269230769230769,
+            "records": 52,
+            "upper": 0.26666666666666666
+          },
+          {
+            "absolute_gap": 0.1195806137227321,
+            "lower": 0.26666666666666666,
+            "mean_claim_probability": 0.30899081484869645,
+            "observed_claim_rate": 0.42857142857142855,
+            "records": 28,
+            "upper": 0.3333333333333333
+          },
+          {
+            "absolute_gap": 0.144136378030235,
+            "lower": 0.3333333333333333,
+            "mean_claim_probability": 0.3663586002524572,
+            "observed_claim_rate": 0.2222222222222222,
+            "records": 18,
+            "upper": 0.4
+          },
+          {
+            "absolute_gap": 0.125613908174585,
+            "lower": 0.4,
+            "mean_claim_probability": 0.42996173426154155,
+            "observed_claim_rate": 0.30434782608695654,
+            "records": 23,
+            "upper": 0.4666666666666667
+          },
+          {
+            "absolute_gap": 0.1837901823648312,
+            "lower": 0.4666666666666667,
+            "mean_claim_probability": 0.5019720005466494,
+            "observed_claim_rate": 0.3181818181818182,
+            "records": 22,
+            "upper": 0.5333333333333333
+          },
+          {
+            "absolute_gap": 0.06478952526495241,
+            "lower": 0.5333333333333333,
+            "mean_claim_probability": 0.5647895252649524,
+            "observed_claim_rate": 0.5,
+            "records": 30,
+            "upper": 0.6
+          },
+          {
+            "absolute_gap": 0.18833125405772,
+            "lower": 0.6,
+            "mean_claim_probability": 0.6327756985021644,
+            "observed_claim_rate": 0.4444444444444444,
+            "records": 18,
+            "upper": 0.6666666666666666
+          },
+          {
+            "absolute_gap": 0.2521844205022456,
+            "lower": 0.6666666666666666,
+            "mean_claim_probability": 0.6995528415548772,
+            "observed_claim_rate": 0.4473684210526316,
+            "records": 38,
+            "upper": 0.7333333333333333
+          },
+          {
+            "absolute_gap": 0.28275485104554077,
+            "lower": 0.7333333333333333,
+            "mean_claim_probability": 0.7692413375320273,
+            "observed_claim_rate": 0.4864864864864865,
+            "records": 37,
+            "upper": 0.8
+          },
+          {
+            "absolute_gap": 0.2591578413691801,
+            "lower": 0.8,
+            "mean_claim_probability": 0.8369356191469578,
+            "observed_claim_rate": 0.5777777777777777,
+            "records": 45,
+            "upper": 0.8666666666666667
+          },
+          {
+            "absolute_gap": 0.18783175214662706,
+            "lower": 0.8666666666666667,
+            "mean_claim_probability": 0.9042496625943882,
+            "observed_claim_rate": 0.7164179104477612,
+            "records": 67,
+            "upper": 0.9333333333333333
+          },
+          {
+            "absolute_gap": 0.004345942079286624,
+            "lower": 0.9333333333333333,
+            "mean_claim_probability": 0.9792941397203043,
+            "observed_claim_rate": 0.983640081799591,
+            "records": 978,
+            "upper": 1.0
+          }
+        ],
+        "brier_score": 0.06889557569658179,
+        "expected_calibration_error": 0.043986618102352715,
+        "maximum_calibration_error": 0.28275485104554077,
+        "negative_log_likelihood": 0.23103563835509486,
+        "records": 2600
+      }
+    }
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,23 @@
+{
+  "calibration_bins": 15,
+  "fit_records": 800,
+  "fit_split": "calibration",
+  "method": "temperature_scaling",
+  "model_sha256": "ab8cd8a15cdc0badef3d90b2b57e98b03d7435e4b36c7aafc8999a625df99224",
+  "review_policy": {
+    "accepted_records": 737,
+    "confidence_threshold": 0.775775084742109,
+    "coverage": 0.92125,
+    "empirical_risk": 0.048846675712347354,
+    "minimum_records": 100,
+    "target_risk": 0.05
+  },
+  "review_policy_interpretation": "Threshold selected for <=5% empirical error on the reserved calibration split; it is evaluated, not assumed, on frozen test and external data.",
+  "schema_version": 1,
+  "source_predictions": {
+    "bytes": 86124,
+    "path": "reports/generated/bert_mixed/predictions/calibration.csv",
+    "sha256": "6f623f91e4443fe49df98d5f7716544919f6c1e215f3c8854586d5aba9be4831"
+  },
+  "temperature": 1.6535728153253397
+}
