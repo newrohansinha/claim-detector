@@ -3,12 +3,9 @@
 from __future__ import annotations
 
 import argparse
-import gc
 import json
 import os
-import time
 from collections.abc import Sequence
-from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, cast
 
@@ -21,9 +18,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-import torch
-from torch.optim import AdamW
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from transformers import AutoTokenizer
 
 from claim_detector.data.download import PROJECT_ROOT, digest_file
 from claim_detector.data.prepare import DEFAULT_PROCESSED_DIR
@@ -31,24 +26,16 @@ from claim_detector.evaluation.bootstrap import (
     evaluated_binary_predictions,
     paired_metric_difference_interval,
 )
-from claim_detector.evaluation.metrics import binary_classification_metrics
 from claim_detector.models.bert import (
     MODEL_CONFIG,
     MODEL_ID,
     MODEL_REVISION,
     DeviceName,
-    _artifact_manifest,
     _git_state,
-    build_loader,
-    encode_frame,
-    linear_warmup_decay,
-    predict_loader,
-    prediction_frame,
     resolve_device,
-    set_reproducible_seed,
-    train_epoch,
     validate_development_splits,
 )
+from claim_detector.models.bert_training import train_selected_classifier
 
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "reports" / "generated" / "bert_heldout"
 DEFAULT_ARTIFACT_DIR = PROJECT_ROOT / "artifacts" / "bert_heldout"
@@ -77,11 +64,6 @@ def source_holdout_frames(
     return fit, validation, test
 
 
-def _label_counts(frame: pd.DataFrame) -> dict[str, int]:
-    keys = frame["source"].astype(str) + "|" + frame["label"].astype(str)
-    return {str(key): int(count) for key, count in keys.value_counts().sort_index().items()}
-
-
 def _score_summary(probabilities: pd.Series) -> dict[str, float]:
     return {
         "minimum": float(probabilities.min()),
@@ -92,146 +74,30 @@ def _score_summary(probabilities: pd.Series) -> dict[str, float]:
     }
 
 
-def _clear_device_cache(device: torch.device) -> None:
-    gc.collect()
-    if device.type == "mps":
-        torch.mps.empty_cache()
-    elif device.type == "cuda":
-        torch.cuda.empty_cache()
-
-
 def train_heldout_source(
     composite: pd.DataFrame,
     held_out_source: str,
     tokenizer: Any,
     output_dir: Path,
     artifact_root: Path,
-    device: torch.device,
+    device: Any,
 ) -> dict[str, Any]:
-    seed = cast(int, MODEL_CONFIG["seed"])
-    max_length = cast(int, MODEL_CONFIG["max_length"])
-    set_reproducible_seed(seed)
     fit, validation, test = source_holdout_frames(composite, held_out_source)
-    fit_dataset, fit_tokenization = encode_frame(fit, tokenizer, max_length=max_length)
-    validation_dataset, validation_tokenization = encode_frame(
-        validation,
-        tokenizer,
-        max_length=max_length,
-    )
-    test_dataset, test_tokenization = encode_frame(test, tokenizer, max_length=max_length)
-    fit_loader = build_loader(
-        fit_dataset,
-        batch_size=cast(int, MODEL_CONFIG["train_batch_size"]),
-        shuffle=True,
-        seed=seed,
-    )
-    validation_loader = build_loader(
-        validation_dataset,
-        batch_size=cast(int, MODEL_CONFIG["evaluation_batch_size"]),
-        shuffle=False,
-        seed=seed,
-    )
-    test_loader = build_loader(
-        test_dataset,
-        batch_size=cast(int, MODEL_CONFIG["evaluation_batch_size"]),
-        shuffle=False,
-        seed=seed,
-    )
-
-    print(json.dumps({"held_out_source": held_out_source, "status": "training"}), flush=True)
-    model = AutoModelForSequenceClassification.from_pretrained(
-        MODEL_ID,
-        revision=MODEL_REVISION,
-        num_labels=2,
-        id2label={0: "not_claim", 1: "claim"},
-        label2id={"not_claim": 0, "claim": 1},
-    ).to(device)
-    optimizer = AdamW(
-        model.parameters(),
-        lr=cast(float, MODEL_CONFIG["learning_rate"]),
-        weight_decay=cast(float, MODEL_CONFIG["weight_decay"]),
-    )
-    total_steps = len(fit_loader) * cast(int, MODEL_CONFIG["epochs"])
-    warmup_steps = int(total_steps * cast(float, MODEL_CONFIG["warmup_ratio"]))
-    scheduler = linear_warmup_decay(
-        optimizer,
-        total_steps=total_steps,
-        warmup_steps=warmup_steps,
-    )
-
     artifact_dir = artifact_root / held_out_source
-    artifact_dir.mkdir(parents=True, exist_ok=True)
-    history: list[dict[str, int | float]] = []
-    best_macro_f1 = -1.0
-    selected_epoch = 0
-    started_at = datetime.now(UTC)
-    for epoch in range(1, cast(int, MODEL_CONFIG["epochs"]) + 1):
-        epoch_started = time.perf_counter()
-        train_loss = train_epoch(
-            model,
-            fit_loader,
-            optimizer,
-            scheduler,
-            device,
-            max_gradient_norm=cast(float, MODEL_CONFIG["max_gradient_norm"]),
-        )
-        probabilities = predict_loader(model, validation_loader, device)
-        validation_predictions = (probabilities >= 0.5).astype(int)
-        metrics = binary_classification_metrics(
-            validation["label"].to_numpy(),
-            validation_predictions,
-            probabilities,
-        )
-        epoch_seconds = time.perf_counter() - epoch_started
-        macro_f1 = float(cast(float, metrics["macro_f1"]))
-        record = {
-            "epoch": epoch,
-            "train_loss": train_loss,
-            "epoch_seconds": epoch_seconds,
-            "training_records_per_second": len(fit) / epoch_seconds,
-            "validation_accuracy": float(cast(float, metrics["accuracy"])),
-            "validation_claim_f1": float(cast(float, metrics["claim_f1"])),
-            "validation_macro_f1": macro_f1,
-        }
-        history.append(record)
-        print(
-            json.dumps({"held_out_source": held_out_source, **record}, sort_keys=True), flush=True
-        )
-        if macro_f1 > best_macro_f1:
-            best_macro_f1 = macro_f1
-            selected_epoch = epoch
-            model.save_pretrained(artifact_dir, safe_serialization=True)
-            tokenizer.save_pretrained(artifact_dir)
-
-    del model, optimizer, scheduler
-    _clear_device_cache(device)
-    selected_model = AutoModelForSequenceClassification.from_pretrained(artifact_dir).to(device)
-    test_probabilities = predict_loader(selected_model, test_loader, device)
-    test_predictions = prediction_frame(test, test_probabilities)
+    test_predictions, training, tokenization, artifact = train_selected_classifier(
+        fit,
+        validation,
+        test,
+        tokenizer=tokenizer,
+        artifact_dir=artifact_dir,
+        device=device,
+        log_context={"held_out_source": held_out_source},
+    )
     prediction_path = output_dir / "predictions" / f"holdout_{held_out_source}.csv"
     prediction_path.parent.mkdir(parents=True, exist_ok=True)
     test_predictions.to_csv(prediction_path, index=False)
     prediction_bytes, prediction_sha = digest_file(prediction_path)
 
-    training = {
-        "device": str(device),
-        "fit_records": len(fit),
-        "validation_records": len(validation),
-        "fit_sources": sorted(map(str, fit["source"].unique())),
-        "validation_sources": sorted(map(str, validation["source"].unique())),
-        "source_label_counts": _label_counts(pd.concat([fit, validation])),
-        "total_optimizer_steps": total_steps,
-        "warmup_steps": warmup_steps,
-        "selected_epoch": selected_epoch,
-        "selection_metric": "validation_macro_f1",
-        "history": history,
-        "started_at": started_at.isoformat(),
-        "finished_at": datetime.now(UTC).isoformat(),
-    }
-    (artifact_dir / "training_metadata.json").write_text(
-        json.dumps(training, indent=2, sort_keys=True, allow_nan=False) + "\n",
-        encoding="utf-8",
-    )
     evaluation = {
         "test_records": len(test),
         "test_sources": sorted(map(str, test["source"].unique())),
@@ -249,16 +115,13 @@ def train_heldout_source(
             test_predictions["claim_probability"].to_numpy(),
         ),
     }
-    artifact = _artifact_manifest(artifact_dir)
-    del selected_model
-    _clear_device_cache(device)
     return {
         "held_out_source": held_out_source,
         "training": training,
         "tokenization": {
-            "fit": fit_tokenization,
-            "validation": validation_tokenization,
-            "test": test_tokenization,
+            "fit": tokenization["fit"],
+            "validation": tokenization["validation"],
+            "test": tokenization["evaluation"],
         },
         "artifact": artifact,
         "evaluation": evaluation,
