@@ -2,38 +2,45 @@
 
 [![CI](https://github.com/newrohansinha/claim-detector/actions/workflows/ci.yml/badge.svg)](https://github.com/newrohansinha/claim-detector/actions/workflows/ci.yml)
 
-A fine-tuned BERT service for detecting factual claims—and an investigation into when its metrics
-can actually be trusted.
+A fine-tuned BERT service for sentence-level factual claim detection, with a source-aware
+evaluation of how well the model generalizes.
 
-## The result that matters
+Given one English sentence, the API returns whether it contains a factual assertion and a
+calibrated confidence score. It detects the presence of a claim; it does not determine whether the
+claim is true.
 
-The straightforward version of this project worked: BERT reached **0.907 macro F1** on the
-mixed-source test set. But it also reproduced the reference paper's CheckThat result while calling
-**98.6% of tweets claims**. That contradiction became the real project.
+The reference setup combines three claim-detection sources—ClaimBuster, PoliClaim, and AVeriTeC—
+and reserves 911 CheckThat English tweets as an external-domain evaluation.
 
-I asked whether random mixing was hiding dependence on the datasets the model had seen.
+## Primary finding
 
-### The original experiment
+The fine-tuned model reached **0.907 macro F1** on the mixed-source test set. On the external
+CheckThat evaluation, however, it reproduced the reference paper's positive-class F1 while
+classifying **98.6% of tweets as claims**. This result motivated an investigation into whether a
+random mixed-source split was hiding dependence on the datasets present during training.
 
-I trained a fresh BERT with each source completely absent from fitting and checkpoint selection,
-then compared it with the mixed-source BERT on the same frozen records from that source.
+### Initial source-held-out experiment
 
-| Test source | Metric | Source included | Source held out | Change |
+For each source, a new BERT model was trained with that source completely absent from fitting and
+checkpoint selection. Its predictions were compared with the mixed-source BERT on the same frozen
+records from the target source.
+
+| Test source | Metric | Mixed model, source included | Source-held-out model | Change |
 |---|---|---:|---:|---:|
 | ClaimBuster | Macro F1 | 0.8704 | 0.6737 | **−0.1967** |
 | PoliClaim | Macro F1 | 0.8115 | 0.7243 | **−0.0872** |
 | AVeriTeC | Claim recall | 0.9898 | 0.9628 | **−0.0271** |
 
-This looked like a dramatic transfer failure, especially the 19.7-point ClaimBuster drop. It was
-also not a clean comparison.
+The result suggested a large transfer penalty, particularly the 19.7-point ClaimBuster drop.
+However, source exposure was not the only variable that changed.
 
 Removing a source changed three things at once: source exposure, training-set size, and class
 balance. ClaimBuster is both the largest source and 75% negative, while AVeriTeC is positive-only.
-The experiment could not say how much of the drop came from the missing source itself.
+The initial experiment therefore did not isolate how much of the change came from source exposure.
 
-### The hero experiment: matched source exposure
+### Controlled source-exposure experiment
 
-I trained a second control model for every held-out model. The pair had:
+A matched control was trained for every source-held-out model. Each pair had:
 
 - exactly the same fit and validation row counts;
 - exactly the same fit and validation label counts;
@@ -51,34 +58,33 @@ Both models were scored on the same records. The effect below is
 
 ![Controlled source-exposure effect with confidence intervals](reports/generated/bert_matched_control/matched_control_comparison.png)
 
-*Figure 1. Every paired interval is below zero: source absence still hurts after matching training
-size and label counts.*
+*Figure 1. Every paired interval is below zero: performance is lower without source exposure even
+after matching training size and label counts.*
 
-The corrected conclusion is stronger because it is narrower and defensible:
+The controlled results support a narrower conclusion:
 
 - **The transfer problem is real.** Both binary source tests lose 7.2–9.0 macro-F1 points when
   their source is absent.
-- **The original ClaimBuster result was exaggerated.** Matching reduces the estimated penalty
+- **The initial ClaimBuster result overestimated the source effect.** Matching reduces the penalty
   from 19.7 points to 7.2.
-- **PoliClaim survives the control.** Its penalty stays almost unchanged, from 8.7 to 9.0 points.
+- **The PoliClaim estimate remains stable.** Its penalty changes only from 8.7 to 9.0 points.
 - **AVeriTeC shows a smaller recall loss.** It is positive-only, so recall is the only defensible
   class-performance metric for that slice.
 
-This is the project's main contribution. Fine-tuning BERT and exposing FastAPI are standard. The
-value added here is recognizing that a strong benchmark was misleading, designing a test for the
-suspected failure, catching a confound in that test, and running a better control instead of
-keeping the more dramatic number.
+The controlled evaluation is the project's main contribution. It extends the benchmark
+reproduction into an analysis of source transfer, identifies a confound in the initial holdout
+design, and replaces that comparison with a size- and class-prior-matched experiment.
 
-The matched control was added after the first holdout result exposed the problem. I report that
-chronology rather than calling it preregistered. Its sampling rule, exclusions, seed, and code were
-committed before the control models were trained.
+The matched control was added after the initial holdout result exposed the confound, so it is
+reported as a follow-up analysis rather than a preregistered experiment. Its sampling rule,
+exclusions, seed, and code were committed before the control models were trained.
 
 ## How the investigation developed
 
 ```mermaid
 flowchart LR
   A[Reproduce the paper benchmark] --> B[Inspect class-level behavior]
-  B --> C[Find 98.6% claim prediction rate on CheckThat]
+  B --> C[Observe 98.6% claim prediction rate on CheckThat]
   C --> D[Measure source-label and source-text signal]
   D --> E[Run source-held-out training]
   E --> F[Identify size and class-prior confound]
@@ -86,12 +92,12 @@ flowchart LR
   G --> H[Report the narrower, defensible effect]
 ```
 
-*Figure 2. The project followed the evidence. Each experiment exists because the previous result
-raised a specific question.*
+*Figure 2. Each follow-up experiment addresses a limitation or question identified in the
+preceding result.*
 
-## Supporting findings
+## Supporting evidence
 
-### 1. I reproduced the paper—and found the metric trap
+### 1. Benchmark reproduction and failure analysis
 
 The mixed-source model closely reproduces Bell (2025), despite reserving 1,600 paper-training
 records for validation and calibration and training for three rather than five epochs.
@@ -121,9 +127,10 @@ confusion counts rather than a single favorable metric.
 *Figure 3. Claim F1 alone hides the external-domain failure. On CheckThat, BERT's macro F1 falls
 below the simpler TF-IDF baseline.*
 
-### 2. The mixed dataset contains strong source signal
+### 2. Source structure in the mixed dataset
 
-Before attributing transfer loss to BERT, I tested the dataset itself.
+Two diagnostics were used to characterize source signal in the dataset before interpreting the
+BERT transfer results.
 
 ![Composite label distribution by source](reports/generated/data_audit/source_label_distribution.png)
 
@@ -143,10 +150,10 @@ show that source is associated with labels and recoverable from language.
 They do **not** prove that BERT uses one specific source shortcut. Their role is to justify the
 controlled transfer experiment, not to overstate its mechanism.
 
-### 3. Confidence improves in-domain but fails as a shift alarm
+### 3. Calibration under domain shift
 
-I fit temperature scaling only on the reserved 800-record calibration split. It learns one scalar
-temperature, **1.6536**, and changes confidence without changing predicted classes.
+Temperature scaling was fit only on the reserved 800-record calibration split. It learns one
+scalar temperature, **1.6536**, and changes confidence without changing predicted classes.
 
 | Evaluation | NLL, raw → scaled | Brier, raw → scaled | ECE, raw → scaled |
 |---|---:|---:|---:|
