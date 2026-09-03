@@ -8,6 +8,7 @@
 __pycache__/
 *.py[cod]
 *.egg-info/
+dist/
 
 # Third-party datasets are fetched and verified locally.
 data/raw/

@@ -1,5 +1,7 @@
 # Claim Detector
 
+[![CI](https://github.com/newrohansinha/claim-detector/actions/workflows/ci.yml/badge.svg)](https://github.com/newrohansinha/claim-detector/actions/workflows/ci.yml)
+
 This project investigates whether a sentence-level factual-claim detector that performs well on
 a random mixed-source split still performs well when the evaluation source was never observed
 during training.

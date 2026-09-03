@@ -1,0 +1,41 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10
+        with:
+          version: "0.12.1"
+          enable-cache: true
+
+      - name: Install Python
+        uses: actions/setup-python@v7
+        with:
+          python-version-file: ".python-version"
+
+      - name: Install locked dependencies
+        run: uv sync --all-groups --locked
+
+      - name: Acquire and reconstruct pinned research data
+        run: make prepare
+
+      - name: Verify types, style, tests, and committed prediction evidence
+        run: make verify
+
+      - name: Verify distributable package
+        run: uv build
