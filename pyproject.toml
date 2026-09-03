@@ -1,0 +1,64 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "claim-detector"
+version = "0.1.0"
+description = "Source-aware evaluation and deployment of a sentence-level factual claim detector"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+license = { file = "LICENSE" }
+authors = [{ name = "Rohan Sinha" }]
+dependencies = [
+  "joblib>=1.4,<2",
+  "matplotlib>=3.9,<4",
+  "openpyxl>=3.1,<4",
+  "pandas>=2.2,<3",
+  "scikit-learn>=1.5,<2",
+  "seaborn>=0.13,<1",
+]
+
+[dependency-groups]
+dev = [
+  "mypy>=1.13,<2",
+  "pandas-stubs>=2.2,<3",
+  "pytest>=8.3,<9",
+  "pytest-cov>=6,<7",
+  "ruff>=0.9,<1",
+  "types-openpyxl>=3.1,<4",
+]
+
+[project.scripts]
+claim-download = "claim_detector.data.download:main"
+claim-prepare = "claim_detector.data.prepare:main"
+claim-audit = "claim_detector.analysis.audit:main"
+claim-baseline = "claim_detector.models.tfidf:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/claim_detector"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-config --strict-markers"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["claim_detector"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true
+

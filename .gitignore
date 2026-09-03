@@ -1,0 +1,18 @@
+.DS_Store
+.env
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Third-party datasets are fetched and verified locally.
+data/raw/
+data/processed/
+
+# Trained artifacts and generated reports are reproducible outputs.
+artifacts/
+reports/generated/
