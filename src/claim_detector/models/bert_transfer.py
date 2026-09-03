@@ -27,7 +27,10 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 from claim_detector.data.download import PROJECT_ROOT, digest_file
 from claim_detector.data.prepare import DEFAULT_PROCESSED_DIR
-from claim_detector.evaluation.bootstrap import evaluated_binary_predictions
+from claim_detector.evaluation.bootstrap import (
+    evaluated_binary_predictions,
+    paired_metric_difference_interval,
+)
 from claim_detector.evaluation.metrics import binary_classification_metrics
 from claim_detector.models.bert import (
     MODEL_CONFIG,
@@ -49,8 +52,9 @@ from claim_detector.models.bert import (
 
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "reports" / "generated" / "bert_heldout"
 DEFAULT_ARTIFACT_DIR = PROJECT_ROOT / "artifacts" / "bert_heldout"
-MIXED_ARTIFACT_DIR = PROJECT_ROOT / "artifacts" / "bert_mixed"
-TFIDF_METRICS_PATH = PROJECT_ROOT / "reports" / "generated" / "tfidf_baseline" / "metrics.json"
+BERT_MIXED_PREDICTIONS = (
+    PROJECT_ROOT / "reports" / "generated" / "bert_mixed" / "predictions" / "mixed_paper_test.csv"
+)
 HELD_OUT_SOURCES = ("claimbuster", "policlaim", "averitec")
 
 
@@ -261,55 +265,65 @@ def train_heldout_source(
     }
 
 
-def evaluate_mixed_model_by_source(
+def frozen_test_comparison(
     composite: pd.DataFrame,
-    tokenizer: Any,
     output_dir: Path,
-    device: torch.device,
 ) -> dict[str, Any]:
-    if not MIXED_ARTIFACT_DIR.exists():
-        raise FileNotFoundError("Train the mixed BERT model before running transfer comparison")
-    dataset, tokenization = encode_frame(
-        composite.reset_index(drop=True),
-        tokenizer,
-        max_length=cast(int, MODEL_CONFIG["max_length"]),
-    )
-    loader = build_loader(
-        dataset,
-        batch_size=cast(int, MODEL_CONFIG["evaluation_batch_size"]),
-        shuffle=False,
-        seed=cast(int, MODEL_CONFIG["seed"]),
-    )
-    model = AutoModelForSequenceClassification.from_pretrained(MIXED_ARTIFACT_DIR).to(device)
-    probabilities = predict_loader(model, loader, device)
-    predictions = prediction_frame(composite.reset_index(drop=True), probabilities)
-    path = output_dir / "predictions" / "mixed_model_all_sources.csv"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    predictions.to_csv(path, index=False)
-    prediction_bytes, prediction_sha = digest_file(path)
-    source_evaluations = {
-        str(source): {
-            "score_summary": _score_summary(group["claim_probability"]),
-            **evaluated_binary_predictions(
-                group["label"].to_numpy(),
-                group["prediction"].to_numpy(),
-                group["claim_probability"].to_numpy(),
+    if not BERT_MIXED_PREDICTIONS.exists():
+        raise FileNotFoundError("Train the mixed BERT model before comparing transfer")
+    paper_test = composite[composite["paper_split"].eq("test")]
+    mixed_predictions = pd.read_csv(BERT_MIXED_PREDICTIONS)
+    metric_by_source = {
+        "claimbuster": "macro_f1",
+        "policlaim": "macro_f1",
+        "averitec": "claim_recall",
+    }
+    comparison: dict[str, Any] = {}
+    for source, metric in metric_by_source.items():
+        test_ids = set(paper_test.loc[paper_test["source"].eq(source), "source_record_id"])
+        included = mixed_predictions[mixed_predictions["source"].eq(source)].set_index(
+            "source_record_id"
+        )
+        heldout_path = output_dir / "predictions" / f"holdout_{source}.csv"
+        heldout = pd.read_csv(heldout_path)
+        heldout = heldout[heldout["source_record_id"].isin(test_ids)].set_index("source_record_id")
+        ordered_ids = sorted(test_ids)
+        if set(included.index) != test_ids or set(heldout.index) != test_ids:
+            raise ValueError(f"Frozen test records do not align for {source}")
+        included = included.loc[ordered_ids]
+        heldout = heldout.loc[ordered_ids]
+        if not included["label"].equals(heldout["label"]):
+            raise ValueError(f"Frozen test labels do not align for {source}")
+
+        included_evaluation = evaluated_binary_predictions(
+            included["label"].to_numpy(),
+            included["prediction"].to_numpy(),
+            included["claim_probability"].to_numpy(),
+        )
+        heldout_evaluation = evaluated_binary_predictions(
+            heldout["label"].to_numpy(),
+            heldout["prediction"].to_numpy(),
+            heldout["claim_probability"].to_numpy(),
+        )
+        included_value = float(cast(dict[str, Any], included_evaluation["metrics"])[metric])
+        heldout_value = float(cast(dict[str, Any], heldout_evaluation["metrics"])[metric])
+        comparison[source] = {
+            "samples": len(ordered_ids),
+            "metric": metric,
+            "source_included": included_evaluation,
+            "source_heldout": heldout_evaluation,
+            "absolute_change": heldout_value - included_value,
+            "absolute_change_confidence_interval_95": paired_metric_difference_interval(
+                included["label"].to_numpy(),
+                included["prediction"].to_numpy(),
+                heldout["prediction"].to_numpy(),
+                metric=metric,
             ),
         }
-        for source, group in predictions.groupby("source")
-    }
-    del model
-    _clear_device_cache(device)
     return {
-        "model_artifact": str(MIXED_ARTIFACT_DIR.relative_to(PROJECT_ROOT)),
-        "records": len(composite),
-        "tokenization": tokenization,
-        "predictions": {
-            "path": str(path.relative_to(PROJECT_ROOT)),
-            "bytes": prediction_bytes,
-            "sha256": prediction_sha,
-        },
-        "source_evaluations": source_evaluations,
+        "evaluation_split": "paper_test",
+        "record_alignment": "source_record_id",
+        "sources": comparison,
     }
 
 
@@ -339,7 +353,7 @@ def train_source_holdouts(
         )
         for source in HELD_OUT_SOURCES
     }
-    mixed_reference = evaluate_mixed_model_by_source(composite, tokenizer, output_dir, device)
+    comparison = frozen_test_comparison(composite, output_dir)
     dataset_path = processed_dir / "dataset_manifest.json"
     dataset_bytes, dataset_sha = digest_file(dataset_path)
     return {
@@ -352,16 +366,9 @@ def train_source_holdouts(
             "bytes": dataset_bytes,
             "sha256": dataset_sha,
         },
-        "mixed_reference": mixed_reference,
+        "frozen_test_comparison": comparison,
         "runs": runs,
     }
-
-
-def _result_metric(results: dict[str, Any], source: str, metric: str) -> float:
-    value = results["runs"][source]["evaluation"]["metrics"][metric]
-    if not isinstance(value, int | float):
-        raise TypeError(f"Expected numeric metric for {source}.{metric}")
-    return float(value)
 
 
 def write_report(results: dict[str, Any], output_dir: Path) -> None:
@@ -370,48 +377,28 @@ def write_report(results: dict[str, Any], output_dir: Path) -> None:
         "policlaim": ("PoliClaim — macro F1", "macro_f1"),
         "averitec": ("AVeriTeC — claim recall", "claim_recall"),
     }
-    results["transfer_comparison"] = {
-        source: {
-            "metric": metric,
-            "mixed_model": float(
-                results["mixed_reference"]["source_evaluations"][source]["metrics"][metric]
-            ),
-            "source_heldout_model": _result_metric(results, source, metric),
-            "absolute_change": _result_metric(results, source, metric)
-            - float(results["mixed_reference"]["source_evaluations"][source]["metrics"][metric]),
-        }
-        for source, (_, metric) in display.items()
-    }
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "metrics.json").write_text(
         json.dumps(results, indent=2, sort_keys=True, allow_nan=False) + "\n",
         encoding="utf-8",
     )
 
-    tfidf = json.loads(TFIDF_METRICS_PATH.read_text(encoding="utf-8"))
     rows = []
-    for source, (label, metric) in display.items():
+    for source, (label, _) in display.items():
+        comparison = results["frozen_test_comparison"]["sources"][source]
+        metric = comparison["metric"]
         rows.append(
             {
                 "evaluation": label,
                 "condition": "BERT · source included",
-                "score": float(
-                    results["mixed_reference"]["source_evaluations"][source]["metrics"][metric]
-                ),
+                "score": float(comparison["source_included"]["metrics"][metric]),
             }
         )
         rows.append(
             {
                 "evaluation": label,
                 "condition": "BERT · source held out",
-                "score": _result_metric(results, source, metric),
-            }
-        )
-        rows.append(
-            {
-                "evaluation": label,
-                "condition": "TF-IDF · source held out",
-                "score": float(tfidf["evaluations"][f"holdout_{source}"]["metrics"][metric]),
+                "score": float(comparison["source_heldout"]["metrics"][metric]),
             }
         )
 
@@ -424,7 +411,7 @@ def write_report(results: dict[str, Any], output_dir: Path) -> None:
         ylabel="",
         title="Source-held-out transfer gap",
     )
-    axis.legend(loc="upper center", bbox_to_anchor=(0.5, -0.13), ncol=3, title=None)
+    axis.legend(loc="upper center", bbox_to_anchor=(0.5, -0.13), ncol=2, title=None)
     figure.savefig(
         output_dir / "source_heldout_comparison.png",
         dpi=180,
@@ -452,18 +439,9 @@ def main(argv: Sequence[str] | None = None) -> None:
     if args.comparison_only:
         results = json.loads((args.output_dir / "metrics.json").read_text(encoding="utf-8"))
         composite = pd.read_csv(args.processed_dir / "composite.csv")
-        device = resolve_device(cast(DeviceName, args.device))
-        tokenizer = AutoTokenizer.from_pretrained(  # type: ignore[no-untyped-call]
-            MODEL_ID,
-            revision=MODEL_REVISION,
-            use_fast=True,
-        )
-        results["mixed_reference"] = evaluate_mixed_model_by_source(
-            composite,
-            tokenizer,
-            args.output_dir,
-            device,
-        )
+        results.pop("mixed_reference", None)
+        results.pop("transfer_comparison", None)
+        results["frozen_test_comparison"] = frozen_test_comparison(composite, args.output_dir)
     else:
         results = train_source_holdouts(
             args.processed_dir,

@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import pytest
 
-from claim_detector.evaluation.bootstrap import bootstrap_intervals
+from claim_detector.evaluation.bootstrap import (
+    bootstrap_intervals,
+    paired_metric_difference_interval,
+)
 
 
 def test_bootstrap_is_deterministic_and_contains_observed_accuracy() -> None:
@@ -31,3 +34,15 @@ def test_bootstrap_rejects_invalid_configuration(
             repetitions=repetitions,
             confidence=confidence,
         )
+
+
+def test_paired_interval_is_zero_for_identical_predictions() -> None:
+    interval = paired_metric_difference_interval(
+        [0, 0, 1, 1],
+        [0, 1, 1, 0],
+        [0, 1, 1, 0],
+        metric="macro_f1",
+        repetitions=100,
+    )
+
+    assert interval == {"low": 0.0, "high": 0.0}

@@ -18,173 +18,288 @@
     "sha256": "700e3144116c6fc379971beaa20d2274ae08323e3f94219cc2918cb4e4a56a17"
   },
   "experiment": "bert_leave_one_source_out",
-  "git": {
-    "dirty": true,
-    "revision": "da848dda77cf14ad8de1fc65e214dcb83c473ffa"
-  },
-  "mixed_reference": {
-    "model_artifact": "artifacts/bert_mixed",
-    "predictions": {
-      "bytes": 1399059,
-      "path": "reports/generated/bert_heldout/predictions/mixed_model_all_sources.csv",
-      "sha256": "01f510a0e813085c1aec50bf3182e7c1a33899ee0cf491f7fa21898dbfaa6fbd"
-    },
-    "records": 12996,
-    "source_evaluations": {
+  "frozen_test_comparison": {
+    "evaluation_split": "paper_test",
+    "record_alignment": "source_record_id",
+    "sources": {
       "averitec": {
-        "bootstrap_repetitions": 2000,
-        "confidence_intervals_95": {
-          "accuracy": {
-            "high": 0.9986957939354418,
-            "low": 0.9947831757417672
+        "absolute_change": -0.027072758037224975,
+        "absolute_change_confidence_interval_95": {
+          "high": -0.015228426395939021,
+          "low": -0.040609137055837574
+        },
+        "metric": "claim_recall",
+        "samples": 591,
+        "source_heldout": {
+          "bootstrap_repetitions": 2000,
+          "confidence_intervals_95": {
+            "accuracy": {
+              "high": 0.9780033840947546,
+              "low": 0.9475465313028765
+            },
+            "claim_f1": {
+              "high": 0.9888793840889649,
+              "low": 0.9730668983492615
+            },
+            "claim_precision": {
+              "high": 1.0,
+              "low": 1.0
+            },
+            "claim_recall": {
+              "high": 0.9780033840947546,
+              "low": 0.9475465313028765
+            },
+            "macro_f1": {
+              "high": 0.49443969204448246,
+              "low": 0.48653344917463076
+            }
           },
-          "claim_f1": {
-            "high": 0.999347471451876,
-            "low": 0.9973847662634848
-          },
-          "claim_precision": {
-            "high": 1.0,
-            "low": 1.0
-          },
-          "claim_recall": {
-            "high": 0.9986957939354418,
-            "low": 0.9947831757417672
-          },
-          "macro_f1": {
-            "high": 0.499673735725938,
-            "low": 0.4986923831317424
+          "metrics": {
+            "accuracy": 0.9627749576988156,
+            "claim_f1": 0.9810344827586207,
+            "claim_precision": 1.0,
+            "claim_recall": 0.9627749576988156,
+            "false_negatives": 22,
+            "false_positives": 0,
+            "macro_f1": 0.49051724137931035,
+            "positive_prediction_rate": 0.9627749576988156,
+            "pr_auc": null,
+            "prevalence": 1.0,
+            "roc_auc": null,
+            "samples": 591,
+            "true_negatives": 0,
+            "true_positives": 569
           }
         },
-        "metrics": {
-          "accuracy": 0.9967394848386045,
-          "claim_f1": 0.9983670803396473,
-          "claim_precision": 1.0,
-          "claim_recall": 0.9967394848386045,
-          "false_negatives": 10,
-          "false_positives": 0,
-          "macro_f1": 0.49918354016982364,
-          "positive_prediction_rate": 0.9967394848386045,
-          "pr_auc": null,
-          "prevalence": 1.0,
-          "roc_auc": null,
-          "samples": 3067,
-          "true_negatives": 0,
-          "true_positives": 3057
-        },
-        "score_summary": {
-          "maximum": 0.9991851449012756,
-          "median": 0.9990222454071045,
-          "minimum": 0.00962971430271864,
-          "p05": 0.9980211377143859,
-          "p95": 0.9991408228874207
+        "source_included": {
+          "bootstrap_repetitions": 2000,
+          "confidence_intervals_95": {
+            "accuracy": {
+              "high": 0.9966159052453468,
+              "low": 0.9813874788494078
+            },
+            "claim_f1": {
+              "high": 0.9983050847457627,
+              "low": 0.9906063193851409
+            },
+            "claim_precision": {
+              "high": 1.0,
+              "low": 1.0
+            },
+            "claim_recall": {
+              "high": 0.9966159052453468,
+              "low": 0.9813874788494078
+            },
+            "macro_f1": {
+              "high": 0.49915254237288137,
+              "low": 0.49530315969257044
+            }
+          },
+          "metrics": {
+            "accuracy": 0.9898477157360406,
+            "claim_f1": 0.9948979591836735,
+            "claim_precision": 1.0,
+            "claim_recall": 0.9898477157360406,
+            "false_negatives": 6,
+            "false_positives": 0,
+            "macro_f1": 0.49744897959183676,
+            "positive_prediction_rate": 0.9898477157360406,
+            "pr_auc": null,
+            "prevalence": 1.0,
+            "roc_auc": null,
+            "samples": 591,
+            "true_negatives": 0,
+            "true_positives": 585
+          }
         }
       },
       "claimbuster": {
-        "bootstrap_repetitions": 2000,
-        "confidence_intervals_95": {
-          "accuracy": {
-            "high": 0.9628886659979939,
-            "low": 0.9543599548645938
+        "absolute_change": -0.19669957045258823,
+        "absolute_change_confidence_interval_95": {
+          "high": -0.1751865741957546,
+          "low": -0.21839779724294983
+        },
+        "metric": "macro_f1",
+        "samples": 1626,
+        "source_heldout": {
+          "bootstrap_repetitions": 2000,
+          "confidence_intervals_95": {
+            "accuracy": {
+              "high": 0.7091020910209103,
+              "low": 0.6666666666666666
+            },
+            "claim_f1": {
+              "high": 0.6234223901237559,
+              "low": 0.5873333613251317
+            },
+            "claim_precision": {
+              "high": 0.4599074214963594,
+              "low": 0.4247787610619469
+            },
+            "claim_recall": {
+              "high": 0.9777777777777777,
+              "low": 0.9382716049382716
+            },
+            "macro_f1": {
+              "high": 0.6929292327890453,
+              "low": 0.6541349407615511
+            }
           },
-          "claim_f1": {
-            "high": 0.9268443112539133,
-            "low": 0.9105163737515753
-          },
-          "claim_precision": {
-            "high": 0.9127879203081025,
-            "low": 0.8902011618291789
-          },
-          "claim_recall": {
-            "high": 0.9473420260782347,
-            "low": 0.9262788365095286
-          },
-          "macro_f1": {
-            "high": 0.9509740318228123,
-            "low": 0.9399058033979316
+          "metrics": {
+            "accuracy": 0.6881918819188192,
+            "claim_f1": 0.6048324240062354,
+            "claim_precision": 0.4419134396355353,
+            "claim_recall": 0.9580246913580247,
+            "false_negatives": 17,
+            "false_positives": 490,
+            "macro_f1": 0.6736706558832599,
+            "positive_prediction_rate": 0.5399753997539976,
+            "pr_auc": 0.7780039497745087,
+            "prevalence": 0.24907749077490776,
+            "roc_auc": 0.9131970354192576,
+            "samples": 1626,
+            "true_negatives": 731,
+            "true_positives": 388
           }
         },
-        "metrics": {
-          "accuracy": 0.9586258776328987,
-          "claim_f1": 0.9188391539596655,
-          "claim_precision": 0.9015444015444015,
-          "claim_recall": 0.9368104312938816,
-          "false_negatives": 126,
-          "false_positives": 204,
-          "macro_f1": 0.9455376991403577,
-          "positive_prediction_rate": 0.2597793380140421,
-          "pr_auc": 0.9646632978770053,
-          "prevalence": 0.25,
-          "roc_auc": 0.9863026474944727,
-          "samples": 7976,
-          "true_negatives": 5778,
-          "true_positives": 1868
-        },
-        "score_summary": {
-          "maximum": 0.9991835951805115,
-          "median": 0.01179582066833973,
-          "minimum": 0.0025307312607765198,
-          "p05": 0.003714879392646253,
-          "p95": 0.9988045990467072
+        "source_included": {
+          "bootstrap_repetitions": 2000,
+          "confidence_intervals_95": {
+            "accuracy": {
+              "high": 0.9132841328413284,
+              "low": 0.8843788437884379
+            },
+            "claim_f1": {
+              "high": 0.8342992975342213,
+              "low": 0.7826036634460548
+            },
+            "claim_precision": {
+              "high": 0.7990870156776647,
+              "low": 0.7341738486399139
+            },
+            "claim_recall": {
+              "high": 0.891358024691358,
+              "low": 0.8246913580246914
+            },
+            "macro_f1": {
+              "high": 0.8879918439325472,
+              "low": 0.852328139948874
+            }
+          },
+          "metrics": {
+            "accuracy": 0.8991389913899139,
+            "claim_f1": 0.8093023255813954,
+            "claim_precision": 0.7648351648351648,
+            "claim_recall": 0.8592592592592593,
+            "false_negatives": 57,
+            "false_positives": 107,
+            "macro_f1": 0.8703702263358482,
+            "positive_prediction_rate": 0.27982779827798276,
+            "pr_auc": 0.9088238420904946,
+            "prevalence": 0.24907749077490776,
+            "roc_auc": 0.9608274941608274,
+            "samples": 1626,
+            "true_negatives": 1114,
+            "true_positives": 348
+          }
         }
       },
       "policlaim": {
-        "bootstrap_repetitions": 2000,
-        "confidence_intervals_95": {
-          "accuracy": {
-            "high": 0.9221710189452125,
-            "low": 0.8970814132104454
+        "absolute_change": -0.08723879961297532,
+        "absolute_change_confidence_interval_95": {
+          "high": -0.04717896072286475,
+          "low": -0.12721047700586252
+        },
+        "metric": "macro_f1",
+        "samples": 383,
+        "source_heldout": {
+          "bootstrap_repetitions": 2000,
+          "confidence_intervals_95": {
+            "accuracy": {
+              "high": 0.7650130548302873,
+              "low": 0.6919060052219321
+            },
+            "claim_f1": {
+              "high": 0.7435158501440923,
+              "low": 0.6341463414634146
+            },
+            "claim_precision": {
+              "high": 1.0,
+              "low": 0.944
+            },
+            "claim_recall": {
+              "high": 0.5990783410138248,
+              "low": 0.4700460829493088
+            },
+            "macro_f1": {
+              "high": 0.7634634387351779,
+              "low": 0.6833380044843049
+            }
           },
-          "claim_f1": {
-            "high": 0.9317160826594789,
-            "low": 0.9086737121534647
-          },
-          "claim_precision": {
-            "high": 0.9734105669650693,
-            "low": 0.9513309809019717
-          },
-          "claim_recall": {
-            "high": 0.9003466204506065,
-            "low": 0.8630849220103987
-          },
-          "macro_f1": {
-            "high": 0.9206436063449177,
-            "low": 0.8956332990859364
+          "metrics": {
+            "accuracy": 0.7284595300261096,
+            "claim_f1": 0.6904761904761905,
+            "claim_precision": 0.9747899159663865,
+            "claim_recall": 0.5345622119815668,
+            "false_negatives": 101,
+            "false_positives": 3,
+            "macro_f1": 0.7243078626799557,
+            "positive_prediction_rate": 0.31070496083550914,
+            "pr_auc": 0.9264209112045966,
+            "prevalence": 0.566579634464752,
+            "roc_auc": 0.9020598523124758,
+            "samples": 383,
+            "true_negatives": 163,
+            "true_positives": 116
           }
         },
-        "metrics": {
-          "accuracy": 0.9098822324628776,
-          "claim_f1": 0.9203619909502262,
-          "claim_precision": 0.9630681818181818,
-          "claim_recall": 0.8812824956672444,
-          "false_negatives": 137,
-          "false_positives": 39,
-          "macro_f1": 0.9082942030222829,
-          "positive_prediction_rate": 0.5407066052227343,
-          "pr_auc": 0.9770684441045959,
-          "prevalence": 0.5908858166922683,
-          "roc_auc": 0.9634682000681095,
-          "samples": 1953,
-          "true_negatives": 760,
-          "true_positives": 1017
-        },
-        "score_summary": {
-          "maximum": 0.9991697072982788,
-          "median": 0.8572044372558594,
-          "minimum": 0.0027501999866217375,
-          "p05": 0.0050830932334065436,
-          "p95": 0.9989710569381713
+        "source_included": {
+          "bootstrap_repetitions": 2000,
+          "confidence_intervals_95": {
+            "accuracy": {
+              "high": 0.8511749347258486,
+              "low": 0.7728459530026109
+            },
+            "claim_f1": {
+              "high": 0.8593116548928215,
+              "low": 0.7777777777777778
+            },
+            "claim_precision": {
+              "high": 0.9329608938547486,
+              "low": 0.8484769157544026
+            },
+            "claim_recall": {
+              "high": 0.815668202764977,
+              "low": 0.7004608294930875
+            },
+            "macro_f1": {
+              "high": 0.8506844046865655,
+              "low": 0.7719423490855564
+            }
+          },
+          "metrics": {
+            "accuracy": 0.8120104438642297,
+            "claim_f1": 0.8208955223880597,
+            "claim_precision": 0.8918918918918919,
+            "claim_recall": 0.7603686635944701,
+            "false_negatives": 52,
+            "false_positives": 20,
+            "macro_f1": 0.811546662292931,
+            "positive_prediction_rate": 0.4830287206266319,
+            "pr_auc": 0.9328228654343633,
+            "prevalence": 0.566579634464752,
+            "roc_auc": 0.9039753483982012,
+            "samples": 383,
+            "true_negatives": 146,
+            "true_positives": 165
+          }
         }
       }
-    },
-    "tokenization": {
-      "maximum": 187,
-      "median": 21.0,
-      "minimum": 5,
-      "p95": 53.0,
-      "records": 12996,
-      "truncated_fraction": 0.0004616805170821791,
-      "truncated_records": 6
     }
+  },
+  "git": {
+    "dirty": true,
+    "revision": "da848dda77cf14ad8de1fc65e214dcb83c473ffa"
   },
   "runs": {
     "averitec": {
@@ -738,25 +853,5 @@
       }
     }
   },
-  "schema_version": 1,
-  "transfer_comparison": {
-    "averitec": {
-      "absolute_change": -0.03619171829149004,
-      "metric": "claim_recall",
-      "mixed_model": 0.9967394848386045,
-      "source_heldout_model": 0.9605477665471145
-    },
-    "claimbuster": {
-      "absolute_change": -0.2857738554480973,
-      "metric": "macro_f1",
-      "mixed_model": 0.9455376991403577,
-      "source_heldout_model": 0.6597638436922604
-    },
-    "policlaim": {
-      "absolute_change": -0.21227691432389073,
-      "metric": "macro_f1",
-      "mixed_model": 0.9082942030222829,
-      "source_heldout_model": 0.6960172886983922
-    }
-  }
+  "schema_version": 1
 }

@@ -77,3 +77,50 @@ def evaluated_binary_predictions(
         ),
         "bootstrap_repetitions": bootstrap_repetitions,
     }
+
+
+def paired_metric_difference_interval(
+    labels: Sequence[int] | np.ndarray,
+    reference_predictions: Sequence[int] | np.ndarray,
+    candidate_predictions: Sequence[int] | np.ndarray,
+    *,
+    metric: str,
+    repetitions: int = 2_000,
+    confidence: float = 0.95,
+    seed: int = 42,
+) -> dict[str, float]:
+    if metric not in {"macro_f1", "claim_recall"}:
+        raise ValueError(f"Unsupported paired-bootstrap metric: {metric}")
+    if repetitions < 2:
+        raise ValueError("repetitions must be at least 2")
+    if not 0 < confidence < 1:
+        raise ValueError("confidence must be between 0 and 1")
+
+    y_true = np.asarray(labels, dtype=int)
+    reference = np.asarray(reference_predictions, dtype=int)
+    candidate = np.asarray(candidate_predictions, dtype=int)
+    if any(values.ndim != 1 for values in (y_true, reference, candidate)):
+        raise ValueError("paired-bootstrap inputs must be one-dimensional")
+    if not len(y_true) or len(reference) != len(y_true) or len(candidate) != len(y_true):
+        raise ValueError("paired-bootstrap inputs must be non-empty and equally sized")
+
+    class_indices = [np.flatnonzero(y_true == label) for label in np.unique(y_true)]
+    random = np.random.default_rng(seed)
+    differences = []
+    for _ in range(repetitions):
+        indices = np.concatenate(
+            [random.choice(group, size=len(group), replace=True) for group in class_indices]
+        )
+        reference_value = binary_classification_metrics(y_true[indices], reference[indices])[metric]
+        candidate_value = binary_classification_metrics(y_true[indices], candidate[indices])[metric]
+        if not isinstance(reference_value, int | float) or not isinstance(
+            candidate_value, int | float
+        ):
+            raise TypeError(f"Paired-bootstrap metric {metric} was unexpectedly non-numeric")
+        differences.append(float(candidate_value) - float(reference_value))
+
+    alpha = 1 - confidence
+    return {
+        "low": float(np.quantile(differences, alpha / 2)),
+        "high": float(np.quantile(differences, 1 - alpha / 2)),
+    }

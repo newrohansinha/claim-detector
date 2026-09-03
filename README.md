@@ -20,20 +20,20 @@ All numbers come from committed, text-free predictions over the real upstream da
 
 ### Hero result: source-held-out transfer
 
-Each row compares BERT on the same full source with and without that source available during
-training. A fresh model was trained for every held-out condition. The held-out source was also
-excluded from checkpoint selection.
+Each row compares BERT on the same frozen paper-test records with and without that source available
+during training. A fresh model was trained for every held-out condition. The held-out source was
+also excluded from checkpoint selection.
 
-| Evaluation source | Metric | Source included | Source held out | Change | Actual claim rate | Held-out prediction rate |
+| Evaluation source | Metric | Source included | Source held out | Change (paired 95% CI) | Actual claim rate | Held-out prediction rate |
 |---|---|---:|---:|---:|---:|---:|
-| ClaimBuster | Macro F1 | 0.9455 | 0.6598 | -0.2858 | 0.2500 | 0.5622 |
-| PoliClaim | Macro F1 | 0.9083 | 0.6960 | -0.2123 | 0.5909 | 0.3113 |
-| AVeriTeC | Claim recall | 0.9967 | 0.9605 | -0.0362 | 1.0000 | 0.9605 |
+| ClaimBuster | Macro F1 | 0.8704 | 0.6737 | -0.1967 [-0.2184, -0.1752] | 0.2491 | 0.5400 |
+| PoliClaim | Macro F1 | 0.8115 | 0.7243 | -0.0872 [-0.1272, -0.0472] | 0.5666 | 0.3107 |
+| AVeriTeC | Claim recall | 0.9898 | 0.9628 | -0.0271 [-0.0406, -0.0152] | 1.0000 | 0.9628 |
 
-The mixed model looks excellent on every source it saw. Removing a source cuts macro F1 by 28.6
-points on ClaimBuster and 21.2 points on PoliClaim. The errors follow source-specific label priors:
-the ClaimBuster holdout over-predicts claims, while the PoliClaim holdout under-predicts them.
-AVeriTeC is positive-only, so recall is reported instead of binary F1.
+Removing a source cuts macro F1 by 19.7 points on ClaimBuster and 8.7 points on PoliClaim. All
+paired intervals exclude zero. The errors follow source-specific label priors: the ClaimBuster
+holdout over-predicts claims, while the PoliClaim holdout under-predicts them. AVeriTeC is
+positive-only, so recall is reported instead of binary F1.
 
 ### Benchmark checks
 

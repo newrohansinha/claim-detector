@@ -99,7 +99,10 @@ def test_saved_bert_source_holdouts_are_traceable_and_leakage_free() -> None:
             else:
                 assert evaluation["metrics"][metric] == pytest.approx(value)
 
-    mixed_path = PROJECT_ROOT / results["mixed_reference"]["predictions"]["path"]
-    mixed_predictions = pd.read_csv(mixed_path)
-    assert len(mixed_predictions) == 12_996
-    assert "text" not in mixed_predictions.columns
+    comparison = results["frozen_test_comparison"]
+    assert comparison["evaluation_split"] == "paper_test"
+    for source, source_comparison in comparison["sources"].items():
+        assert source in results["runs"]
+        assert source_comparison["samples"] > 0
+        assert source_comparison["absolute_change"] < 0
+        assert source_comparison["absolute_change_confidence_interval_95"]["high"] < 0
