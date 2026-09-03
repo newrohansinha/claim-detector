@@ -13,6 +13,8 @@ source = { editable = "." }
 dependencies = [
     { name = "joblib" },
     { name = "matplotlib" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
+    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "openpyxl" },
     { name = "pandas" },
     { name = "scikit-learn" },
@@ -33,6 +35,7 @@ dev = [
 requires-dist = [
     { name = "joblib", specifier = ">=1.4,<2" },
     { name = "matplotlib", specifier = ">=3.9,<4" },
+    { name = "numpy", specifier = ">=2.0,<3" },
     { name = "openpyxl", specifier = ">=3.1,<4" },
     { name = "pandas", specifier = ">=2.2,<3" },
     { name = "scikit-learn", specifier = ">=1.5,<2" },

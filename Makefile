@@ -1,4 +1,4 @@
-.PHONY: setup download prepare audit baseline test lint format verify
+.PHONY: setup download prepare audit baseline test test-data lint format verify
 
 setup:
 	uv sync --all-groups
@@ -18,6 +18,9 @@ baseline: prepare
 test:
 	uv run pytest --cov=claim_detector --cov-report=term-missing
 
+test-data: prepare
+	uv run pytest -m real_data
+
 lint:
 	uv run ruff check .
 	uv run mypy src
@@ -27,4 +30,3 @@ format:
 	uv run ruff check --fix .
 
 verify: lint test
-

@@ -13,6 +13,5 @@ __pycache__/
 data/raw/
 data/processed/
 
-# Trained artifacts and generated reports are reproducible outputs.
+# Trained model binaries are reproducible outputs and are published separately.
 artifacts/
-reports/generated/

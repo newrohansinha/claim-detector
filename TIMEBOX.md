@@ -8,6 +8,7 @@ work, validation, and documentation are recorded rather than hidden.
 | Date | Phase | Activities | Status |
 |---|---|---|---|
 | 2026-09-02 | Foundation | Repository, research contract, label policy, reproducible environment | Complete |
+| 2026-09-02 | Data | Pinned acquisition, exact split reconstruction, integrity tests, generated audit | Complete |
 
 ## Scope rule
 

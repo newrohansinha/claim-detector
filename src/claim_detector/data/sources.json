@@ -1,0 +1,85 @@
+{
+  "upstream_repository": "https://github.com/VeritaResearch/claim-extraction",
+  "upstream_revision": "4fd0cbe0f74fb08d3caf76d77f6757fc9207ebe9",
+  "files": [
+    {
+      "relative_path": "AVeriTeC/train.json",
+      "url": "https://raw.githubusercontent.com/VeritaResearch/claim-extraction/4fd0cbe0f74fb08d3caf76d77f6757fc9207ebe9/data/AVeriTeC/train.json",
+      "bytes": 10184813,
+      "sha256": "ae5eda7c42ddf1695ef185a7ba1bc716928f5adf57103e4f78aae5f9afe00f9c"
+    },
+    {
+      "relative_path": "Claimbuster/full.json",
+      "url": "https://raw.githubusercontent.com/VeritaResearch/claim-extraction/4fd0cbe0f74fb08d3caf76d77f6757fc9207ebe9/data/Claimbuster/full.json",
+      "bytes": 1335188,
+      "sha256": "4fd0b54f265f6fa7997a2a7daad07cce6628e98b26534eebc639454272b3191b"
+    },
+    {
+      "relative_path": "PoliClaim/AL2003_G4_1.xlsx",
+      "url": "https://raw.githubusercontent.com/VeritaResearch/claim-extraction/4fd0cbe0f74fb08d3caf76d77f6757fc9207ebe9/data/PoliClaim/AL2003_G4_1.xlsx",
+      "bytes": 65706,
+      "sha256": "49a3ad268535fdb0692f450ab223f96f7af2e68e8145eba35aaf43a18c7915e2"
+    },
+    {
+      "relative_path": "PoliClaim/CT2014_G4_1.xlsx",
+      "url": "https://raw.githubusercontent.com/VeritaResearch/claim-extraction/4fd0cbe0f74fb08d3caf76d77f6757fc9207ebe9/data/PoliClaim/CT2014_G4_1.xlsx",
+      "bytes": 108852,
+      "sha256": "d351b10dddbe9ef14fec03b48b6f85727d35b908683b627e5c65d707f6dcadfb"
+    },
+    {
+      "relative_path": "PoliClaim/DE1999_G4_1.xlsx",
+      "url": "https://raw.githubusercontent.com/VeritaResearch/claim-extraction/4fd0cbe0f74fb08d3caf76d77f6757fc9207ebe9/data/PoliClaim/DE1999_G4_1.xlsx",
+      "bytes": 149335,
+      "sha256": "75faf49955037dc75f674e04069c0f8d65f4cc2de2db23cd88e7f25fa8c63fd3"
+    },
+    {
+      "relative_path": "PoliClaim/DE2021_G4_1.xlsx",
+      "url": "https://raw.githubusercontent.com/VeritaResearch/claim-extraction/4fd0cbe0f74fb08d3caf76d77f6757fc9207ebe9/data/PoliClaim/DE2021_G4_1.xlsx",
+      "bytes": 95839,
+      "sha256": "e938cc88661f872157950905e912025e4c188d60aa000961f9af103017461342"
+    },
+    {
+      "relative_path": "PoliClaim/IN2001_G4_1.xlsx",
+      "url": "https://raw.githubusercontent.com/VeritaResearch/claim-extraction/4fd0cbe0f74fb08d3caf76d77f6757fc9207ebe9/data/PoliClaim/IN2001_G4_1.xlsx",
+      "bytes": 72236,
+      "sha256": "a36afd7278b97389b5699c576235ad5d63e748efb72b9d44b96dc4ab932e683d"
+    },
+    {
+      "relative_path": "PoliClaim/IN2011_G4_1.xlsx",
+      "url": "https://raw.githubusercontent.com/VeritaResearch/claim-extraction/4fd0cbe0f74fb08d3caf76d77f6757fc9207ebe9/data/PoliClaim/IN2011_G4_1.xlsx",
+      "bytes": 106697,
+      "sha256": "e4dda43784dd00fdfd9963393066d12583644d41a374691981487781a8d833b7"
+    },
+    {
+      "relative_path": "PoliClaim/KY2018_G4_1.xlsx",
+      "url": "https://raw.githubusercontent.com/VeritaResearch/claim-extraction/4fd0cbe0f74fb08d3caf76d77f6757fc9207ebe9/data/PoliClaim/KY2018_G4_1.xlsx",
+      "bytes": 206745,
+      "sha256": "ce4479c1628c18ca045c60b15a27d7c7ffc954e14d50b69a6b5d4058c4e4d889"
+    },
+    {
+      "relative_path": "PoliClaim/US2016_G4_1.xlsx",
+      "url": "https://raw.githubusercontent.com/VeritaResearch/claim-extraction/4fd0cbe0f74fb08d3caf76d77f6757fc9207ebe9/data/PoliClaim/US2016_G4_1.xlsx",
+      "bytes": 157188,
+      "sha256": "74f323dbb2ac9322c5898c8962eb62e08f452fd407b11cbe13ce193aad17a6ff"
+    },
+    {
+      "relative_path": "CheckThat/CT22_english_1B_claim_dev_test.tsv",
+      "url": "https://raw.githubusercontent.com/VeritaResearch/claim-extraction/4fd0cbe0f74fb08d3caf76d77f6757fc9207ebe9/data/CheckThat/CT22_english_1B_claim_dev_test.tsv",
+      "bytes": 291607,
+      "sha256": "6a1c566b78a353ec184a06a68ef920c57d03f2eab1086b158f6a7f0eef0e6fc0"
+    },
+    {
+      "relative_path": "ours/train.csv",
+      "url": "https://raw.githubusercontent.com/VeritaResearch/claim-extraction/4fd0cbe0f74fb08d3caf76d77f6757fc9207ebe9/data/ours/train.csv",
+      "bytes": 1122810,
+      "sha256": "c463c2f85b2a7ae819f49a572a7cf1d3b9354fde62e1e6328b7435446d2ad179"
+    },
+    {
+      "relative_path": "ours/test.csv",
+      "url": "https://raw.githubusercontent.com/VeritaResearch/claim-extraction/4fd0cbe0f74fb08d3caf76d77f6757fc9207ebe9/data/ours/test.csv",
+      "bytes": 279892,
+      "sha256": "4a888d767fe9bf60a7354bef1c32beb92675d006b26e0f787f7ac77478838673"
+    }
+  ]
+}
+

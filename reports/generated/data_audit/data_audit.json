@@ -1,0 +1,92 @@
+{
+  "checkthat": {
+    "characters_median": 252.0,
+    "characters_p95": 302.0,
+    "negative": 337,
+    "positive": 574,
+    "positive_rate": 0.6300768386388584,
+    "records": 911,
+    "words_median": 36.0,
+    "words_p95": 47.0
+  },
+  "composite_by_source": {
+    "averitec": {
+      "characters_median": 93.0,
+      "characters_p95": 203.0,
+      "negative": 0,
+      "positive": 3067,
+      "positive_rate": 1.0,
+      "records": 3067,
+      "words_median": 15.0,
+      "words_p95": 33.0
+    },
+    "claimbuster": {
+      "characters_median": 80.0,
+      "characters_p95": 250.0,
+      "negative": 5982,
+      "positive": 1994,
+      "positive_rate": 0.25,
+      "records": 7976,
+      "words_median": 15.0,
+      "words_p95": 46.0
+    },
+    "policlaim": {
+      "characters_median": 100.0,
+      "characters_p95": 230.0,
+      "negative": 799,
+      "positive": 1154,
+      "positive_rate": 0.5908858166922683,
+      "records": 1953,
+      "words_median": 17.0,
+      "words_p95": 40.0
+    }
+  },
+  "duplicates": {
+    "conflicting_label_groups": 0,
+    "cross_source_duplicate_groups": 0,
+    "normalized_duplicate_groups": 49,
+    "paper_train_test_overlap_by_source": {
+      "averitec": 16,
+      "claimbuster": 2
+    },
+    "paper_train_test_overlap_groups": 18,
+    "paper_train_test_overlap_records": 54,
+    "records_in_normalized_duplicate_groups": 128
+  },
+  "input_manifest": {
+    "bytes": 1111,
+    "path": "data/processed/dataset_manifest.json",
+    "sha256": "700e3144116c6fc379971beaa20d2274ae08323e3f94219cc2918cb4e4a56a17"
+  },
+  "integrity": {
+    "checkthat": 911,
+    "composite_invalid": 1,
+    "composite_total_upstream": 12997,
+    "composite_valid": 12996
+  },
+  "schema_version": 1,
+  "source_majority_diagnostic": {
+    "description": "Uses held-out source identity only; sentence text is ignored.",
+    "majority_label_by_source": {
+      "averitec": 1,
+      "claimbuster": 0,
+      "policlaim": 1
+    },
+    "metrics": {
+      "accuracy": 0.7803846153846153,
+      "claim_f1": 0.7389117512574302,
+      "claim_precision": 0.8295687885010267,
+      "claim_recall": 0.6661170651277823,
+      "false_negatives": 405,
+      "false_positives": 166,
+      "macro_f1": 0.7746998185427543,
+      "positive_prediction_rate": 0.37461538461538463,
+      "pr_auc": null,
+      "prevalence": 0.4665384615384615,
+      "roc_auc": null,
+      "samples": 2600,
+      "true_negatives": 1221,
+      "true_positives": 808
+    }
+  }
+}
