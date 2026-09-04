@@ -3,14 +3,14 @@
 [![CI](https://github.com/newrohansinha/claim-detector/actions/workflows/ci.yml/badge.svg)](https://github.com/newrohansinha/claim-detector/actions/workflows/ci.yml)
 
 This project asks one question: **when a claim detector reaches a new domain and starts labeling
-almost everything as a claim, has it stopped separating the classes—or has its decision threshold
-stopped transferring?** The threshold is the cutoff that turns a model score into the API's
-`true` or `false` answer.
+almost everything as a claim, has it stopped separating the classes? Or did its decision threshold
+stop transferring?** The threshold is the cutoff that turns a model score into the API's `true`
+or `false` answer.
 
-**I found that BERT still ranked claims above non-claims on the new dataset, but its original 50%
-cutoff no longer worked. Using 25 labeled examples only to choose a new cutoff—without adding them
-to BERT's training data or changing the model—raised median macro F1 from 0.420 to 0.698 on the
-other 886 examples, close to the full-data diagnostic ceiling of 0.719.**
+**BERT continued to rank claims above non-claims on the new dataset. Its original 50% cutoff no
+longer worked. I used 25 labeled examples to choose a new cutoff. I did not add those examples to
+BERT's training data or change the model. Median macro F1 rose from 0.420 to 0.698 on the other 886
+examples, close to the full-data diagnostic ceiling of 0.719.**
 
 I reached this result by reproducing the fine-tuned BERT evaluation in
 [Bell (2025)](https://aclanthology.org/2025.fever-1.6/), then extending it with class-balanced and
@@ -26,37 +26,35 @@ without changing any model weights.
 
 ![ROC and target-threshold adaptation results](reports/generated/threshold_adaptation/threshold_adaptation.png)
 
-*Figure 1. Left: BERT retains substantially more ranking signal than TF-IDF on CheckThat. Right:
+*Figure 1. Left: BERT retains more ranking signal than TF-IDF on CheckThat. Right:
 each threshold is selected on a small labeled target subset and evaluated on different target
 records. Shading is the central 95% of 2,000 repeated stratified splits.*
 
 | Model | Labeled target examples | Median macro F1 on disjoint remainder | Central 95% range |
 |---|---:|---:|---:|
-| BERT, transferred 0.5 threshold | 0 | 0.420 | — |
+| BERT, transferred 0.5 threshold | 0 | 0.420 | N/A |
 | BERT, target-selected threshold | 10 | 0.683 | 0.502–0.714 |
 | BERT, target-selected threshold | 25 | **0.698** | 0.569–0.715 |
 | BERT, target-selected threshold | 50 | **0.703** | 0.639–0.717 |
 | BERT, target-selected threshold | 100 | **0.705** | 0.662–0.720 |
 | BERT, target-selected threshold | 200 | **0.706** | 0.675–0.724 |
-| TF-IDF, transferred 0.5 threshold | 0 | 0.514 | — |
+| TF-IDF, transferred 0.5 threshold | 0 | 0.514 | N/A |
 | TF-IDF, target-selected threshold | 25 | 0.583 | 0.482–0.606 |
 | TF-IDF, target-selected threshold | 100 | 0.594 | 0.538–0.610 |
 
-The full-label oracle threshold gives BERT macro F1 **0.719**. That is an upper-bound diagnostic,
-not deployable performance, because it uses all CheckThat labels for both selection and
-evaluation. The disjoint-split result with 100 labels reaches 0.705, suggesting that most of the
-recoverable operating-point performance does not require retraining BERT.
+The full-label oracle threshold gives BERT macro F1 **0.719**. This is an upper-bound diagnostic
+because it uses all CheckThat labels for selection and evaluation. It is not deployable
+performance. The disjoint-split result reaches 0.705 with 100 labels, so most of the recoverable
+operating-point performance does not require retraining BERT.
 
-The conclusion is deliberately narrower than “the model generalizes.” BERT's ROC-AUC falls from
-0.971 on the mixed test to 0.779 on CheckThat, so its representation also degrades. The new finding
-is that the fixed threshold makes the external failure look substantially worse than the remaining
-ranking signal warrants—and that this part of the failure can be repaired without retraining when
-labeled target examples are available.
+BERT's representation also degrades. ROC-AUC falls from 0.971 on the mixed test to 0.779 on
+CheckThat. The fixed threshold creates a second problem by understating the useful ranking signal
+that remains. A labeled target sample can correct this part of the failure without retraining.
 
 ## Experiment design
 
 The study uses saved predictions from the frozen BERT and TF-IDF models on all 911 CheckThat
-examples. All resampling operates on observed labels and predictions; model weights remain fixed.
+examples. All resampling operates on observed labels and predictions. Model weights remain fixed.
 
 For target-label budgets of 10, 25, 50, 100, and 200:
 
@@ -67,12 +65,11 @@ For target-label budgets of 10, 25, 50, 100, and 200:
 5. Repeat 2,000 times.
 
 The reported interval is the 2.5th–97.5th percentile across repeated adaptation samples. It shows
-sensitivity to which examples are labeled; it is not a population confidence interval.
+sensitivity to which examples are labeled. It is not a population confidence interval.
 
 This is a **post-hoc exploratory experiment**. The question arose after the frozen CheckThat
-evaluation revealed a 98.6% positive prediction rate alongside nontrivial ROC-AUC. The adaptation
-result therefore answers a practical follow-up question; it is not presented as preregistered or
-untouched-target evidence.
+evaluation showed a 98.6% positive prediction rate alongside nontrivial ROC-AUC. The adaptation
+result answers that follow-up question. It is not preregistered or untouched-target evidence.
 
 ## How the evidence fits together
 
@@ -99,16 +96,16 @@ records for validation and calibration and training for three rather than five e
 
 | Evaluation and model | Accuracy | Claim F1 | Macro F1 | ROC-AUC | Predicted claim rate |
 |---|---:|---:|---:|---:|---:|
-| Mixed test, BERT in Bell (2025) | 0.917 | 0.911 | — | — | — |
+| Mixed test, BERT in Bell (2025) | 0.917 | 0.911 | N/A | N/A | N/A |
 | Mixed test, BERT in this work | 0.907 | 0.901 | **0.907** | **0.971** | 47.1% |
-| CheckThat, BERT in Bell (2025) | 0.633 | 0.774 | — | — | — |
+| CheckThat, BERT in Bell (2025) | 0.633 | 0.774 | N/A | N/A | N/A |
 | CheckThat, BERT in this work | 0.640 | **0.777** | 0.420 | **0.779** | **98.6%** |
 | CheckThat, TF-IDF | **0.650** | 0.771 | **0.514** | 0.635 | 89.9% |
 
 BERT correctly labels 572 of 574 CheckThat claims but only **11 of 337 non-claims**. Because 63%
 of CheckThat examples are claims, predicting the positive class almost everywhere preserves claim
-F1. Macro F1, the confusion matrix, and prediction rate expose the failure; ROC-AUC then shows that
-the underlying ranking has not collapsed to the same degree.
+F1. Macro F1, the confusion matrix, and prediction rate expose the failure. ROC-AUC then shows
+that the underlying ranking has not collapsed to the same degree.
 
 ![Claim F1 and macro F1 across evaluations](reports/generated/bert_mixed/bert_tfidf_comparison.png)
 
@@ -134,9 +131,8 @@ threshold.
 
 The same problem appears in selective prediction. A confidence threshold chosen for at most 5%
 error on the reserved calibration split handles 92.1% of those examples automatically at 4.9%
-error. On CheckThat it handles 98.4% automatically at **35.6% error**. The model is not merely
-uncertain on the shifted inputs; it is often confidently wrong. This is why target-threshold
-adaptation, rather than generic confidence filtering, became the main experiment.
+error. On CheckThat it handles 98.4% automatically at **35.6% error**. Many shifted examples
+receive high confidence despite being wrong. That result led to the target-threshold experiment.
 
 ### Why the mixed split did not reveal the problem
 
@@ -155,7 +151,7 @@ to both label balance and writing style:
 testing.*
 
 As a supporting check, I trained source-held-out BERT models and matched source-included controls.
-Each pair has exactly the same fit and validation sizes and label counts; normalized-text groups
+Each pair has exactly the same fit and validation sizes and label counts. Normalized-text groups
 remain intact, and target test hashes are excluded. Removing target-source exposure reduces macro
 F1 by 7.2 points on ClaimBuster and 9.0 points on PoliClaim.
 
@@ -169,7 +165,7 @@ F1 by 7.2 points on ClaimBuster and 9.0 points on PoliClaim.
 
 *Figure 6. Controlled source-exposure differences with paired 2,000-sample bootstrap intervals.*
 
-These source results support the main interpretation: high performance on a familiar source
+These source results support the main interpretation. High performance on a familiar source
 mixture does not establish that the same operating point will survive a new collection process.
 The matched control also corrects an initially misleading result: the naive ClaimBuster holdout
 suggested a 19.7-point loss, which fell to 7.2 points after training size and class prior were
@@ -178,7 +174,7 @@ matched.
 ## What the result means for the API
 
 The service detects whether a sentence asserts at least one proposition that external evidence
-could prove or disprove. It does not determine whether the proposition is true.
+could prove or disprove. Truth verification is outside its scope.
 
 | Sentence | Output | Reason |
 |---|---|---|
@@ -188,14 +184,13 @@ could prove or disprove. It does not determine whether the proposition is true.
 | Taylor Swift is the greatest singer alive. | Not claim | “Greatest” has no agreed criterion here. |
 
 The labeling rule includes false, negated, attributed, and definite future assertions when they
-are externally checkable. Pure questions, commands, and subjective judgments are not claims; a
+are externally checkable. Pure questions, commands, and subjective judgments are not claims. A
 mixed sentence is a claim if it contains at least one checkable assertion.
 
-The deployed endpoint retains the in-domain 0.5 decision threshold. The CheckThat-adapted
-threshold is not silently promoted to a universal default: it is target-specific and was studied
-post hoc. For a new production domain, the evidence supports collecting a small representative
-labeled sample, validating the operating point, and monitoring aggregate prediction rates before
-enabling automatic handling.
+The deployed endpoint retains the in-domain 0.5 decision threshold. I did not replace it with the
+CheckThat threshold because that value is target-specific and came from a post-hoc study. A new
+production domain should supply a small representative labeled sample before automatic handling
+is enabled. Aggregate prediction rates should also be monitored.
 
 ## Implementation reference
 
@@ -247,7 +242,7 @@ flowchart LR
   J --> L[Caller]
 ```
 
-*Figure 7. The model and calibrator share an enforced artifact identity; a mismatch fails at
+*Figure 7. The model and calibrator share an enforced artifact identity. A mismatch fails at
 startup.*
 
 Requests use strict schemas, reject unknown fields and sentences over 2,000 characters, and reject
@@ -269,8 +264,8 @@ checkpoint on Docker Desktop ARM64 CPU. Every response was contract-validated.
 | 100 | 1 | 56.6 ms | 61.4 ms | 65.2 ms | 19.5 req/s | 0 |
 | 500 | 4 | 176.3 ms | 187.5 ms | 198.6 ms | 22.8 req/s | 0 |
 
-Queueing latency rises at concurrency four because local model execution is deliberately
-serialized. Research dependencies are excluded from the runtime image.
+Local model execution is serialized, so queueing latency rises at concurrency four. Research
+dependencies are excluded from the runtime image.
 
 ### Data and training
 
@@ -333,11 +328,11 @@ Then build the self-contained CPU image with `make docker-build` and run it with
 | Development and adaptation seed | 42 |
 
 Raw upstream data is not redistributed because its repository has no repository-level license
-file. The approximately 418 MB model weights are rebuilt locally rather than committed to Git.
-Generated reports contain no sentence text.
+file. The approximately 418 MB model weights are excluded from Git and rebuilt locally. Generated
+reports contain no sentence text.
 
 The work was limited to a 20-hour active-work timebox. Codex accelerated implementation and
-testing; every quantitative statement in this README traces to executable code and saved
+testing. Every quantitative statement in this README traces to executable code and saved
 predictions from the real datasets.
 
 `make verify` runs Ruff, strict mypy, and 58 tests. Tests cover data integrity, grouped splitting,
@@ -349,7 +344,7 @@ and pinned real-data evidence. Linux CI downloads and verifies the actual resear
 
 - The threshold-adaptation study is a post-hoc analysis on one previously evaluated external
   dataset, not confirmation on a new untouched domain.
-- Repeated holdout ranges measure sensitivity to the labeled target sample; they are not
+- Repeated holdout ranges measure sensitivity to the labeled target sample. They are not
   population confidence intervals or 2,000 independent datasets.
 - Stratified sampling assumes the labeled target sample is representative enough to contain both
   classes. Ten-label estimates have visibly high variance.
@@ -364,15 +359,15 @@ and pinned real-data evidence. Linux CI downloads and verifies the actual resear
 - AVeriTeC is positive-only in this release, so only claim recall is comparable for its source
   slice.
 - The datasets use related but non-identical definitions of claim detection and check-worthiness.
-- The service detects assertions; it does not retrieve evidence or determine truth.
+- The service detects assertions. It does not retrieve evidence or determine truth.
 
 ## Key files
 
-- [`src/claim_detector/evaluation/threshold_adaptation.py`](src/claim_detector/evaluation/threshold_adaptation.py) — main experiment
-- [`reports/generated/threshold_adaptation/metrics.json`](reports/generated/threshold_adaptation/metrics.json) — complete results
-- [`src/claim_detector/models/bert_control.py`](src/claim_detector/models/bert_control.py) — matched source analysis
-- [`src/claim_detector/evaluation/calibration.py`](src/claim_detector/evaluation/calibration.py) — calibration analysis
-- [`src/claim_detector/api/`](src/claim_detector/api/) — inference service
+- [`src/claim_detector/evaluation/threshold_adaptation.py`](src/claim_detector/evaluation/threshold_adaptation.py): main experiment
+- [`reports/generated/threshold_adaptation/metrics.json`](reports/generated/threshold_adaptation/metrics.json): complete results
+- [`src/claim_detector/models/bert_control.py`](src/claim_detector/models/bert_control.py): matched source analysis
+- [`src/claim_detector/evaluation/calibration.py`](src/claim_detector/evaluation/calibration.py): calibration analysis
+- [`src/claim_detector/api/`](src/claim_detector/api/): inference service
 
 ## Reference
 
