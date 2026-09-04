@@ -11,13 +11,7 @@ from typing import Any, cast
 
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
-import matplotlib
-
-matplotlib.use("Agg")
-
-import matplotlib.pyplot as plt
 import pandas as pd
-import seaborn as sns
 from transformers import AutoTokenizer
 
 from claim_detector.data.download import PROJECT_ROOT, digest_file
@@ -232,52 +226,11 @@ def train_source_holdouts(
 
 
 def write_report(results: dict[str, Any], output_dir: Path) -> None:
-    display = {
-        "claimbuster": ("ClaimBuster — macro F1", "macro_f1"),
-        "policlaim": ("PoliClaim — macro F1", "macro_f1"),
-        "averitec": ("AVeriTeC — claim recall", "claim_recall"),
-    }
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "metrics.json").write_text(
         json.dumps(results, indent=2, sort_keys=True, allow_nan=False) + "\n",
         encoding="utf-8",
     )
-
-    rows = []
-    for source, (label, _) in display.items():
-        comparison = results["frozen_test_comparison"]["sources"][source]
-        metric = comparison["metric"]
-        rows.append(
-            {
-                "evaluation": label,
-                "condition": "BERT · source included",
-                "score": float(comparison["source_included"]["metrics"][metric]),
-            }
-        )
-        rows.append(
-            {
-                "evaluation": label,
-                "condition": "BERT · source held out",
-                "score": float(comparison["source_heldout"]["metrics"][metric]),
-            }
-        )
-
-    sns.set_theme(style="whitegrid", context="talk")
-    figure, axis = plt.subplots(figsize=(11, 6.5))
-    sns.barplot(data=pd.DataFrame(rows), x="score", y="evaluation", hue="condition", ax=axis)
-    axis.set(
-        xlim=(0, 1),
-        xlabel="Score",
-        ylabel="",
-        title="Source-held-out transfer gap",
-    )
-    axis.legend(loc="upper center", bbox_to_anchor=(0.5, -0.13), ncol=2, title=None)
-    figure.savefig(
-        output_dir / "source_heldout_comparison.png",
-        dpi=180,
-        bbox_inches="tight",
-    )
-    plt.close(figure)
 
 
 def build_parser() -> argparse.ArgumentParser:

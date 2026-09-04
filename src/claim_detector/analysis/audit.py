@@ -110,68 +110,6 @@ def audit_datasets(processed_dir: Path) -> dict[str, Any]:
     }
 
 
-def _format_metric(value: Any) -> str:
-    if value is None:
-        return "N/A"
-    if isinstance(value, float):
-        return f"{value:.4f}"
-    return str(value)
-
-
-def write_markdown(audit: dict[str, Any], output_path: Path) -> None:
-    lines = [
-        "# Dataset Audit",
-        "",
-        "This report is generated from checksum-verified upstream data. It contains measured",
-        "properties, not planned or simulated values.",
-        "",
-        "## Source composition",
-        "",
-        "| Source | Records | Positive | Negative | Positive rate | Median words | P95 words |",
-        "|---|---:|---:|---:|---:|---:|---:|",
-    ]
-    for source, values in audit["composite_by_source"].items():
-        lines.append(
-            f"| {source} | {values['records']} | {values['positive']} | "
-            f"{values['negative']} | {values['positive_rate']:.3f} | "
-            f"{values['words_median']:.1f} | {values['words_p95']:.1f} |"
-        )
-
-    duplicates = audit["duplicates"]
-    lines.extend(
-        [
-            "",
-            "## Integrity findings",
-            "",
-            f"- Upstream composite records: {audit['integrity']['composite_total_upstream']}.",
-            f"- Usable composite records: {audit['integrity']['composite_valid']}.",
-            f"- Invalid records: {audit['integrity']['composite_invalid']}.",
-            f"- Normalized duplicate groups: {duplicates['normalized_duplicate_groups']}.",
-            f"- Conflicting-label duplicate groups: {duplicates['conflicting_label_groups']}.",
-            f"- Cross-source duplicate groups: {duplicates['cross_source_duplicate_groups']}.",
-            "- Normalized hashes crossing the paper train/test boundary: "
-            f"{duplicates['paper_train_test_overlap_groups']}.",
-            "- Records belonging to those cross-boundary groups: "
-            f"{duplicates['paper_train_test_overlap_records']}.",
-            "",
-            "The frozen paper split is retained for comparability. Derived fit, validation, and",
-            "calibration partitions keep normalized duplicate groups together.",
-            "",
-            "## Source-majority diagnostic",
-            "",
-            "This diagnostic reads only source identity and predicts that source's training-set",
-            "majority label. It does not inspect sentence text and is not deployable.",
-            "",
-            "| Metric | Value |",
-            "|---|---:|",
-        ]
-    )
-    for metric, value in audit["source_majority_diagnostic"]["metrics"].items():
-        lines.append(f"| {metric} | {_format_metric(value)} |")
-    lines.append("")
-    output_path.write_text("\n".join(lines), encoding="utf-8")
-
-
 def write_figures(processed_dir: Path, output_dir: Path) -> None:
     composite = pd.read_csv(processed_dir / "composite.csv")
     sns.set_theme(style="whitegrid", context="talk")
@@ -199,34 +137,11 @@ def write_figures(processed_dir: Path, output_dir: Path) -> None:
     figure.savefig(output_dir / "source_label_distribution.png", dpi=180)
     plt.close(figure)
 
-    lengths = composite[["source", "text"]].copy()
-    lengths["words"] = lengths["text"].str.split().str.len()
-    upper = lengths["words"].quantile(0.99)
-    figure, axis = plt.subplots(figsize=(10, 6))
-    sns.boxplot(
-        data=lengths[lengths["words"].le(upper)],
-        x="source",
-        y="words",
-        hue="source",
-        legend=False,
-        ax=axis,
-    )
-    axis.set(
-        title="Sentence lengths by source (up to global 99th percentile)",
-        xlabel="Source",
-        ylabel="Whitespace-delimited words",
-    )
-    figure.tight_layout()
-    figure.savefig(output_dir / "source_length_distribution.png", dpi=180)
-    plt.close(figure)
-
-
 def write_audit(audit: dict[str, Any], processed_dir: Path, output_dir: Path) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     with (output_dir / "data_audit.json").open("w", encoding="utf-8") as stream:
         json.dump(audit, stream, indent=2, sort_keys=True, allow_nan=False)
         stream.write("\n")
-    write_markdown(audit, output_dir / "data_audit.md")
     write_figures(processed_dir, output_dir)
 
 

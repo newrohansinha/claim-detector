@@ -72,8 +72,7 @@ sensitivity to which examples are labeled; it is not a population confidence int
 This is a **post-hoc exploratory experiment**. The question arose after the frozen CheckThat
 evaluation revealed a 98.6% positive prediction rate alongside nontrivial ROC-AUC. The adaptation
 result therefore answers a practical follow-up question; it is not presented as preregistered or
-untouched-target evidence. The complete specification is in
-[`docs/EXPERIMENT_PROTOCOL.md`](docs/EXPERIMENT_PROTOCOL.md).
+untouched-target evidence.
 
 ## How the evidence fits together
 
@@ -188,7 +187,9 @@ could prove or disprove. It does not determine whether the proposition is true.
 | Is unemployment rising? | Not claim | The sentence asks rather than asserts. |
 | Taylor Swift is the greatest singer alive. | Not claim | “Greatest” has no agreed criterion here. |
 
-See [`LABEL_POLICY.md`](LABEL_POLICY.md) for negation, attribution, mixed sentences, and hard cases.
+The labeling rule includes false, negated, attributed, and definite future assertions when they
+are externally checkable. Pure questions, commands, and subjective judgments are not claims; a
+mixed sentence is a claim if it contains at least one checkable assertion.
 
 The deployed endpoint retains the in-domain 0.5 decision threshold. The CheckThat-adapted
 threshold is not silently promoted to a universal default: it is target-specific and was studied
@@ -335,6 +336,10 @@ Raw upstream data is not redistributed because its repository has no repository-
 file. The approximately 418 MB model weights are rebuilt locally rather than committed to Git.
 Generated reports contain no sentence text.
 
+The work was limited to a 20-hour active-work timebox. Codex accelerated implementation and
+testing; every quantitative statement in this README traces to executable code and saved
+predictions from the real datasets.
+
 `make verify` runs Ruff, strict mypy, and 58 tests. Tests cover data integrity, grouped splitting,
 threshold selection and repeated adaptation, bootstrap math, calibration, the review policy, API
 validation, artifact mismatch failure, real checkpoint inference when weights exist, packaging,
@@ -361,18 +366,13 @@ and pinned real-data evidence. Linux CI downloads and verifies the actual resear
 - The datasets use related but non-identical definitions of claim detection and check-worthiness.
 - The service detects assertions; it does not retrieve evidence or determine truth.
 
-## Evidence and project map
+## Key files
 
-- [`docs/EXPERIMENT_PROTOCOL.md`](docs/EXPERIMENT_PROTOCOL.md) — experiment rules and analysis status
-- [`src/claim_detector/evaluation/threshold_adaptation.py`](src/claim_detector/evaluation/threshold_adaptation.py) — main experiment and Figure 1
-- [`reports/generated/threshold_adaptation/metrics.json`](reports/generated/threshold_adaptation/metrics.json) — complete threshold-adaptation results
-- [`DATA_CARD.md`](DATA_CARD.md) — provenance, composition, integrity, and redistribution
-- [`LABEL_POLICY.md`](LABEL_POLICY.md) — annotation boundary
-- [`TIMEBOX.md`](TIMEBOX.md) — project scope and work log
-- [`AI_USAGE.md`](AI_USAGE.md) — Codex disclosure and verification standard
-- [`src/claim_detector/models/bert_control.py`](src/claim_detector/models/bert_control.py) — matched source-exposure analysis
-- [`src/claim_detector/evaluation/calibration.py`](src/claim_detector/evaluation/calibration.py) — temperature scaling and selective prediction
-- [`src/claim_detector/api/`](src/claim_detector/api/) — API contract and inference runtime
+- [`src/claim_detector/evaluation/threshold_adaptation.py`](src/claim_detector/evaluation/threshold_adaptation.py) — main experiment
+- [`reports/generated/threshold_adaptation/metrics.json`](reports/generated/threshold_adaptation/metrics.json) — complete results
+- [`src/claim_detector/models/bert_control.py`](src/claim_detector/models/bert_control.py) — matched source analysis
+- [`src/claim_detector/evaluation/calibration.py`](src/claim_detector/evaluation/calibration.py) — calibration analysis
+- [`src/claim_detector/api/`](src/claim_detector/api/) — inference service
 
 ## Reference
 

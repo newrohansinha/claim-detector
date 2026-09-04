@@ -9,13 +9,7 @@ from pathlib import Path
 from typing import Any
 
 import joblib
-import matplotlib
-
-matplotlib.use("Agg")
-
-import matplotlib.pyplot as plt
 import pandas as pd
-import seaborn as sns
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
@@ -199,44 +193,11 @@ def run_baselines(
     }
 
 
-def _metric(evaluation: dict[str, Any], name: str) -> float:
-    value = evaluation["metrics"][name]
-    if not isinstance(value, int | float):
-        raise TypeError(f"Expected numeric {name}, got {value!r}")
-    return float(value)
-
-
 def write_report(results: dict[str, Any], output_dir: Path) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     with (output_dir / "metrics.json").open("w", encoding="utf-8") as stream:
         json.dump(results, stream, indent=2, sort_keys=True, allow_nan=False)
         stream.write("\n")
-
-    plot_names = [
-        "mixed_paper_test",
-        "mixed_paper_test_without_train_duplicates",
-        "holdout_claimbuster",
-        "holdout_policlaim",
-        "external_checkthat",
-    ]
-    plot_frame = pd.DataFrame(
-        [
-            {
-                "evaluation": name.replace("_", " "),
-                "Claim F1": _metric(results["evaluations"][name], "claim_f1"),
-                "Macro F1": _metric(results["evaluations"][name], "macro_f1"),
-            }
-            for name in plot_names
-        ]
-    ).melt(id_vars="evaluation", var_name="metric", value_name="score")
-    sns.set_theme(style="whitegrid", context="talk")
-    figure, axis = plt.subplots(figsize=(12, 7))
-    sns.barplot(data=plot_frame, x="score", y="evaluation", hue="metric", ax=axis)
-    axis.set(xlim=(0, 1), xlabel="Score", ylabel="Evaluation", title="TF-IDF transfer baseline")
-    figure.tight_layout()
-    figure.savefig(output_dir / "transfer_baseline.png", dpi=180)
-    plt.close(figure)
-
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)

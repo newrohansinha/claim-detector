@@ -8,14 +8,8 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
-import matplotlib
-
-matplotlib.use("Agg")
-
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, confusion_matrix, f1_score
@@ -70,7 +64,7 @@ def top_source_features(model: Pipeline, count: int = 20) -> dict[str, list[dict
     return result
 
 
-def run_source_probe(processed_dir: Path) -> tuple[dict[str, Any], pd.DataFrame, np.ndarray]:
+def run_source_probe(processed_dir: Path) -> tuple[dict[str, Any], pd.DataFrame]:
     frame = pd.read_csv(processed_dir / "composite.csv")
     model = build_source_model()
     splitter = StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=42)
@@ -109,13 +103,12 @@ def run_source_probe(processed_dir: Path) -> tuple[dict[str, Any], pd.DataFrame,
     }
     prediction_frame = frame[["source_record_id", "source", "normalized_text_hash"]].copy()
     prediction_frame["predicted_source"] = predictions
-    return results, prediction_frame, matrix
+    return results, prediction_frame
 
 
 def write_source_probe(
     results: dict[str, Any],
     predictions: pd.DataFrame,
-    matrix: np.ndarray,
     output_dir: Path,
 ) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -123,28 +116,6 @@ def write_source_probe(
         json.dump(results, stream, indent=2, sort_keys=True, allow_nan=False)
         stream.write("\n")
     predictions.to_csv(output_dir / "predictions.csv", index=False)
-
-    sns.set_theme(style="white", context="talk")
-    figure, axis = plt.subplots(figsize=(9, 7))
-    sns.heatmap(
-        matrix,
-        annot=True,
-        fmt="d",
-        cmap="Blues",
-        xticklabels=SOURCE_ORDER,
-        yticklabels=SOURCE_ORDER,
-        cbar=False,
-        ax=axis,
-    )
-    axis.set(
-        title="Text-to-source probe (grouped 5-fold CV)",
-        xlabel="Predicted source",
-        ylabel="Actual source",
-    )
-    figure.tight_layout()
-    figure.savefig(output_dir / "confusion_matrix.png", dpi=180)
-    plt.close(figure)
-
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -155,8 +126,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: Sequence[str] | None = None) -> None:
     args = build_parser().parse_args(argv)
-    results, predictions, matrix = run_source_probe(args.processed_dir)
-    write_source_probe(results, predictions, matrix, args.output_dir)
+    results, predictions = run_source_probe(args.processed_dir)
+    write_source_probe(results, predictions, args.output_dir)
     print(json.dumps(results, indent=2, sort_keys=True, allow_nan=False))
 
 
