@@ -2,6 +2,11 @@
 
 [![CI](https://github.com/newrohansinha/claim-detector/actions/workflows/ci.yml/badge.svg)](https://github.com/newrohansinha/claim-detector/actions/workflows/ci.yml)
 
+The central idea is to test whether a claim detector that scores well on a random mixture of
+datasets truly generalizes to a source it never saw during training. The project fine-tunes and
+deploys BERT, then uses matched source-exposure controls to separate genuine cross-source
+degradation from changes in training-set size and label balance.
+
 ## Main finding: source exposure matters after matching
 
 After matching training-set size and class balance, withholding ClaimBuster or PoliClaim reduced
