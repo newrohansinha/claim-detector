@@ -1,0 +1,686 @@
+{
+  "adaptation_results": {
+    "bert": {
+      "10": {
+        "adaptation_claims_per_split": 6,
+        "adaptation_non_claims_per_split": 4,
+        "evaluation_records_per_split": 901,
+        "metrics_across_repetitions": {
+          "accuracy": {
+            "central_95_percent_high": 0.7458379578246392,
+            "central_95_percent_low": 0.5460321864594895,
+            "mean": 0.6897502774694784,
+            "median": 0.7058823529411765
+          },
+          "claim_recall": {
+            "central_95_percent_high": 0.9683098591549296,
+            "central_95_percent_low": 0.3133362676056338,
+            "mean": 0.7175105633802817,
+            "median": 0.7552816901408451
+          },
+          "fixed_threshold_macro_f1": {
+            "central_95_percent_high": 0.4205281712507146,
+            "central_95_percent_low": 0.41745496503635626,
+            "mean": 0.42014871083582606,
+            "median": 0.4205281712507146
+          },
+          "macro_f1": {
+            "central_95_percent_high": 0.7141469740274674,
+            "central_95_percent_low": 0.5016486314104318,
+            "mean": 0.6618792680668131,
+            "median": 0.6830115086644362
+          },
+          "macro_f1_improvement": {
+            "central_95_percent_high": 0.29413587253783613,
+            "central_95_percent_low": 0.08112046015971715,
+            "mean": 0.24173055723098713,
+            "median": 0.2627529354121825
+          },
+          "non_claim_recall": {
+            "central_95_percent_high": 0.9429429429429429,
+            "central_95_percent_low": 0.1831831831831832,
+            "mean": 0.6423993993993994,
+            "median": 0.6636636636636637
+          },
+          "positive_prediction_rate": {
+            "central_95_percent_high": 0.9123196448390677,
+            "central_95_percent_low": 0.21861820199778023,
+            "mean": 0.5844916759156492,
+            "median": 0.6004439511653719
+          },
+          "selected_threshold": {
+            "central_95_percent_high": 0.9852932888240888,
+            "central_95_percent_low": 0.9611920189468522,
+            "mean": 0.9797797165968243,
+            "median": 0.9825944340824758
+          }
+        }
+      },
+      "100": {
+        "adaptation_claims_per_split": 63,
+        "adaptation_non_claims_per_split": 37,
+        "evaluation_records_per_split": 811,
+        "metrics_across_repetitions": {
+          "accuracy": {
+            "central_95_percent_high": 0.750924784217016,
+            "central_95_percent_low": 0.6695437731196054,
+            "mean": 0.7256270036991368,
+            "median": 0.7336621454993835
+          },
+          "claim_recall": {
+            "central_95_percent_high": 0.8885029354207433,
+            "central_95_percent_low": 0.5949119373776908,
+            "mean": 0.7945870841487279,
+            "median": 0.8199608610567515
+          },
+          "fixed_threshold_macro_f1": {
+            "central_95_percent_high": 0.42456938735564687,
+            "central_95_percent_low": 0.41376376868607395,
+            "mean": 0.41999989339580546,
+            "median": 0.42060090037189274
+          },
+          "macro_f1": {
+            "central_95_percent_high": 0.7202614139481871,
+            "central_95_percent_low": 0.661595326879206,
+            "mean": 0.7010908223544298,
+            "median": 0.7050249006770746
+          },
+          "macro_f1_improvement": {
+            "central_95_percent_high": 0.30179310601033627,
+            "central_95_percent_low": 0.2418121010909774,
+            "mean": 0.28109092895862425,
+            "median": 0.28469448410673354
+          },
+          "non_claim_recall": {
+            "central_95_percent_high": 0.7967499999999995,
+            "central_95_percent_low": 0.45666666666666667,
+            "mean": 0.608165,
+            "median": 0.5966666666666667
+          },
+          "positive_prediction_rate": {
+            "central_95_percent_high": 0.7595869297163993,
+            "central_95_percent_low": 0.45006165228113443,
+            "mean": 0.6456035758323058,
+            "median": 0.6658446362515413
+          },
+          "selected_threshold": {
+            "central_95_percent_high": 0.984079939860405,
+            "central_95_percent_low": 0.9795821716977524,
+            "mean": 0.9817961825988265,
+            "median": 0.9816752825568321
+          }
+        }
+      },
+      "200": {
+        "adaptation_claims_per_split": 126,
+        "adaptation_non_claims_per_split": 74,
+        "evaluation_records_per_split": 711,
+        "metrics_across_repetitions": {
+          "accuracy": {
+            "central_95_percent_high": 0.7538677918424754,
+            "central_95_percent_low": 0.6821378340365682,
+            "mean": 0.7300450070323489,
+            "median": 0.7341772151898734
+          },
+          "claim_recall": {
+            "central_95_percent_high": 0.8794642857142857,
+            "central_95_percent_low": 0.6450892857142857,
+            "mean": 0.8069497767857142,
+            "median": 0.8214285714285714
+          },
+          "fixed_threshold_macro_f1": {
+            "central_95_percent_high": 0.42971229293809937,
+            "central_95_percent_low": 0.40962936128058064,
+            "mean": 0.42017983105171286,
+            "median": 0.4213484574887459
+          },
+          "macro_f1": {
+            "central_95_percent_high": 0.7242010002729621,
+            "central_95_percent_low": 0.675051576278405,
+            "mean": 0.7046724448550549,
+            "median": 0.7064847189479364
+          },
+          "macro_f1_improvement": {
+            "central_95_percent_high": 0.3062649061705089,
+            "central_95_percent_low": 0.2532100533068751,
+            "mean": 0.2844926138033419,
+            "median": 0.286060454019038
+          },
+          "non_claim_recall": {
+            "central_95_percent_high": 0.7567490494296573,
+            "central_95_percent_low": 0.49429657794676807,
+            "mean": 0.5990437262357413,
+            "median": 0.5893536121673004
+          },
+          "positive_prediction_rate": {
+            "central_95_percent_high": 0.7412095639943741,
+            "central_95_percent_low": 0.4964838255977497,
+            "mean": 0.6567721518987342,
+            "median": 0.6694796061884669
+          },
+          "selected_threshold": {
+            "central_95_percent_high": 0.9836811208277818,
+            "central_95_percent_low": 0.9802515548199772,
+            "mean": 0.9817170714982724,
+            "median": 0.9816720048569056
+          }
+        }
+      },
+      "25": {
+        "adaptation_claims_per_split": 16,
+        "adaptation_non_claims_per_split": 9,
+        "evaluation_records_per_split": 886,
+        "metrics_across_repetitions": {
+          "accuracy": {
+            "central_95_percent_high": 0.7471783295711061,
+            "central_95_percent_low": 0.5993227990970654,
+            "mean": 0.7101004514672686,
+            "median": 0.7212189616252822
+          },
+          "claim_recall": {
+            "central_95_percent_high": 0.9408602150537635,
+            "central_95_percent_low": 0.43010752688172044,
+            "mean": 0.7651890681003585,
+            "median": 0.7956989247311828
+          },
+          "fixed_threshold_macro_f1": {
+            "central_95_percent_high": 0.42131942162339797,
+            "central_95_percent_low": 0.41454588121954683,
+            "mean": 0.4199391286889761,
+            "median": 0.42079754739523456
+          },
+          "macro_f1": {
+            "central_95_percent_high": 0.7153253299617357,
+            "central_95_percent_low": 0.5692285924778475,
+            "mean": 0.6834288127121008,
+            "median": 0.698239588258191
+          },
+          "macro_f1_improvement": {
+            "central_95_percent_high": 0.29580324226299054,
+            "central_95_percent_low": 0.14978185672083888,
+            "mean": 0.2634896840231246,
+            "median": 0.27863191365121565
+          },
+          "non_claim_recall": {
+            "central_95_percent_high": 0.8902439024390244,
+            "central_95_percent_low": 0.2652439024390244,
+            "mean": 0.6163826219512195,
+            "median": 0.6189024390243902
+          },
+          "positive_prediction_rate": {
+            "central_95_percent_high": 0.8656884875846501,
+            "central_95_percent_low": 0.3115124153498871,
+            "mean": 0.6239300225733634,
+            "median": 0.6433408577878104
+          },
+          "selected_threshold": {
+            "central_95_percent_high": 0.984846576617009,
+            "central_95_percent_low": 0.9729010882496203,
+            "mean": 0.9812677106273472,
+            "median": 0.9819592721158834
+          }
+        }
+      },
+      "50": {
+        "adaptation_claims_per_split": 32,
+        "adaptation_non_claims_per_split": 18,
+        "evaluation_records_per_split": 861,
+        "metrics_across_repetitions": {
+          "accuracy": {
+            "central_95_percent_high": 0.7479674796747967,
+            "central_95_percent_low": 0.6573751451800233,
+            "mean": 0.7204790940766551,
+            "median": 0.7282229965156795
+          },
+          "claim_recall": {
+            "central_95_percent_high": 0.9022140221402214,
+            "central_95_percent_low": 0.5645756457564576,
+            "mean": 0.7840258302583026,
+            "median": 0.8118081180811808
+          },
+          "fixed_threshold_macro_f1": {
+            "central_95_percent_high": 0.4221614565799562,
+            "central_95_percent_low": 0.4152037617554859,
+            "mean": 0.41978809717467436,
+            "median": 0.4216217387535755
+          },
+          "macro_f1": {
+            "central_95_percent_high": 0.7167097532314923,
+            "central_95_percent_low": 0.6388742674667509,
+            "mean": 0.695864729544937,
+            "median": 0.7034293120358694
+          },
+          "macro_f1_improvement": {
+            "central_95_percent_high": 0.29774971315985244,
+            "central_95_percent_low": 0.2204491085205501,
+            "mean": 0.2760766323702628,
+            "median": 0.28340675683918287
+          },
+          "non_claim_recall": {
+            "central_95_percent_high": 0.8119905956112848,
+            "central_95_percent_low": 0.4012539184952978,
+            "mean": 0.6125094043887147,
+            "median": 0.6050156739811913
+          },
+          "positive_prediction_rate": {
+            "central_95_percent_high": 0.7886469221835074,
+            "central_95_percent_low": 0.42392566782810687,
+            "mean": 0.637109756097561,
+            "median": 0.6567944250871081
+          },
+          "selected_threshold": {
+            "central_95_percent_high": 0.9842353932528033,
+            "central_95_percent_low": 0.9783320721081817,
+            "mean": 0.9817444734969716,
+            "median": 0.9817337105623251
+          }
+        }
+      }
+    },
+    "tfidf": {
+      "10": {
+        "adaptation_claims_per_split": 6,
+        "adaptation_non_claims_per_split": 4,
+        "evaluation_records_per_split": 901,
+        "metrics_across_repetitions": {
+          "accuracy": {
+            "central_95_percent_high": 0.6526082130965594,
+            "central_95_percent_low": 0.46059933407325193,
+            "mean": 0.5946126526082132,
+            "median": 0.6154273029966704
+          },
+          "claim_recall": {
+            "central_95_percent_high": 0.9612676056338029,
+            "central_95_percent_low": 0.20946302816901408,
+            "mean": 0.6339639084507042,
+            "median": 0.653169014084507
+          },
+          "fixed_threshold_macro_f1": {
+            "central_95_percent_high": 0.5157837445573294,
+            "central_95_percent_low": 0.5103571471429771,
+            "mean": 0.5137952610062955,
+            "median": 0.5141939693660279
+          },
+          "macro_f1": {
+            "central_95_percent_high": 0.6053314358675661,
+            "central_95_percent_low": 0.42941007350770044,
+            "mean": 0.5536634318464951,
+            "median": 0.5685979240265153
+          },
+          "macro_f1_improvement": {
+            "central_95_percent_high": 0.09162103949660305,
+            "central_95_percent_low": -0.08520691121127248,
+            "mean": 0.039868170840199404,
+            "median": 0.05473593983064251
+          },
+          "non_claim_recall": {
+            "central_95_percent_high": 0.8888888888888888,
+            "central_95_percent_low": 0.08408408408408409,
+            "mean": 0.5274909909909911,
+            "median": 0.5495495495495496
+          },
+          "positive_prediction_rate": {
+            "central_95_percent_high": 0.9445061043285239,
+            "central_95_percent_low": 0.17203107658157601,
+            "mean": 0.5742918978912319,
+            "median": 0.5782463928967814
+          },
+          "selected_threshold": {
+            "central_95_percent_high": 0.9259776457300848,
+            "central_95_percent_low": 0.41399399856564323,
+            "mean": 0.7498278897855009,
+            "median": 0.7804309207308537
+          }
+        }
+      },
+      "100": {
+        "adaptation_claims_per_split": 63,
+        "adaptation_non_claims_per_split": 37,
+        "evaluation_records_per_split": 811,
+        "metrics_across_repetitions": {
+          "accuracy": {
+            "central_95_percent_high": 0.6485819975339088,
+            "central_95_percent_low": 0.5524044389642416,
+            "mean": 0.6206609124537609,
+            "median": 0.6276202219482121
+          },
+          "claim_recall": {
+            "central_95_percent_high": 0.8786692759295499,
+            "central_95_percent_low": 0.4617906066536203,
+            "mean": 0.6966859099804306,
+            "median": 0.7084148727984344
+          },
+          "fixed_threshold_macro_f1": {
+            "central_95_percent_high": 0.5240288802567133,
+            "central_95_percent_low": 0.5022425684988323,
+            "mean": 0.5135800852867379,
+            "median": 0.5137561222766425
+          },
+          "macro_f1": {
+            "central_95_percent_high": 0.6104864670275237,
+            "central_95_percent_low": 0.5375765799028578,
+            "mean": 0.5886543316613174,
+            "median": 0.5941937311178247
+          },
+          "macro_f1_improvement": {
+            "central_95_percent_high": 0.09698928780651483,
+            "central_95_percent_low": 0.023784331023948998,
+            "mean": 0.07507424637457953,
+            "median": 0.08023620497723183
+          },
+          "non_claim_recall": {
+            "central_95_percent_high": 0.7066666666666667,
+            "central_95_percent_low": 0.25666666666666665,
+            "mean": 0.49116499999999996,
+            "median": 0.49666666666666665
+          },
+          "positive_prediction_rate": {
+            "central_95_percent_high": 0.8286066584463625,
+            "central_95_percent_low": 0.39824290998766954,
+            "mean": 0.6271972872996302,
+            "median": 0.6325524044389642
+          },
+          "selected_threshold": {
+            "central_95_percent_high": 0.8562833650513619,
+            "central_95_percent_low": 0.6101353836475548,
+            "mean": 0.7483023950925914,
+            "median": 0.7528949983597346
+          }
+        }
+      },
+      "200": {
+        "adaptation_claims_per_split": 126,
+        "adaptation_non_claims_per_split": 74,
+        "evaluation_records_per_split": 711,
+        "metrics_across_repetitions": {
+          "accuracy": {
+            "central_95_percent_high": 0.6497890295358649,
+            "central_95_percent_low": 0.5794655414908579,
+            "mean": 0.62428129395218,
+            "median": 0.6286919831223629
+          },
+          "claim_recall": {
+            "central_95_percent_high": 0.8482142857142857,
+            "central_95_percent_low": 0.5580357142857143,
+            "mean": 0.704109375,
+            "median": 0.7142857142857143
+          },
+          "fixed_threshold_macro_f1": {
+            "central_95_percent_high": 0.5294429416853177,
+            "central_95_percent_low": 0.49637178547000094,
+            "mean": 0.5137710413839278,
+            "median": 0.5138227903719672
+          },
+          "macro_f1": {
+            "central_95_percent_high": 0.6147861534213623,
+            "central_95_percent_low": 0.5547477737126102,
+            "mean": 0.5936342489194609,
+            "median": 0.5961172645447097
+          },
+          "macro_f1_improvement": {
+            "central_95_percent_high": 0.10139802064360191,
+            "central_95_percent_low": 0.04328588768701562,
+            "mean": 0.07986320753553318,
+            "median": 0.08229000987489715
+          },
+          "non_claim_recall": {
+            "central_95_percent_high": 0.6312737642585545,
+            "central_95_percent_low": 0.2889733840304182,
+            "mean": 0.4883003802281369,
+            "median": 0.49049429657794674
+          },
+          "positive_prediction_rate": {
+            "central_95_percent_high": 0.7933895921237686,
+            "central_95_percent_low": 0.4880450070323488,
+            "mean": 0.6329367088607595,
+            "median": 0.6385372714486639
+          },
+          "selected_threshold": {
+            "central_95_percent_high": 0.8218994583186459,
+            "central_95_percent_low": 0.6384530958562074,
+            "mean": 0.7488974399975736,
+            "median": 0.7493724540604142
+          }
+        }
+      },
+      "25": {
+        "adaptation_claims_per_split": 16,
+        "adaptation_non_claims_per_split": 9,
+        "evaluation_records_per_split": 886,
+        "metrics_across_repetitions": {
+          "accuracy": {
+            "central_95_percent_high": 0.6523702031602708,
+            "central_95_percent_low": 0.5045146726862303,
+            "mean": 0.6146320541760721,
+            "median": 0.6320541760722348
+          },
+          "claim_recall": {
+            "central_95_percent_high": 0.9408602150537635,
+            "central_95_percent_low": 0.3224462365591398,
+            "mean": 0.696312724014337,
+            "median": 0.7222222222222222
+          },
+          "fixed_threshold_macro_f1": {
+            "central_95_percent_high": 0.5178418720360725,
+            "central_95_percent_low": 0.5075636370093491,
+            "mean": 0.5135830008644234,
+            "median": 0.5139484959614187
+          },
+          "macro_f1": {
+            "central_95_percent_high": 0.6062554791886421,
+            "central_95_percent_low": 0.4822367758186398,
+            "mean": 0.5720716812355641,
+            "median": 0.5826476898140364
+          },
+          "macro_f1_improvement": {
+            "central_95_percent_high": 0.09257583307873811,
+            "central_95_percent_low": -0.029994453709201875,
+            "mean": 0.05848868037114059,
+            "median": 0.06848682035071207
+          },
+          "non_claim_recall": {
+            "central_95_percent_high": 0.8109756097560976,
+            "central_95_percent_low": 0.1402439024390244,
+            "mean": 0.4756753048780487,
+            "median": 0.48628048780487804
+          },
+          "positive_prediction_rate": {
+            "central_95_percent_high": 0.9108352144469526,
+            "central_95_percent_low": 0.27308126410835215,
+            "mean": 0.6326422121896164,
+            "median": 0.6450338600451467
+          },
+          "selected_threshold": {
+            "central_95_percent_high": 0.8989776111627409,
+            "central_95_percent_low": 0.48086469563564466,
+            "mean": 0.7306510292713749,
+            "median": 0.7468951635233927
+          }
+        }
+      },
+      "50": {
+        "adaptation_claims_per_split": 32,
+        "adaptation_non_claims_per_split": 18,
+        "evaluation_records_per_split": 861,
+        "metrics_across_repetitions": {
+          "accuracy": {
+            "central_95_percent_high": 0.6504355400696863,
+            "central_95_percent_low": 0.5296167247386759,
+            "mean": 0.6200940766550522,
+            "median": 0.632404181184669
+          },
+          "claim_recall": {
+            "central_95_percent_high": 0.9280442804428044,
+            "central_95_percent_low": 0.3966328413284133,
+            "mean": 0.7081143911439115,
+            "median": 0.7269372693726938
+          },
+          "fixed_threshold_macro_f1": {
+            "central_95_percent_high": 0.5205770690964313,
+            "central_95_percent_low": 0.5052021514746315,
+            "mean": 0.5133902197700284,
+            "median": 0.5133371763966041
+          },
+          "macro_f1": {
+            "central_95_percent_high": 0.6074763496537109,
+            "central_95_percent_low": 0.5111125843715998,
+            "mean": 0.5805907519035522,
+            "median": 0.5907795497486418
+          },
+          "macro_f1_improvement": {
+            "central_95_percent_high": 0.09386583958517432,
+            "central_95_percent_low": -0.0053572298619003695,
+            "mean": 0.0672005321335238,
+            "median": 0.07722600347614128
+          },
+          "non_claim_recall": {
+            "central_95_percent_high": 0.7493730407523502,
+            "central_95_percent_low": 0.1786833855799373,
+            "mean": 0.4705423197492163,
+            "median": 0.47648902821316613
+          },
+          "positive_prediction_rate": {
+            "central_95_percent_high": 0.8873983739837396,
+            "central_95_percent_low": 0.33797909407665505,
+            "mean": 0.6419221835075494,
+            "median": 0.6515679442508711
+          },
+          "selected_threshold": {
+            "central_95_percent_high": 0.8735626767271231,
+            "central_95_percent_low": 0.5265859974257073,
+            "mean": 0.7331885590767956,
+            "median": 0.7450626593699171
+          }
+        }
+      }
+    }
+  },
+  "analysis_status": "Post-hoc exploratory follow-up motivated by the frozen CheckThat evaluation; not a preregistered or untouched-target estimate.",
+  "experiment": "labeled_target_threshold_adaptation",
+  "full_target_diagnostics": {
+    "bert": {
+      "display_name": "BERT",
+      "fixed_threshold": 0.5,
+      "fixed_threshold_metrics": {
+        "accuracy": 0.6399560922063666,
+        "claim_f1": 0.7771739130434783,
+        "claim_precision": 0.6369710467706013,
+        "claim_recall": 0.9965156794425087,
+        "false_negatives": 2,
+        "false_positives": 326,
+        "macro_f1": 0.42001552795031055,
+        "positive_prediction_rate": 0.9857299670691547,
+        "pr_auc": 0.8467901067249766,
+        "prevalence": 0.6300768386388584,
+        "roc_auc": 0.7787017028712042,
+        "samples": 911,
+        "true_negatives": 11,
+        "true_positives": 572
+      },
+      "oracle_diagnostic": {
+        "adaptation_macro_f1": 0.7185955518945635,
+        "interpretation": "Upper-bound diagnostic selected and evaluated on all target labels; not a deployable performance estimate.",
+        "metrics": {
+          "accuracy": 0.7497255762897914,
+          "claim_f1": 0.8121911037891268,
+          "claim_precision": 0.7703125,
+          "claim_recall": 0.8588850174216028,
+          "false_negatives": 81,
+          "false_positives": 147,
+          "macro_f1": 0.7185955518945635,
+          "positive_prediction_rate": 0.7025246981339188,
+          "pr_auc": 0.8467901067249766,
+          "prevalence": 0.6300768386388584,
+          "roc_auc": 0.7787017028712042,
+          "samples": 911,
+          "true_negatives": 190,
+          "true_positives": 493
+        },
+        "threshold": 0.981083284336526
+      }
+    },
+    "tfidf": {
+      "display_name": "TF-IDF",
+      "fixed_threshold": 0.5,
+      "fixed_threshold_metrics": {
+        "accuracy": 0.6498353457738749,
+        "claim_f1": 0.7709978463747308,
+        "claim_precision": 0.6556776556776557,
+        "claim_recall": 0.9355400696864111,
+        "false_negatives": 37,
+        "false_positives": 282,
+        "macro_f1": 0.5137040513924935,
+        "positive_prediction_rate": 0.8990120746432492,
+        "pr_auc": 0.7278379837499831,
+        "prevalence": 0.6300768386388584,
+        "roc_auc": 0.6348442394979269,
+        "samples": 911,
+        "true_negatives": 55,
+        "true_positives": 537
+      },
+      "oracle_diagnostic": {
+        "adaptation_macro_f1": 0.6091098956771679,
+        "interpretation": "Upper-bound diagnostic selected and evaluated on all target labels; not a deployable performance estimate.",
+        "metrics": {
+          "accuracy": 0.6355653128430296,
+          "claim_f1": 0.710801393728223,
+          "claim_precision": 0.710801393728223,
+          "claim_recall": 0.710801393728223,
+          "false_negatives": 166,
+          "false_positives": 166,
+          "macro_f1": 0.6091098956771679,
+          "positive_prediction_rate": 0.6300768386388584,
+          "pr_auc": 0.7278379837499831,
+          "prevalence": 0.6300768386388584,
+          "roc_auc": 0.6348442394979269,
+          "samples": 911,
+          "true_negatives": 171,
+          "true_positives": 408
+        },
+        "threshold": 0.7548999581548614
+      }
+    }
+  },
+  "inputs": {
+    "bert": {
+      "bytes": 143281,
+      "path": "reports/generated/bert_calibration/predictions/external_checkthat.csv",
+      "probability": "in-domain temperature-scaled",
+      "sha256": "8e99706ecb77327af954c165aa78b2988ad39bbcfa8b010d9b823660b01f325f"
+    },
+    "tfidf": {
+      "bytes": 116624,
+      "path": "reports/generated/tfidf_baseline/predictions/external_checkthat.csv",
+      "probability": "uncalibrated",
+      "sha256": "6f38fa2174b25f27982d64caae74e2600992de4d943c90609e7a12a539caf6e3"
+    }
+  },
+  "protocol": {
+    "adaptation_budgets": [
+      10,
+      25,
+      50,
+      100,
+      200
+    ],
+    "evaluation_rule": "Select a threshold only on the labeled adaptation subset, then score it on the disjoint remainder. Model weights never change.",
+    "repetitions_per_budget": 2000,
+    "seed": 42,
+    "selection_metric": "macro_f1",
+    "split_method": "repeated stratified random holdout",
+    "summary_interval": "2.5th to 97.5th percentile across repeated adaptation/evaluation splits; not a population confidence interval",
+    "tie_break": "median threshold among exact macro-F1 maximizers"
+  },
+  "research_question": "Under domain shift, did class separation fail, or did the learned operating threshold stop transferring?",
+  "schema_version": 1,
+  "target": "CheckThat English COVID-19 tweets",
+  "target_claims": 574,
+  "target_non_claims": 337,
+  "target_records": 911,
+  "trials": {
+    "bytes": 992529,
+    "contains_sentence_text": false,
+    "path": "reports/generated/threshold_adaptation/trials.csv.gz",
+    "sha256": "d678abf49416ef1e48f88e6f18198154c8c2ececd792ee5cb1c87bc350971681"
+  }
+}

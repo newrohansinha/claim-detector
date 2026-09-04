@@ -14,6 +14,7 @@ work, validation, and documentation are recorded rather than hidden.
 | 2026-09-02 | Verification | Linux CI with real pinned data acquisition, tests, and package build | Complete |
 | 2026-09-03 | Controlled evaluation | Size/class-prior-matched BERT controls and paired intervals | Complete |
 | 2026-09-03 | Confidence | Reserved-split temperature scaling and review-policy transfer test | Complete |
+| 2026-09-03 | Target adaptation | Repeated disjoint threshold selection on real CheckThat predictions | Complete |
 | 2026-09-03 | Serving | Validated FastAPI contract, hardened Docker image, real HTTP load measurement | Complete |
 
 ## Scope rule

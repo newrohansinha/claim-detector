@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "claim-detector"
 version = "0.1.0"
-description = "Source-aware evaluation and deployment of a sentence-level factual claim detector"
+description = "Threshold transfer analysis and deployment of a factual claim detector"
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
 license = { file = "LICENSE" }
@@ -51,6 +51,7 @@ claim-train-bert-heldout = "claim_detector.models.bert_transfer:main"
 claim-train-bert-control = "claim_detector.models.bert_control:main"
 claim-source-probe = "claim_detector.analysis.source_probe:main"
 claim-calibrate = "claim_detector.evaluation.calibration:main"
+claim-adapt-threshold = "claim_detector.evaluation.threshold_adaptation:main"
 claim-api = "claim_detector.api.serve:main"
 
 [tool.hatch.build.targets.wheel]

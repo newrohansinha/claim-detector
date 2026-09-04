@@ -1,4 +1,4 @@
-.PHONY: setup download prepare audit baseline train-bert train-bert-heldout train-bert-control calibrate serve benchmark docker-build docker-up docker-down source-probe test test-data lint format verify
+.PHONY: setup download prepare audit baseline train-bert train-bert-heldout train-bert-control calibrate adapt-threshold serve benchmark docker-build docker-up docker-down source-probe test test-data lint format verify
 
 setup:
 	uv sync --all-extras --all-groups
@@ -26,6 +26,9 @@ train-bert-control: prepare
 
 calibrate:
 	uv run claim-calibrate
+
+adapt-threshold:
+	uv run claim-adapt-threshold
 
 serve:
 	uv run claim-api

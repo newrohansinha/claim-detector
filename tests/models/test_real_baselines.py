@@ -7,6 +7,7 @@ import pytest
 
 from claim_detector.data.download import PROJECT_ROOT, digest_file
 from claim_detector.evaluation.metrics import binary_classification_metrics
+from claim_detector.evaluation.threshold_adaptation import run_adaptation_study
 
 pytestmark = pytest.mark.real_data
 
@@ -106,3 +107,64 @@ def test_saved_bert_source_holdouts_are_traceable_and_leakage_free() -> None:
         assert source_comparison["samples"] > 0
         assert source_comparison["absolute_change"] < 0
         assert source_comparison["absolute_change_confidence_interval_95"]["high"] < 0
+
+
+def test_saved_threshold_adaptation_is_traceable_and_recomputable() -> None:
+    report_dir = PROJECT_ROOT / "reports" / "generated" / "threshold_adaptation"
+    results = json.loads((report_dir / "metrics.json").read_text(encoding="utf-8"))
+    trials_path = PROJECT_ROOT / results["trials"]["path"]
+    trial_bytes, trial_sha256 = digest_file(trials_path)
+    trials = pd.read_csv(trials_path)
+
+    assert trial_bytes == results["trials"]["bytes"]
+    assert trial_sha256 == results["trials"]["sha256"]
+    assert results["analysis_status"].startswith("Post-hoc exploratory")
+    assert len(trials) == 2 * 5 * 2_000
+    assert "text" not in trials.columns
+
+    prediction_paths = {}
+    for model, metadata in results["inputs"].items():
+        prediction_path = PROJECT_ROOT / metadata["path"]
+        prediction_paths[model] = prediction_path
+        size, sha256 = digest_file(prediction_path)
+        predictions = pd.read_csv(prediction_path)
+        recomputed = binary_classification_metrics(
+            predictions["label"].to_numpy(),
+            predictions["claim_probability"].ge(0.5).astype(int).to_numpy(),
+            predictions["claim_probability"].to_numpy(),
+        )
+        assert size == metadata["bytes"]
+        assert sha256 == metadata["sha256"]
+        for metric, value in recomputed.items():
+            reported = results["full_target_diagnostics"][model]["fixed_threshold_metrics"][
+                metric
+            ]
+            if value is None:
+                assert reported is None
+            else:
+                assert reported == pytest.approx(value)
+
+        for budget, budget_results in results["adaptation_results"][model].items():
+            subset = trials[
+                trials["model"].eq(model)
+                & trials["adaptation_budget"].eq(int(budget))
+            ]
+            reported_macro = budget_results["metrics_across_repetitions"]["macro_f1"]
+            assert len(subset) == 2_000
+            assert reported_macro["median"] == pytest.approx(subset["macro_f1"].median())
+            assert reported_macro["central_95_percent_low"] == pytest.approx(
+                subset["macro_f1"].quantile(0.025)
+            )
+            assert reported_macro["central_95_percent_high"] == pytest.approx(
+                subset["macro_f1"].quantile(0.975)
+            )
+
+    regenerated, regenerated_trials, _ = run_adaptation_study(prediction_paths)
+    pd.testing.assert_frame_equal(
+        trials,
+        regenerated_trials,
+        check_exact=False,
+        rtol=1e-12,
+        atol=1e-12,
+    )
+    assert regenerated["adaptation_results"] == results["adaptation_results"]

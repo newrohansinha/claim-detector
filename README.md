@@ -1,175 +1,123 @@
-# Claim Detection Under Source Shift
+# Claim Detection Under Domain Shift
 
 [![CI](https://github.com/newrohansinha/claim-detector/actions/workflows/ci.yml/badge.svg)](https://github.com/newrohansinha/claim-detector/actions/workflows/ci.yml)
 
-This work reproduces the fine-tuned BERT results in [Bell (2025)](https://aclanthology.org/2025.fever-1.6/),
-then extends the evaluation in a different direction. The paper compares a model trained on the
-three-source composite with an in-domain mixed test and the external CheckThat dataset; this
-project instead measures what happens when each constituent source is absent from training.
+This project asks one question: **when a claim detector reaches a new domain and starts labeling
+almost everything as a claim, has it stopped separating the classes—or has its decision threshold
+stopped transferring?** The threshold is the cutoff that turns a model score into the API's
+`true` or `false` answer.
 
-| | Bell (2025) | Extension in this project |
-|---|---|---|
-| Evaluation focus | Compare model families in-domain and on CheckThat transfer | Measure BERT's dependence on each source inside the composite |
-| Main comparison | One composite-trained model across test domains | Separately trained models with and without the target source, scored on the same target records |
-| Matched variables | Not applicable to the paper's comparison | Training size, validation size, and label counts |
-
-This design separates source exposure from changes in training-set size and class prior—the two
-confounders in the initial leave-one-source-out result.
+I reproduced the fine-tuned BERT evaluation in [Bell (2025)](https://aclanthology.org/2025.fever-1.6/),
+then extended it with class-balanced and threshold-free diagnostics. On CheckThat, BERT matches
+the paper's claim F1 but predicts “claim” for 98.6% of sentences. Its ranking is still useful,
+however. The main experiment measures how much of that remaining signal can be recovered by
+resetting only the threshold with a small labeled sample from the new domain.
 
 ## Main result
 
-Performance is lower when the test source was absent from training. On the two sources containing
-both labels, removing the source reduced macro F1 by **7.2 points for ClaimBuster** and **9.0
-points for PoliClaim**.
+BERT's CheckThat ROC-AUC is **0.779**, so the domain shift weakens class separation but does not
+erase it. At the transferred 0.5 threshold, macro F1 is only **0.420**. Selecting a new threshold
+from 25 labeled CheckThat examples raises median macro F1 to **0.698** on the disjoint remainder,
+without changing any model weights.
 
-The controlled effect is the score without the source minus the score with it; a negative value
-means that performance fell. The final column shows the earlier comparison before size and label
-balance were matched.
+![ROC and target-threshold adaptation results](reports/generated/threshold_adaptation/threshold_adaptation.png)
 
-| Test source and measure | With source | Without source | Controlled change (95% confidence interval) | Initial change |
-|---|---:|---:|---:|---:|
-| ClaimBuster macro F1, n=1,626 | 0.7456 | 0.6737 | **−0.0719** [−0.0892, −0.0552] | −0.1967 |
-| PoliClaim macro F1, n=383 | 0.8143 | 0.7243 | **−0.0900** [−0.1297, −0.0530] | −0.0872 |
-| AVeriTeC claim recall, n=591 | 0.9797 | 0.9628 | **−0.0169** [−0.0305, −0.0034] | −0.0271 |
+*Figure 1. Left: BERT retains substantially more ranking signal than TF-IDF on CheckThat. Right:
+each threshold is selected on a small labeled target subset and evaluated on different target
+records. Shading is the central 95% of 2,000 repeated stratified splits.*
 
-![Controlled source-exposure effect with confidence intervals](reports/generated/bert_matched_control/matched_control_comparison.png)
+| Model | Labeled target examples | Median macro F1 on disjoint remainder | Central 95% range |
+|---|---:|---:|---:|
+| BERT, transferred 0.5 threshold | 0 | 0.420 | — |
+| BERT, target-selected threshold | 10 | 0.683 | 0.502–0.714 |
+| BERT, target-selected threshold | 25 | **0.698** | 0.569–0.715 |
+| BERT, target-selected threshold | 50 | **0.703** | 0.639–0.717 |
+| BERT, target-selected threshold | 100 | **0.705** | 0.662–0.720 |
+| BERT, target-selected threshold | 200 | **0.706** | 0.675–0.724 |
+| TF-IDF, transferred 0.5 threshold | 0 | 0.514 | — |
+| TF-IDF, target-selected threshold | 25 | 0.583 | 0.482–0.606 |
+| TF-IDF, target-selected threshold | 100 | 0.594 | 0.538–0.610 |
 
-*Figure 1. Controlled effect estimates with paired 95% bootstrap intervals. Every interval
-excludes zero.*
+The full-label oracle threshold gives BERT macro F1 **0.719**. That is an upper-bound diagnostic,
+not deployable performance, because it uses all CheckThat labels for both selection and
+evaluation. The disjoint-split result with 100 labels reaches 0.705, suggesting that most of the
+recoverable operating-point performance does not require retraining BERT.
 
-Four conclusions follow:
+The conclusion is deliberately narrower than “the model generalizes.” BERT's ROC-AUC falls from
+0.971 on the mixed test to 0.779 on CheckThat, so its representation also degrades. The new finding
+is that the fixed threshold makes the external failure look substantially worse than the remaining
+ranking signal warrants—and that this part of the failure can be repaired without retraining when
+labeled target examples are available.
 
-- **Mixed-source performance does not imply source transfer.** The model reached 0.907 macro F1
-  on the mixed test while retaining measurable dependence on source exposure.
-- **The initial ClaimBuster estimate was confounded.** The naive holdout showed a 19.7-point loss;
-  the matched estimate is 7.2 points.
-- **The PoliClaim result is stable.** Its estimated loss changes only from 8.7 to 9.0 points after
-  adding the control.
-- **AVeriTeC shows a smaller recall loss.** It is positive-only, so recall is the only defensible
-  measure for that source.
+## Experiment design
 
-The main contribution is a controlled estimate of within-composite source transfer. In
-particular, it shows that the unadjusted ClaimBuster result substantially overstated the effect,
-while the PoliClaim result survived the stronger control.
+The study uses saved predictions from the frozen BERT and TF-IDF models on all 911 CheckThat
+examples. All resampling operates on observed labels and predictions; model weights remain fixed.
 
-## Why the controlled experiment was needed
+For target-label budgets of 10, 25, 50, 100, and 200:
 
-### 1. Reproducing the external result exposed the failure mode
+1. Draw a stratified labeled subset from CheckThat.
+2. Choose the threshold that maximizes macro F1 on that subset.
+3. Evaluate the threshold on the disjoint remaining records.
+4. Use the identical split for BERT and TF-IDF.
+5. Repeat 2,000 times.
 
-The model scored **0.907 macro F1** on the mixed test and reproduced the paper's CheckThat claim
-F1: 0.777 here versus 0.774 reported. Adding macro F1, confusion counts, and prediction rate made
-the failure concrete: the model labeled **98.6% of CheckThat tweets as claims** and correctly
-classified only 11 of 337 non-claims.
+The reported interval is the 2.5th–97.5th percentile across repeated adaptation samples. It shows
+sensitivity to which examples are labeled; it is not a population confidence interval.
 
-### 2. The first source holdout mixed several effects together
+This is a **post-hoc exploratory experiment**. The question arose after the frozen CheckThat
+evaluation revealed a 98.6% positive prediction rate alongside nontrivial ROC-AUC. The adaptation
+result therefore answers a practical follow-up question; it is not presented as preregistered or
+untouched-target evidence. The complete specification is in
+[`docs/EXPERIMENT_PROTOCOL.md`](docs/EXPERIMENT_PROTOCOL.md).
 
-I next trained a new model with each source completely removed from both training and model
-selection. Each new model was compared with the mixed-source model on the same test examples.
-
-| Test source | Metric | Mixed model | Source removed | Change |
-|---|---|---:|---:|---:|
-| ClaimBuster | Macro F1 | 0.8704 | 0.6737 | **−0.1967** |
-| PoliClaim | Macro F1 | 0.8115 | 0.7243 | **−0.0872** |
-| AVeriTeC | Claim recall | 0.9898 | 0.9628 | **−0.0271** |
-
-These results suggested dependence on source exposure, but removing a source also reduced the
-training set and changed its class prior. This was especially important for ClaimBuster, the
-largest dataset and 75% non-claim. The experiment did not isolate source absence from those
-changes.
-
-### 3. The matched control isolates source exposure
-
-For every source-removed model, I trained a comparison model with:
-
-- the same number of training examples;
-- the same number of validation examples;
-- the same claim/non-claim counts in both sets; and
-- examples from the target source, without using any text from its final test set.
-
-Normalized-text groups were kept intact, and target test hashes were excluded from training and
-validation. Both models were evaluated on aligned records with a paired 2,000-sample bootstrap.
-
-The matched control was added after the initial holdout result exposed the confound, so it is
-reported as a follow-up analysis rather than a preregistered experiment. Its sampling rule,
-exclusions, seed, and code were committed before the control models were trained.
-
-## How the investigation developed
+## How the evidence fits together
 
 ```mermaid
 flowchart LR
-  A[Reproduce Bell 2025] --> B[Inspect prediction distribution]
-  B --> C[Find 98.6% positive rate on CheckThat]
-  C --> D[Measure source-label and text-source signal]
-  D --> E[Train leave-one-source-out models]
-  E --> F[Identify size and class-prior confounding]
-  F --> G[Train matched source-included controls]
-  G --> H[Estimate the controlled source effect]
+  A[Reproduce Bell 2025] --> B[Match CheckThat claim F1]
+  B --> C[Inspect both classes]
+  C --> D[Find 98.6% claim prediction rate]
+  D --> E[Measure threshold-free ranking]
+  E --> F[Find useful ROC-AUC despite cutoff failure]
+  F --> G[Adapt threshold with small labeled target samples]
+  G --> H[Recover most available macro F1 without retraining]
 ```
 
-*Figure 2. Each follow-up experiment addresses a limitation or question identified in the
-preceding result.*
+*Figure 2. The investigation moves from benchmark reproduction to failure diagnosis and then to
+target-threshold adaptation.*
 
-## Supporting evidence
+## Evidence behind the main question
 
-### 1. Benchmark reproduction and failure analysis
+### The reproduced F1 and two-class behavior diverge
 
-The mixed-source model closely reproduces Bell (2025), despite reserving 1,600 paper-training
+The mixed-source BERT is close to the paper's reported result despite reserving 1,600 training
 records for validation and calibration and training for three rather than five epochs.
 
-| Mixed test model | Accuracy | Claim precision | Claim recall | Claim F1 | Macro F1 | Predicted claim rate |
-|---|---:|---:|---:|---:|---:|---:|
-| TF-IDF baseline | 0.8465 | 0.8589 | 0.8030 | 0.8300 | 0.8451 | 43.6% |
-| BERT, this work | **0.9069** | 0.8963 | **0.9052** | **0.9007** | **0.9066** | 47.1% |
-| BERT, Bell (2025) | 0.9170 | 0.9180 | 0.9040 | 0.9110 | — | — |
+| Evaluation and model | Accuracy | Claim F1 | Macro F1 | ROC-AUC | Predicted claim rate |
+|---|---:|---:|---:|---:|---:|
+| Mixed test, BERT in Bell (2025) | 0.917 | 0.911 | — | — | — |
+| Mixed test, BERT in this work | 0.907 | 0.901 | **0.907** | **0.971** | 47.1% |
+| CheckThat, BERT in Bell (2025) | 0.633 | 0.774 | — | — | — |
+| CheckThat, BERT in this work | 0.640 | **0.777** | 0.420 | **0.779** | **98.6%** |
+| CheckThat, TF-IDF | **0.650** | 0.771 | **0.514** | 0.635 | 89.9% |
 
-On CheckThat, this model reproduces the paper's claim F1 almost exactly: 0.777 here versus 0.774
-reported. The broader set of metrics tells a different story.
+BERT correctly labels 572 of 574 CheckThat claims but only **11 of 337 non-claims**. Because 63%
+of CheckThat examples are claims, predicting the positive class almost everywhere preserves claim
+F1. Macro F1, the confusion matrix, and prediction rate expose the failure; ROC-AUC then shows that
+the underlying ranking has not collapsed to the same degree.
 
-| CheckThat model | Accuracy | Claim precision | Claim recall | Claim F1 | Macro F1 | Predicted claim rate |
-|---|---:|---:|---:|---:|---:|---:|
-| TF-IDF baseline | 0.6498 | 0.6557 | 0.9355 | 0.7710 | **0.5137** | 89.9% |
-| BERT, this work | 0.6400 | 0.6370 | 0.9965 | **0.7772** | 0.4200 | **98.6%** |
-| BERT, Bell (2025) | 0.6330 | 0.6320 | 0.9980 | 0.7740 | — | — |
+![Claim F1 and macro F1 across evaluations](reports/generated/bert_mixed/bert_tfidf_comparison.png)
 
-BERT correctly classifies 572 of 574 claims but only **11 of 337 non-claims**. Because CheckThat
-is 63% positive, predicting “claim” almost everywhere preserves claim F1 while failing the
-negative class. This is why the project reports macro F1, prediction rate, prevalence, and
-confusion counts rather than a single favorable metric.
+*Figure 3. At the fixed threshold, claim F1 remains comparable while macro F1 reveals BERT's
+near-one-class behavior.*
 
-![Claim F1 and macro F1 on mixed and transfer evaluations](reports/generated/bert_mixed/bert_tfidf_comparison.png)
+### In-domain calibration does not fix the new domain
 
-*Figure 3. Claim F1 alone hides the external-domain failure. On CheckThat, BERT's macro F1 falls
-below the simpler TF-IDF baseline.*
-
-### 2. Source structure in the mixed dataset
-
-Two diagnostics measured the relationship between dataset identity, labels, and sentence text.
-They establish whether a mixed split contains recoverable provenance signal before any causal
-claim is made about BERT's behavior.
-
-![Composite label distribution by source](reports/generated/data_audit/source_label_distribution.png)
-
-*Figure 4. Source and label are strongly associated. A random mixed split lets every source—and
-its characteristic label balance—appear on both sides.*
-
-| Check | How it was evaluated | Accuracy | Macro F1 |
-|---|---|---:|---:|
-| Predict the claim label from the source name only | Mixed test; sentence text hidden | 0.7804 | 0.7747 |
-| Predict the source from sentence text | 5-fold cross-validation; duplicates grouped | 0.8613 | 0.7848 |
-| Always guess the largest source, ClaimBuster | Same five folds | 0.6137 | 0.2535 |
-
-A rule that sees only source identity predicts claim labels with 78.0% accuracy. Separately, a
-text classifier identifies which dataset a sentence came from with 86.1% accuracy. Together these
-show that source is associated with labels and recoverable from language.
-
-They do **not** prove that BERT uses one specific source shortcut. Their role is to justify the
-controlled transfer experiment, not to overstate its mechanism.
-
-### 3. Calibration under domain shift
-
-Temperature scaling was fit on the reserved 800-record calibration split (`T=1.6536`). It changes
-confidence, not the predicted class. The table reports negative log-likelihood (NLL), Brier score,
-and expected calibration error (ECE); lower is better.
+Temperature scaling was fit on 800 reserved composite examples (`T=1.6536`). It improves all
+three average calibration measures on the mixed test, but CheckThat remains badly miscalibrated.
+Temperature scaling is monotonic, so it does not change class ranking or the prediction at a 0.5
+threshold.
 
 | Evaluation | NLL, raw → scaled | Brier, raw → scaled | ECE, raw → scaled |
 |---|---:|---:|---:|
@@ -179,75 +127,72 @@ and expected calibration error (ECE); lower is better.
 
 ![Reliability diagrams before and after temperature scaling](reports/generated/bert_calibration/reliability_diagram.png)
 
-*Figure 5. Average calibration improves in-domain. CheckThat remains far from the diagonal even
-after scaling; sparse equal-width bins appear only when populated.*
+*Figure 4. Calibration learned from the composite transfers poorly to CheckThat.*
 
-The average CheckThat metrics improve numerically but remain far worse than in-domain, and maximum
-calibration error worsens from 0.778 to 0.811.
+The same problem appears in selective prediction. A confidence threshold chosen for at most 5%
+error on the reserved calibration split handles 92.1% of those examples automatically at 4.9%
+error. On CheckThat it handles 98.4% automatically at **35.6% error**. The model is not merely
+uncertain on the shifted inputs; it is often confidently wrong. This is why target-threshold
+adaptation, rather than generic confidence filtering, became the main experiment.
 
-The calibration set also selects confidence 0.7758 as the cutoff for handling a prediction
-automatically rather than recommending review. On the calibration set, this keeps error below 5%:
+### Why the mixed split did not reveal the problem
 
-| Evaluation | Predictions handled automatically | Error within those predictions |
-|---|---:|---:|
-| Reserved calibration | 92.1% | 4.9% |
-| Frozen mixed test | 91.0% | 5.8% |
-| CheckThat transfer | 98.4% | **35.6%** |
+The composite contains ClaimBuster, PoliClaim, and AVeriTeC. Source identity is strongly related
+to both label balance and writing style:
 
-The policy works similarly on the mixed test and fails badly on the new tweet dataset. Low
-confidence is therefore not a reliable detector of out-of-domain text. The API returns
-`review_recommended`, but documents it as an in-domain triage hint—not a safety guarantee.
+| Diagnostic | Evaluation | Accuracy | Macro F1 |
+|---|---|---:|---:|
+| Predict claim label from source identity only | Frozen mixed test | 0.780 | 0.775 |
+| Predict source identity from sentence text | Grouped five-fold cross-validation | 0.861 | 0.785 |
+| Always predict the largest source | Same five folds | 0.614 | 0.254 |
 
-## What the service does
+![Composite label distribution by source](reports/generated/data_audit/source_label_distribution.png)
 
-The endpoint detects whether a sentence asserts at least one proposition that external evidence
-could prove or disprove. It does **not** decide whether that proposition is true.
+*Figure 5. A random mixed split preserves the same source-specific label balances in training and
+testing.*
+
+As a supporting check, I trained source-held-out BERT models and matched source-included controls.
+Each pair has exactly the same fit and validation sizes and label counts; normalized-text groups
+remain intact, and target test hashes are excluded. Removing target-source exposure reduces macro
+F1 by 7.2 points on ClaimBuster and 9.0 points on PoliClaim.
+
+| Target source and measure | Source included | Source absent | Change (paired 95% CI) |
+|---|---:|---:|---:|
+| ClaimBuster macro F1, n=1,626 | 0.7456 | 0.6737 | **−0.0719** [−0.0892, −0.0552] |
+| PoliClaim macro F1, n=383 | 0.8143 | 0.7243 | **−0.0900** [−0.1297, −0.0530] |
+| AVeriTeC claim recall, n=591 | 0.9797 | 0.9628 | **−0.0169** [−0.0305, −0.0034] |
+
+![Controlled source-exposure effect](reports/generated/bert_matched_control/matched_control_comparison.png)
+
+*Figure 6. Controlled source-exposure differences with paired 2,000-sample bootstrap intervals.*
+
+These source results support the main interpretation: high performance on a familiar source
+mixture does not establish that the same operating point will survive a new collection process.
+The matched control also corrects an initially misleading result: the naive ClaimBuster holdout
+suggested a 19.7-point loss, which fell to 7.2 points after training size and class prior were
+matched.
+
+## What the result means for the API
+
+The service detects whether a sentence asserts at least one proposition that external evidence
+could prove or disprove. It does not determine whether the proposition is true.
 
 | Sentence | Output | Reason |
 |---|---|---|
 | The moon is made of cheese. | Claim | False, but externally checkable. |
 | Tomorrow it will rain in Boston. | Claim | A definite, checkable prediction. |
-| Is unemployment rising? | Not claim | A question does not assert the proposition. |
+| Is unemployment rising? | Not claim | The sentence asks rather than asserts. |
 | Taylor Swift is the greatest singer alive. | Not claim | “Greatest” has no agreed criterion here. |
 
 See [`LABEL_POLICY.md`](LABEL_POLICY.md) for negation, attribution, mixed sentences, and hard cases.
 
+The deployed endpoint retains the in-domain 0.5 decision threshold. The CheckThat-adapted
+threshold is not silently promoted to a universal default: it is target-specific and was studied
+post hoc. For a new production domain, the evidence supports collecting a small representative
+labeled sample, validating the operating point, and monitoring aggregate prediction rates before
+enabling automatic handling.
+
 ## Implementation reference
-
-### Data and training
-
-The project uses the composite released with Bell (2025): ClaimBuster, PoliClaim, and AVeriTeC,
-plus CheckThat English tweets as external-only evaluation data.
-
-| Source | Usable records | Claims | Not claims | Role |
-|---|---:|---:|---:|---|
-| ClaimBuster | 7,976 | 1,994 | 5,982 | Composite |
-| PoliClaim | 1,953 | 1,154 | 799 | Composite |
-| AVeriTeC | 3,067 | 3,067 | 0 | Composite |
-| CheckThat | 911 | 574 | 337 | External test only |
-
-The pinned composite has 12,997 rows and 12,996 usable texts. Its released training portion is
-divided into 8,796 fit, 800 validation, and 800 calibration records. Normalized duplicate groups
-stay together across these derived splits. The frozen paper test remains untouched.
-
-The audit found 49 normalized duplicate groups and no conflicting-label duplicates. Eighteen
-hashes cross the released train/test boundary, affecting 20 test records. Removing those test
-records changes BERT macro F1 only from 0.9066 to 0.9058.
-
-The model is a full fine-tune of `google-bert/bert-base-uncased` at exact revision
-`86b5e0934494bd15c9632b12f734a8a67f723594`.
-
-| Setting | Value |
-|---|---:|
-| Sequence length | 128 tokens |
-| Epochs / selected mixed epoch | 3 / 2 |
-| Learning rate / weight decay | 2 × 10⁻⁵ / 0.01 |
-| Warmup / max gradient norm | 10% / 1.0 |
-| Train / evaluation batch | 16 / 32 |
-| Seed / selection metric | 42 / validation macro F1 |
-
-Training ran on Apple MPS. No test-set hyperparameter search was performed. The TF-IDF baseline is
-word unigram/bigram logistic regression with a 100,000-feature cap and seed 42.
 
 ### API
 
@@ -297,18 +242,17 @@ flowchart LR
   J --> L[Caller]
 ```
 
-*Figure 6. The calibrator and model share an enforced artifact identity; a mismatched pair fails
-at startup.*
+*Figure 7. The model and calibrator share an enforced artifact identity; a mismatch fails at
+startup.*
 
 Requests use strict schemas, reject unknown fields and sentences over 2,000 characters, and reject
-declared bodies over 16 KiB. The model loads once. Inference is serialized to avoid CPU
-oversubscription. The container runs as UID 10001 with a read-only root filesystem, no Linux
-capabilities, and no privilege escalation. Research-only dependencies are excluded from the
-runtime image.
+declared bodies over 16 KiB. The model loads once, inference is serialized to avoid CPU
+oversubscription, and the container runs as UID 10001 with a read-only root filesystem, no Linux
+capabilities, and no privilege escalation.
 
 TLS, authentication, global rate limits, and hard edge-level body limits belong at the ingress in
-a public deployment. Production telemetry should measure latency, failures, claim rate, and review
-rate by model version without logging sentence text.
+a public deployment. Production telemetry should track latency, failures, predicted claim rate,
+and review rate by model version without logging sentence text.
 
 ### Real container benchmark
 
@@ -321,7 +265,39 @@ checkpoint on Docker Desktop ARM64 CPU. Every response was contract-validated.
 | 500 | 4 | 176.3 ms | 187.5 ms | 198.6 ms | 22.8 req/s | 0 |
 
 Queueing latency rises at concurrency four because local model execution is deliberately
-serialized.
+serialized. Research dependencies are excluded from the runtime image.
+
+### Data and training
+
+| Source | Usable records | Claims | Not claims | Role |
+|---|---:|---:|---:|---|
+| ClaimBuster | 7,976 | 1,994 | 5,982 | Composite |
+| PoliClaim | 1,953 | 1,154 | 799 | Composite |
+| AVeriTeC | 3,067 | 3,067 | 0 | Composite |
+| CheckThat | 911 | 574 | 337 | External evaluation and exploratory target adaptation |
+
+The pinned composite has 12,997 rows and 12,996 usable texts. Its released training portion is
+divided into 8,796 fit, 800 validation, and 800 calibration records. Normalized duplicate groups
+stay together across derived splits. The frozen paper test remains untouched.
+
+The audit found 49 normalized duplicate groups and no conflicting-label duplicates. Eighteen
+hashes cross the released train/test boundary, affecting 20 test records. Removing those test
+records changes BERT macro F1 only from 0.9066 to 0.9058.
+
+The model is a full fine-tune of `google-bert/bert-base-uncased` at revision
+`86b5e0934494bd15c9632b12f734a8a67f723594`.
+
+| Setting | Value |
+|---|---:|
+| Sequence length | 128 tokens |
+| Epochs / selected mixed epoch | 3 / 2 |
+| Learning rate / weight decay | 2 × 10⁻⁵ / 0.01 |
+| Warmup / maximum gradient norm | 10% / 1.0 |
+| Training / evaluation batch | 16 / 32 |
+| Seed / selection metric | 42 / validation macro F1 |
+
+Training ran on Apple MPS. No test-set hyperparameter search was performed. The TF-IDF baseline is
+word unigram/bigram logistic regression with a 100,000-feature cap and seed 42.
 
 ## Reproduce and verify
 
@@ -337,6 +313,7 @@ make train-bert
 make train-bert-heldout
 make train-bert-control
 make calibrate
+make adapt-threshold
 make verify
 ```
 
@@ -348,50 +325,54 @@ Then build the self-contained CPU image with `make docker-build` and run it with
 | Base BERT revision | `86b5e0934494bd15c9632b12f734a8a67f723594` |
 | Selected model SHA-256 | `ab8cd8a15cdc0badef3d90b2b57e98b03d7435e4b36c7aafc8999a625df99224` |
 | API model version | `ab8cd8a15cdc` |
-| Development and control seed | 42 |
+| Development and adaptation seed | 42 |
 
 Raw upstream data is not redistributed because its repository has no repository-level license
-file. The approximately 418 MB weights are rebuilt locally rather than committed to Git. Generated
-reports contain no sentence text.
+file. The approximately 418 MB model weights are rebuilt locally rather than committed to Git.
+Generated reports contain no sentence text.
 
-`make verify` runs Ruff, strict mypy, and 53 tests. Tests cover data integrity, grouped splitting,
-bootstrap math, calibration, the review policy, API validation, artifact mismatch failure, real
-checkpoint inference when weights exist, packaging, and the pinned real data. Linux CI downloads
-and verifies that real data rather than replacing reported evidence with fixtures.
+`make verify` runs Ruff, strict mypy, and 58 tests. Tests cover data integrity, grouped splitting,
+threshold selection and repeated adaptation, bootstrap math, calibration, the review policy, API
+validation, artifact mismatch failure, real checkpoint inference when weights exist, packaging,
+and pinned real-data evidence. Linux CI downloads and verifies the actual research data.
 
 ## Limitations
 
-- One seed was trained per condition. Paired intervals cover evaluation-record uncertainty, not
-  initialization or matched-sample variance.
-- Matching controls size and class prior, but restoring a source necessarily changes the remaining
-  source mixture.
-- CheckThat is one external domain, not an estimate of all open-world behavior.
-- AVeriTeC is positive-only in this dataset, so only claim recall is comparable for its source
+- The threshold-adaptation study is a post-hoc analysis on one previously evaluated external
+  dataset, not confirmation on a new untouched domain.
+- Repeated holdout ranges measure sensitivity to the labeled target sample; they are not
+  population confidence intervals or 2,000 independent datasets.
+- Stratified sampling assumes the labeled target sample is representative enough to contain both
+  classes. Ten-label estimates have visibly high variance.
+- The threshold optimizes macro F1, which weights both classes equally. A production decision cost
+  may require a different target metric.
+- Threshold adaptation cannot repair all domain shift. CheckThat ROC-AUC remains well below the
+  mixed-test ROC-AUC.
+- One BERT seed was trained per condition. Source-effect bootstrap intervals cover evaluation
+  records, not initialization or matched-sample variance.
+- Matching source controls fixes size and class prior, but restoring a source changes the
+  remaining source mixture.
+- AVeriTeC is positive-only in this release, so only claim recall is comparable for its source
   slice.
-- Source datasets use related but non-identical definitions of claim detection and
-  check-worthiness. Transfer loss can reflect both language and annotation-policy shift.
-- This run is a close reproduction, not an exact one: three epochs and reserved calibration data
-  are used, while the paper reports five epochs.
-- Temperature scaling and the review flag are distribution-dependent, not OOD safeguards.
+- The datasets use related but non-identical definitions of claim detection and check-worthiness.
 - The service detects assertions; it does not retrieve evidence or determine truth.
 
 ## Evidence and project map
 
-- [`docs/EXPERIMENT_PROTOCOL.md`](docs/EXPERIMENT_PROTOCOL.md) — hypotheses and evaluation rules
+- [`docs/EXPERIMENT_PROTOCOL.md`](docs/EXPERIMENT_PROTOCOL.md) — experiment rules and analysis status
+- [`src/claim_detector/evaluation/threshold_adaptation.py`](src/claim_detector/evaluation/threshold_adaptation.py) — main experiment and Figure 1
+- [`reports/generated/threshold_adaptation/metrics.json`](reports/generated/threshold_adaptation/metrics.json) — complete threshold-adaptation results
 - [`DATA_CARD.md`](DATA_CARD.md) — provenance, composition, integrity, and redistribution
-- [`LABEL_POLICY.md`](LABEL_POLICY.md) — the annotation boundary
-- [`TIMEBOX.md`](TIMEBOX.md) — 20-hour scope and work log
+- [`LABEL_POLICY.md`](LABEL_POLICY.md) — annotation boundary
+- [`TIMEBOX.md`](TIMEBOX.md) — project scope and work log
 - [`AI_USAGE.md`](AI_USAGE.md) — Codex disclosure and verification standard
-- [`src/claim_detector/models/bert_control.py`](src/claim_detector/models/bert_control.py) — matched
-  sampling, training, paired comparison, and Figure 1
-- [`src/claim_detector/evaluation/calibration.py`](src/claim_detector/evaluation/calibration.py) —
-  temperature scaling and selective prediction
+- [`src/claim_detector/models/bert_control.py`](src/claim_detector/models/bert_control.py) — matched source-exposure analysis
+- [`src/claim_detector/evaluation/calibration.py`](src/claim_detector/evaluation/calibration.py) — temperature scaling and selective prediction
 - [`src/claim_detector/api/`](src/claim_detector/api/) — API contract and inference runtime
-- [`reports/generated/`](reports/generated/) — metrics, figures, artifact hashes, and HTTP results
 
 ## Reference
 
 Andrew Bell. 2025. [*Less Can be More: An Empirical Evaluation of Small and Large Language Models
 for Sentence-level Claim Detection*](https://aclanthology.org/2025.fever-1.6/). Proceedings of the
 Eighth Fact Extraction and VERification Workshop (FEVER), pages 85–90. Association for
-Computational Linguistics. DOI: [10.18653/v1/2025.fever-1.6](https://doi.org/10.18653/v1/2025.fever-1.6).
+Computational Linguistics. DOI: [10.18653/v1/2025.fever-1.6](https://doi.org/10.18653/v1/2025.fever-1.6/).
