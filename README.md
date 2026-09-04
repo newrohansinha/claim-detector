@@ -7,11 +7,15 @@ almost everything as a claim, has it stopped separating the classes—or has its
 stopped transferring?** The threshold is the cutoff that turns a model score into the API's
 `true` or `false` answer.
 
-I reproduced the fine-tuned BERT evaluation in [Bell (2025)](https://aclanthology.org/2025.fever-1.6/),
-then extended it with class-balanced and threshold-free diagnostics. On CheckThat, BERT matches
-the paper's claim F1 but predicts “claim” for 98.6% of sentences. Its ranking is still useful,
-however. The main experiment measures how much of that remaining signal can be recovered by
-resetting only the threshold with a small labeled sample from the new domain.
+**I found that BERT still ranked claims above non-claims on the new dataset, but its original 50%
+cutoff no longer worked. Using 25 labeled examples only to choose a new cutoff—without adding them
+to BERT's training data or changing the model—raised median macro F1 from 0.420 to 0.698 on the
+other 886 examples, close to the full-data diagnostic ceiling of 0.719.**
+
+I reached this result by reproducing the fine-tuned BERT evaluation in
+[Bell (2025)](https://aclanthology.org/2025.fever-1.6/), then extending it with class-balanced and
+threshold-free diagnostics. On CheckThat, BERT matches the paper's claim F1 but predicts “claim”
+for 98.6% of sentences, motivating the threshold experiment above.
 
 ## Main result
 
