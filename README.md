@@ -2,22 +2,23 @@
 
 [![CI](https://github.com/newrohansinha/claim-detector/actions/workflows/ci.yml/badge.svg)](https://github.com/newrohansinha/claim-detector/actions/workflows/ci.yml)
 
-A fine-tuned BERT service for sentence-level factual claim detection, with a source-aware
-evaluation of how well the model generalizes.
+## Main finding: source exposure matters after matching
 
-Given one English sentence, the API returns whether it contains a factual assertion and a
-calibrated confidence score. It detects the presence of a claim; it does not determine whether the
-claim is true.
+After matching training-set size and class balance, withholding ClaimBuster or PoliClaim reduced
+macro F1 by **7.2 and 9.0 points**, with paired 95% confidence intervals entirely below zero. The
+same BERT model reached **0.907 macro F1** on a mixed-source test, showing that the aggregate score
+did not capture this source dependence. The matched design also showed that the initial
+ClaimBuster holdout had overestimated the effect as 19.7 points because removing the source
+changed training-set size and class balance at the same time.
 
-The reference setup combines three claim-detection sources—ClaimBuster, PoliClaim, and AVeriTeC—
-and reserves 911 CheckThat English tweets as an external-domain evaluation.
+This project studies sentence-level factual claim detection. Given one English sentence, the API
+returns whether it contains a factual assertion and a calibrated confidence score; it does not
+determine whether the assertion is true. The training data combines ClaimBuster, PoliClaim, and
+AVeriTeC, while 911 CheckThat English tweets are reserved for external-domain evaluation.
 
-## Primary finding
-
-The fine-tuned model reached **0.907 macro F1** on the mixed-source test set. On the external
-CheckThat evaluation, however, it reproduced the reference paper's positive-class F1 while
-classifying **98.6% of tweets as claims**. This result motivated an investigation into whether a
-random mixed-source split was hiding dependence on the datasets present during training.
+The transfer investigation began when the model reproduced the reference paper's positive-class
+F1 on CheckThat while classifying **98.6% of tweets as claims**. That result suggested that a
+random mixed-source split was not sufficient evidence of generalization.
 
 ### Initial source-held-out experiment
 
