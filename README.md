@@ -196,6 +196,10 @@ is enabled. Aggregate prediction rates should also be monitored.
 
 ### API
 
+A fresh clone does not contain the 418 MB BERT checkpoint. Complete the commands through
+`make calibrate` in [Reproduce and verify](#reproduce-and-verify) before running the API or building
+the Docker image.
+
 ```bash
 make serve
 
